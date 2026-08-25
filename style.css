@@ -26,6 +26,15 @@
   padding: 0;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+html, body {
+  touch-action: manipulation;
+  overflow-x: hidden;
+  height: 100%;
 }
 
 body {
@@ -39,7 +48,6 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
 }
 
 /* ヘッダー */

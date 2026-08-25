@@ -1401,6 +1401,25 @@ class Game {
   }
 
   setupEventListeners() {
+    // iPad / iOS Safari 連打時の画面拡大（ダブルタップズーム）を完全防止
+    document.addEventListener("dblclick", (e) => {
+      e.preventDefault();
+    }, { passive: false });
+
+    let lastTouchTime = 0;
+    document.addEventListener("touchend", (e) => {
+      const now = Date.now();
+      if (now - lastTouchTime <= 350) {
+        e.preventDefault();
+      }
+      lastTouchTime = now;
+    }, { passive: false });
+
+    // 2本指ピンチズームの誤作動防止
+    document.addEventListener("gesturestart", (e) => {
+      e.preventDefault();
+    });
+
     const slimeTarget = document.getElementById("slime-target");
     if (slimeTarget) {
       slimeTarget.addEventListener("pointerdown", (e) => {
