@@ -551,97 +551,421 @@ const REBIRTH_SKILLS_MASTER = [
   }
 ];
 
-// --- 2. サウンド＆BGMエンジン (Web Audio API プロシージャルシンセサイザー) ---
+// --- 2. サウンド＆BGMエンジン (Web Audio API 本格RPG長尺ポリフォニックシンセサイザー) ---
 const BGM_NOTES = {
   REST: 0,
+  C1: 32.70, D1: 36.71, E1: 41.20, F1: 43.65, G1: 49.00, A1: 55.00, B1: 61.74,
   C2: 65.41, Db2: 69.30, D2: 73.42, Eb2: 77.78, E2: 82.41, F2: 87.31, Fs2: 92.50, G2: 98.00, Ab2: 103.83, A2: 110.00, Bb2: 116.54, B2: 123.47,
   C3: 130.81, Db3: 138.59, D3: 146.83, Eb3: 155.56, E3: 164.81, F3: 174.61, Fs3: 184.99, G3: 196.00, Ab3: 207.65, A3: 220.00, Bb3: 233.08, B3: 246.94,
   C4: 261.63, Db4: 277.18, D4: 293.66, Eb4: 311.13, E4: 329.63, F4: 349.23, Fs4: 369.99, G4: 392.00, Ab4: 415.30, A4: 440.00, Bb4: 466.16, B4: 493.88,
   C5: 523.25, Db5: 554.37, D5: 587.33, Eb5: 622.25, E5: 659.25, F5: 698.46, Fs5: 739.99, G5: 783.99, Ab5: 830.61, A5: 880.00, Bb5: 932.33, B5: 987.77,
-  C6: 1046.50
+  C6: 1046.50, D6: 1174.66, E6: 1318.51, G6: 1567.98
 };
 
 const BGM_TRACKS = {
-  // ⚠️ ボス戦専用トラック（恐怖・緊迫感のあるダークBGM）
-  boss: {
-    tempo: 220,
-    melodyType: 'sawtooth',
-    bassType: 'triangle',
-    volume: 0.065,
-    melody: ['Eb4', 'D4', 'REST', 'C4', 'B3', 'REST', 'C4', 'Db4', 'Eb4', 'REST', 'D4', 'Db4', 'C4', 'REST', 'B3', 'REST'],
-    bass:   ['C2', 'C2', 'REST', 'C2', 'Eb2', 'REST', 'D2', 'Db2', 'C2', 'C2', 'REST', 'C2', 'Fs2', 'REST', 'F2', 'E2']
-  },
-  // 💧 スライム族（草原・のどかで明るい）
+  // 💧 スライム族（Lv.1〜99）- 『冒険の旅立ち 〜 はじまりの風 〜』 (約56秒 / 128ステップ / 王道JRPGフィールド曲)
   slime: {
-    tempo: 280,
-    melodyType: 'sine',
+    tempo: 220,
+    melodyType: 'triangle',
+    harmonyType: 'sine',
     bassType: 'triangle',
-    volume: 0.075,
-    melody: ['C4', 'E4', 'G4', 'C5', 'B4', 'G4', 'A4', 'G4', 'E4', 'F4', 'G4', 'E4', 'D4', 'E4', 'C4', 'REST'],
-    bass:   ['C3', 'REST', 'G2', 'REST', 'A2', 'REST', 'E2', 'REST', 'F2', 'REST', 'C3', 'REST', 'G2', 'REST', 'C3', 'REST']
+    volume: 0.08,
+    melody: [
+      // イントロ (1-16)
+      'G4','REST','C5','REST', 'D5','REST','E5','REST', 'D5','C5','B4','G4', 'A4','B4','C5','REST',
+      // Aメロ (17-48)
+      'E4','G4','C5','D5', 'E5','REST','D5','C5', 'D5','B4','G4','REST', 'A4','B4','C5','A4',
+      'G4','C5','E5','G5', 'F5','E5','D5','C5', 'D5','E5','D5','B4', 'C5','REST','REST','REST',
+      // Bメロ (49-80) 開放感あふれる旅の広がり
+      'F4','A4','C5','F5', 'E5','D5','C5','G4', 'A4','C5','E5','D5', 'C5','B4','A4','G4',
+      'F4','A4','D5','F5', 'G5','F5','E5','D5', 'E5','G5','C6','B5', 'A5','G5','F5','D5',
+      // サビ (81-112) 勇気と希望の最高潮テーマ
+      'C5','E5','G5','C6', 'B5','G5','A5','G5', 'F5','E5','D5','C5', 'D5','E5','F5','G5',
+      'A5','C6','B5','G5', 'A5','G5','F5','E5', 'F5','E5','D5','G5', 'C5','REST','REST','REST',
+      // アウトロ・ループ接続 (113-128)
+      'E5','D5','C5','G4', 'A4','B4','C5','D5', 'E5','G5','D5','F5', 'C5','REST','REST','REST'
+    ],
+    harmony: [
+      // イントロ
+      'E4','G4','E4','G4', 'F4','A4','F4','A4', 'G4','B4','G4','B4', 'E4','G4','E4','G4',
+      // Aメロ
+      'C4','E4','G4','E4', 'C4','E4','G4','E4', 'G3','B3','D4','B3', 'F3','A3','C4','A3',
+      'C4','E4','G4','E4', 'F4','A4','C5','A4', 'G3','B3','D4','B3', 'C4','E4','G4','E4',
+      // Bメロ
+      'F3','A3','C4','A3', 'C4','E4','G4','E4', 'F3','A3','C4','A3', 'G3','B3','D4','B3',
+      'F3','A3','C4','A3', 'G3','B3','D4','B3', 'C4','E4','G4','E4', 'G3','B3','D4','B3',
+      // サビ
+      'C4','E4','G4','E4', 'G3','B3','D4','B3', 'F3','A3','C4','A3', 'G3','B3','D4','B3',
+      'F3','A3','C4','A3', 'C4','E4','G4','E4', 'F3','A3','C4','A3', 'C4','E4','G4','E4',
+      // アウトロ
+      'C4','E4','G4','E4', 'F3','A3','C4','A3', 'G3','B3','D4','B3', 'C4','E4','G4','E4'
+    ],
+    bass: [
+      // イントロ
+      'C3','REST','G2','REST', 'F2','REST','C3','REST', 'G2','REST','D3','REST', 'C3','REST','G2','REST',
+      // Aメロ
+      'C3','C3','G2','C3', 'C3','C3','G2','C3', 'G2','G2','D3','G2', 'F2','F2','C3','F2',
+      'C3','C3','G2','C3', 'F2','F2','C3','F2', 'G2','G2','D3','G2', 'C3','C3','G2','C3',
+      // Bメロ
+      'F2','F2','C3','F2', 'C3','C3','G2','C3', 'F2','F2','C3','F2', 'G2','G2','D3','G2',
+      'F2','F2','C3','F2', 'G2','G2','D3','G2', 'C3','C3','G2','C3', 'G2','G2','D3','G2',
+      // サビ
+      'C3','C3','G2','C3', 'G2','G2','D3','G2', 'F2','F2','C3','F2', 'G2','G2','D3','G2',
+      'F2','F2','C3','F2', 'C3','C3','G2','C3', 'F2','F2','G2','G2', 'C3','C3','G2','C3',
+      // アウトロ
+      'C3','C3','G2','C3', 'F2','F2','C3','F2', 'G2','G2','D3','G2', 'C3','G2','C3','REST'
+    ],
+    rhythm: [
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','K','S','H'
+    ]
   },
-  // 💀 スケルトン族（墓場・不気味な骨の響き）
+
+  // ⚠️ ボス戦専用トラック（5Lvごと）- 『決戦の刻 〜 恐怖と死闘 〜』 (約51秒 / 128ステップ / 緊迫・恐怖のボスBGM)
+  boss: {
+    tempo: 200,
+    melodyType: 'sawtooth',
+    harmonyType: 'triangle',
+    bassType: 'sawtooth',
+    volume: 0.075,
+    melody: [
+      // イントロ (1-16) 緊迫の下降半音
+      'Eb4','D4','REST','C4', 'B3','REST','C4','Db4', 'Eb4','REST','D4','Db4', 'C4','REST','B3','REST',
+      // Aパート (17-48) 高速な恐怖のバトルリフ
+      'C4','Eb4','G4','Fs4', 'G4','Eb4','C4','B3', 'C4','Eb4','Fs4','G4', 'Ab4','G4','Fs4','Eb4',
+      'D4','F4','Ab4','G4', 'Ab4','F4','D4','Db4', 'C4','Eb4','G4','Bb4', 'A4','Ab4','G4','Fs4',
+      // Bパート (49-80) 怒涛のクライマックス・死闘
+      'Eb4','G4','Bb4','Eb5', 'D5','Bb4','G4','Eb4', 'Db4','F4','Ab4','Db5', 'C5','Ab4','F4','Db4',
+      'C4','Eb4','G4','C5', 'B4','G4','Eb4','C4', 'B3','D4','F4','B4', 'C5','D5','Eb5','D5',
+      // サビ (81-112) 運命をかけた最後の猛攻
+      'C5','Eb5','G5','C6', 'B5','Ab5','G5','Eb5', 'F5','Ab5','C6','Db6', 'C6','Bb5','Ab5','F5',
+      'G5','Bb5','D6','Eb6', 'D6','C6','B5','G5', 'Ab5','G5','Fs5','G5', 'Eb5','D5','C5','B4',
+      // アウトロ (113-128)
+      'C5','B4','Ab4','G4', 'Fs4','F4','Eb4','D4', 'C4','Eb4','G4','B4', 'C4','REST','REST','REST'
+    ],
+    harmony: [
+      'C3','Eb3','G3','Eb3', 'B2','D3','F3','D3', 'C3','Eb3','G3','Eb3', 'Ab2','C3','Eb3','C3',
+      'C3','Eb3','G3','Eb3', 'C3','Eb3','G3','Eb3', 'C3','Eb3','Fs3','Eb3', 'C3','Eb3','G3','Eb3',
+      'D3','F3','Ab3','F3', 'D3','F3','Ab3','F3', 'C3','Eb3','G3','Eb3', 'C3','Eb3','Fs3','Eb3',
+      'Eb3','G3','Bb3','G3', 'Eb3','G3','Bb3','G3', 'Db3','F3','Ab3','F3', 'Db3','F3','Ab3','F3',
+      'C3','Eb3','G3','Eb3', 'C3','Eb3','G3','Eb3', 'B2','D3','F3','D3', 'B2','D3','F3','D3',
+      'C3','Eb3','G3','Eb3', 'Ab2','C3','Eb3','C3', 'F2','Ab2','C3','Ab2', 'Db3','F3','Ab3','F3',
+      'G2','B2','D3','B2', 'G2','B2','D3','B2', 'Ab2','C3','Eb3','C3', 'G2','B2','D3','B2',
+      'C3','Eb3','G3','Eb3', 'B2','D3','F3','D3', 'C3','Eb3','G3','Eb3', 'C3','REST','REST','REST'
+    ],
+    bass: [
+      'C2','C2','C3','C2', 'B1','B1','B2','B1', 'C2','C2','C3','C2', 'Ab1','Ab1','Ab2','Ab1',
+      'C2','C2','C3','C2', 'C2','C2','C3','C2', 'Fs2','Fs2','C3','Fs2', 'G2','G2','D3','G2',
+      'D2','D2','D3','D2', 'D2','D2','D3','D2', 'C2','C2','C3','C2', 'Fs2','Fs2','C3','Fs2',
+      'Eb2','Eb2','Eb3','Eb2', 'Eb2','Eb2','Eb3','Eb2', 'Db2','Db2','Db3','Db2', 'Db2','Db2','Db3','Db2',
+      'C2','C2','C3','C2', 'C2','C2','C3','C2', 'B1','B1','B2','B1', 'B1','B1','B2','B1',
+      'C2','C2','C3','C2', 'Ab1','Ab1','Ab2','Ab1', 'F1','F1','F2','F1', 'Db2','Db2','Db3','Db2',
+      'G1','G1','G2','G1', 'G1','G1','G2','G1', 'Ab1','Ab1','Ab2','Ab1', 'G1','G1','G2','G1',
+      'C2','C2','C3','C2', 'B1','B1','B2','B1', 'C2','C2','G2','C2', 'C2','REST','REST','REST'
+    ],
+    rhythm: [
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','K','S','S', 'K','K','K','S'
+    ]
+  },
+
+  // 💀 スケルトン族（Lv.100〜199）- 『古城の亡霊 〜 地下迷宮の徘徊 〜』 (約48秒 / 96ステップ / ゴシック・マイナー調)
   skeleton: {
     tempo: 250,
     melodyType: 'triangle',
+    harmonyType: 'sine',
     bassType: 'sine',
-    volume: 0.070,
-    melody: ['D4', 'F4', 'A4', 'D5', 'Db5', 'A4', 'Bb4', 'A4', 'F4', 'G4', 'Ab4', 'F4', 'E4', 'F4', 'D4', 'REST'],
-    bass:   ['D2', 'REST', 'A2', 'REST', 'D2', 'F2', 'G2', 'A2', 'Bb2', 'REST', 'F2', 'REST', 'A2', 'REST', 'D2', 'REST']
+    volume: 0.075,
+    melody: [
+      'D4','F4','A4','D5', 'Db5','A4','Bb4','A4', 'F4','G4','Ab4','F4', 'E4','F4','D4','REST',
+      'D4','F4','A4','C5', 'B4','G4','A4','G4', 'E4','F4','G4','E4', 'Db4','E4','D4','REST',
+      'F4','A4','D5','F5', 'E5','D5','C5','A4', 'Bb4','D5','F5','E5', 'D5','Db5','D5','REST',
+      'G4','Bb4','D5','G5', 'F5','E5','D5','Bb4', 'A4','Db5','E5','G5', 'F5','E5','D5','Db5',
+      'D5','F5','A5','D6', 'Db6','A5','Bb5','A5', 'F5','G5','Ab5','F5', 'E5','F5','D5','REST',
+      'Bb4','A4','G4','F4', 'E4','D4','Db4','E4', 'D4','F4','A4','Db5', 'D4','REST','REST','REST'
+    ],
+    harmony: [
+      'D3','F3','A3','F3', 'Db3','E3','A3','E3', 'D3','F3','A3','F3', 'Db3','E3','A3','E3',
+      'D3','F3','A3','F3', 'G3','B3','D4','B3', 'C3','E3','G3','E3', 'A2','Db3','E3','Db3',
+      'D3','F3','A3','F3', 'A2','Db3','E3','Db3', 'G3','Bb3','D4','Bb3', 'A2','Db3','E3','Db3',
+      'G3','Bb3','D4','Bb3', 'D3','F3','A3','F3', 'A2','Db3','E3','Db3', 'D3','F3','A3','F3',
+      'D3','F3','A3','F3', 'Db3','E3','A3','E3', 'D3','F3','A3','F3', 'Db3','E3','A3','E3',
+      'G3','Bb3','D4','Bb3', 'A2','Db3','E3','Db3', 'D3','F3','A3','F3', 'D3','REST','REST','REST'
+    ],
+    bass: [
+      'D2','REST','A2','REST', 'Db2','REST','A2','REST', 'D2','REST','A2','REST', 'Db2','REST','A2','REST',
+      'D2','REST','A2','REST', 'G2','REST','D3','REST', 'C2','REST','G2','REST', 'A1','REST','E2','REST',
+      'D2','D2','A2','D2', 'A1','A1','E2','A1', 'G2','G2','D3','G2', 'A1','A1','E2','A1',
+      'G2','G2','D3','G2', 'D2','D2','A2','D2', 'A1','A1','E2','A1', 'D2','D2','A2','D2',
+      'D2','D2','A2','D2', 'Db2','Db2','A2','Db2', 'D2','D2','A2','D2', 'Db2','Db2','A2','Db2',
+      'G2','G2','D3','G2', 'A1','A1','E2','A1', 'D2','D2','A2','D2', 'D2','REST','REST','REST'
+    ],
+    rhythm: [
+      'H','REST','H','REST', 'H','REST','S','REST', 'H','REST','H','REST', 'H','REST','S','REST',
+      'H','REST','H','REST', 'H','REST','S','REST', 'H','REST','H','REST', 'H','REST','S','REST',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','K','S','H', 'K','REST','REST','REST'
+    ]
   },
-  // 👺 ゴブリン族（荒野・リズミカルな小鬼マーチ）
+
+  // 👺 ゴブリン族（Lv.200〜299）- 『荒野の盗賊団 〜 小鬼の突撃行進曲 〜』 (約44秒 / 96ステップ / リズミカルな行進曲)
   goblin: {
     tempo: 230,
     melodyType: 'triangle',
+    harmonyType: 'triangle',
     bassType: 'triangle',
-    volume: 0.072,
-    melody: ['E4', 'G4', 'E4', 'B4', 'A4', 'G4', 'E4', 'REST', 'G4', 'A4', 'B4', 'G4', 'E4', 'D4', 'E4', 'REST'],
-    bass:   ['E2', 'E2', 'B2', 'E2', 'A2', 'REST', 'E2', 'B2', 'E2', 'E2', 'B2', 'E2', 'D2', 'REST', 'E2', 'REST']
-  },
-  // 🗿 ゴーレム族（古代遺跡・重厚な石響き）
-  golem: {
-    tempo: 320,
-    melodyType: 'sine',
-    bassType: 'sine',
     volume: 0.075,
-    melody: ['A3', 'E4', 'A4', 'C5', 'B4', 'E4', 'G4', 'REST', 'F4', 'C4', 'E4', 'B3', 'D4', 'A3', 'C4', 'B3'],
-    bass:   ['A2', 'REST', 'A2', 'REST', 'E2', 'REST', 'E2', 'REST', 'F2', 'REST', 'C2', 'REST', 'D2', 'REST', 'E2', 'REST']
+    melody: [
+      'E4','G4','E4','B4', 'A4','G4','E4','REST', 'G4','A4','B4','G4', 'E4','D4','E4','REST',
+      'B4','D5','B4','E5', 'D5','B4','G4','REST', 'A4','B4','C5','A4', 'F4','E4','D4','REST',
+      'E4','E4','G4','G4', 'A4','A4','B4','REST', 'C5','B4','A4','G4', 'F4','G4','E4','REST',
+      'G4','B4','D5','G5', 'F5','D5','B4','REST', 'A4','C5','E5','A5', 'G5','E5','C5','REST',
+      'B4','D5','G5','Fs5', 'E5','D5','B4','REST', 'A4','B4','C5','A4', 'B4','A4','G4','Fs4',
+      'E4','G4','B4','E5', 'D5','B4','A4','G4', 'Fs4','G4','A4','B4', 'E4','REST','REST','REST'
+    ],
+    harmony: [
+      'E3','G3','B3','G3', 'A3','C4','E4','C4', 'E3','G3','B3','G3', 'B2','D3','Fs3','D3',
+      'G3','B3','D4','B3', 'E3','G3','B3','G3', 'A3','C4','E4','C4', 'D3','F3','A3','F3',
+      'E3','G3','B3','G3', 'A3','C4','E4','C4', 'A3','C4','E4','C4', 'E3','G3','B3','G3',
+      'G3','B3','D4','B3', 'G3','B3','D4','B3', 'A3','C4','E4','C4', 'A3','C4','E4','C4',
+      'G3','B3','D4','B3', 'E3','G3','B3','G3', 'A3','C4','E4','C4', 'B2','D3','Fs3','D3',
+      'E3','G3','B3','G3', 'A3','C4','E4','C4', 'B2','D3','Fs3','D3', 'E3','REST','REST','REST'
+    ],
+    bass: [
+      'E2','E2','B2','E2', 'A2','A2','E3','A2', 'E2','E2','B2','E2', 'B1','B1','Fs2','B1',
+      'G2','G2','D3','G2', 'E2','E2','B2','E2', 'A2','A2','E3','A2', 'D2','D2','A2','D2',
+      'E2','E2','B2','E2', 'A2','A2','E3','A2', 'A2','A2','E3','A2', 'E2','E2','B2','E2',
+      'G2','G2','D3','G2', 'G2','G2','D3','G2', 'A2','A2','E3','A2', 'A2','A2','E3','A2',
+      'G2','G2','D3','G2', 'E2','E2','B2','E2', 'A2','A2','E3','A2', 'B1','B1','Fs2','B1',
+      'E2','E2','B2','E2', 'A2','A2','E3','A2', 'B1','B1','Fs2','B1', 'E2','REST','REST','REST'
+    ],
+    rhythm: [
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','K','S','REST'
+    ]
   },
-  // 👿 デーモン族（魔王城・緊迫のダークシンセ）
-  demon: {
-    tempo: 240,
-    melodyType: 'sawtooth',
+
+  // 🗿 ゴーレム族（Lv.300〜399）- 『巨神の神殿 〜 太古の記憶 〜』 (約54秒 / 96ステップ / 荘厳・重厚な古代遺跡曲)
+  golem: {
+    tempo: 280,
+    melodyType: 'sine',
+    harmonyType: 'triangle',
     bassType: 'triangle',
-    volume: 0.065,
-    melody: ['Fs4', 'A4', 'C5', 'Fs5', 'F5', 'C5', 'D5', 'C5', 'A4', 'B4', 'C5', 'A4', 'G4', 'A4', 'Fs4', 'REST'],
-    bass:   ['Fs2', 'Fs2', 'C3', 'Fs2', 'D3', 'REST', 'C3', 'B2', 'Fs2', 'Fs2', 'C3', 'Fs2', 'G2', 'REST', 'Fs2', 'REST']
+    volume: 0.08,
+    melody: [
+      'A3','E4','A4','C5', 'B4','E4','G4','REST', 'F4','C4','E4','B3', 'D4','A3','C4','B3',
+      'A3','C4','E4','A4', 'G4','B3','D4','G4', 'F4','A3','C4','F4', 'E4','G3','B3','E4',
+      'C4','E4','G4','C5', 'B4','G4','E4','C4', 'D4','F4','A4','D5', 'C5','A4','F4','D4',
+      'E4','G4','B4','E5', 'D5','B4','G4','E4', 'F4','A4','C5','F5', 'E5','C5','A4','F4',
+      'A4','C5','E5','A5', 'G5','E5','D5','C5', 'F5','E5','D5','C5', 'B4','C5','B4','G4',
+      'A4','E4','C4','A3', 'F4','D4','B3','G3', 'A3','C4','E4','B3', 'A3','REST','REST','REST'
+    ],
+    harmony: [
+      'A2','C3','E3','C3', 'E2','G2','B2','G2', 'F2','A2','C3','A2', 'D2','F2','A2','F2',
+      'A2','C3','E3','C3', 'G2','B2','D3','B2', 'F2','A2','C3','A2', 'E2','G2','B2','G2',
+      'C3','E3','G3','E3', 'G2','B2','D3','B2', 'D3','F3','A3','F3', 'A2','C3','E3','C3',
+      'E3','G3','B3','G3', 'B2','D3','G3','D3', 'F3','A3','C4','A3', 'C3','E3','A3','E3',
+      'A2','C3','E3','C3', 'G2','B2','D3','B2', 'F2','A2','C3','A2', 'E2','G2','B2','G2',
+      'A2','C3','E3','C3', 'F2','A2','D3','A2', 'E2','G2','B2','G2', 'A2','REST','REST','REST'
+    ],
+    bass: [
+      'A1','REST','E2','REST', 'E1','REST','B1','REST', 'F1','REST','C2','REST', 'D1','REST','A1','REST',
+      'A1','REST','E2','REST', 'G1','REST','D2','REST', 'F1','REST','C2','REST', 'E1','REST','B1','REST',
+      'C2','C2','G2','C2', 'G1','G1','D2','G1', 'D2','D2','A2','D2', 'A1','A1','E2','A1',
+      'E2','E2','B2','E2', 'B1','B1','Fs2','B1', 'F2','F2','C3','F2', 'C2','C2','G2','C2',
+      'A1','A1','E2','A1', 'G1','G1','D2','G1', 'F1','F1','C2','F1', 'E1','E1','B1','E1',
+      'A1','A1','E2','A1', 'F1','F1','C2','F1', 'E1','E1','B1','E1', 'A1','REST','REST','REST'
+    ],
+    rhythm: [
+      'K','REST','REST','H', 'K','REST','S','REST', 'K','REST','REST','H', 'K','REST','S','REST',
+      'K','REST','REST','H', 'K','REST','S','REST', 'K','REST','REST','H', 'K','REST','S','REST',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','REST','REST','REST'
+    ]
   },
-  // 🐉 ドラゴン族（天空・壮大なファンファーレ）
+
+  // 👿 デーモン族（Lv.400〜499）- 『灼熱の魔王城 〜 迫りくる闇 〜』 (約44秒 / 96ステップ / 緊迫のダークシンセ)
+  demon: {
+    tempo: 230,
+    melodyType: 'sawtooth',
+    harmonyType: 'triangle',
+    bassType: 'sawtooth',
+    volume: 0.075,
+    melody: [
+      'Fs4','A4','C5','Fs5', 'F5','C5','D5','C5', 'A4','B4','C5','A4', 'G4','A4','Fs4','REST',
+      'Fs4','A4','D5','Fs5', 'E5','B4','C5','B4', 'G4','A4','B4','G4', 'F4','G4','E4','REST',
+      'A4','C5','Eb5','A5', 'G5','Eb5','C5','A4', 'Bb4','D5','F5','Bb5', 'A5','F5','D5','Bb4',
+      'C5','Eb5','G5','C6', 'B5','G5','Eb5','C5', 'Db5','F5','Ab5','Db6', 'C6','Ab5','F5','Db5',
+      'D5','Fs5','A5','D6', 'C6','A5','Fs5','D5', 'Eb5','G5','Bb5','Eb6', 'D6','Bb5','G5','Eb5',
+      'Fs5','E5','D5','C5', 'B4','A4','G4','F4', 'E4','Fs4','G4','A4', 'Fs4','REST','REST','REST'
+    ],
+    harmony: [
+      'Fs3','A3','C4','A3', 'F3','A3','D4','A3', 'Fs3','A3','C4','A3', 'F3','G3','B3','G3',
+      'Fs3','A3','D4','A3', 'E3','G3','B3','G3', 'E3','G3','B3','G3', 'E3','G3','C4','G3',
+      'A2','C3','Eb3','C3', 'A2','C3','Eb3','C3', 'Bb2','D3','F3','D3', 'Bb2','D3','F3','D3',
+      'C3','Eb3','G3','Eb3', 'C3','Eb3','G3','Eb3', 'Db3','F3','Ab3','F3', 'Db3','F3','Ab3','F3',
+      'D3','Fs3','A3','Fs3', 'D3','Fs3','A3','Fs3', 'Eb3','G3','Bb3','G3', 'Eb3','G3','Bb3','G3',
+      'Fs3','A3','C4','A3', 'G3','B3','D4','B3', 'A3','Db4','E4','Db4', 'Fs3','REST','REST','REST'
+    ],
+    bass: [
+      'Fs2','Fs2','C3','Fs2', 'F2','F2','D3','F2', 'Fs2','Fs2','C3','Fs2', 'F2','F2','B2','F2',
+      'Fs2','Fs2','D3','Fs2', 'E2','E2','B2','E2', 'E2','E2','B2','E2', 'E2','E2','C3','E2',
+      'A1','A1','Eb2','A1', 'A1','A1','Eb2','A1', 'Bb1','Bb1','F2','Bb1', 'Bb1','Bb1','F2','Bb1',
+      'C2','C2','G2','C2', 'C2','C2','G2','C2', 'Db2','Db2','Ab2','Db2', 'Db2','Db2','Ab2','Db2',
+      'D2','D2','A2','D2', 'D2','D2','A2','D2', 'Eb2','Eb2','Bb2','Eb2', 'Eb2','Eb2','Bb2','Eb2',
+      'Fs2','Fs2','C3','Fs2', 'G2','G2','D3','G2', 'A2','A2','E3','A2', 'Fs2','REST','REST','REST'
+    ],
+    rhythm: [
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','K','S','H', 'K','H','S','H', 'K','K','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','K','S','H', 'K','K','K','REST'
+    ]
+  },
+
+  // 🐉 ドラゴン族（Lv.500〜599）- 『覇竜の飛翔 〜 天空の神話 〜』 (約48秒 / 96ステップ / 壮大ファンファーレ)
   dragon: {
     tempo: 250,
     melodyType: 'triangle',
+    harmonyType: 'triangle',
     bassType: 'sawtooth',
-    volume: 0.070,
-    melody: ['G4', 'B4', 'D5', 'G5', 'Fs5', 'D5', 'E5', 'D5', 'B4', 'C5', 'D5', 'B4', 'A4', 'B4', 'G4', 'REST'],
-    bass:   ['G2', 'G2', 'D3', 'G2', 'C3', 'REST', 'G2', 'D3', 'G2', 'G2', 'D3', 'G2', 'F2', 'REST', 'G2', 'REST']
+    volume: 0.08,
+    melody: [
+      'G4','B4','D5','G5', 'Fs5','D5','E5','D5', 'B4','C5','D5','B4', 'A4','B4','G4','REST',
+      'G4','C5','E5','G5', 'Fs5','E5','D5','B4', 'C5','D5','E5','C5', 'A4','G4','Fs4','REST',
+      'D5','Fs5','A5','D6', 'C6','A5','B5','A5', 'G5','A5','B5','G5', 'E5','Fs5','G5','REST',
+      'E5','G5','B5','E6', 'D6','B5','C6','B5', 'A5','B5','C6','A5', 'Fs5','G5','A5','REST',
+      'G5','B5','D6','G6', 'Fs6','D6','E6','D6', 'C6','B5','A5','G5', 'Fs5','G5','A5','D5',
+      'B5','A5','G5','Fs5', 'E5','D5','C5','B4', 'A4','B4','C5','D5', 'G4','REST','REST','REST'
+    ],
+    harmony: [
+      'G3','B3','D4','B3', 'D3','Fs3','A3','Fs3', 'E3','G3','B3','G3', 'D3','Fs3','A3','Fs3',
+      'C3','E3','G3','E3', 'G3','B3','D4','B3', 'C3','E3','G3','E3', 'D3','Fs3','A3','Fs3',
+      'D3','Fs3','A3','Fs3', 'A2','Db3','E3','Db3', 'G3','B3','D4','B3', 'C3','E3','G3','E3',
+      'E3','G3','B3','G3', 'B2','D3','Fs3','D3', 'A3','C4','E4','C4', 'D3','Fs3','A3','Fs3',
+      'G3','B3','D4','B3', 'D3','Fs3','A3','Fs3', 'C3','E3','G3','E3', 'D3','Fs3','A3','Fs3',
+      'G3','B3','D4','B3', 'C3','E3','G3','E3', 'D3','Fs3','A3','Fs3', 'G3','REST','REST','REST'
+    ],
+    bass: [
+      'G2','G2','D3','G2', 'D2','D2','A2','D2', 'E2','E2','B2','E2', 'D2','D2','A2','D2',
+      'C2','C2','G2','C2', 'G2','G2','D3','G2', 'C2','C2','G2','C2', 'D2','D2','A2','D2',
+      'D2','D2','A2','D2', 'A1','A1','E2','A1', 'G2','G2','D3','G2', 'C2','C2','G2','C2',
+      'E2','E2','B2','E2', 'B1','B1','Fs2','B1', 'A2','A2','E3','A2', 'D2','D2','A2','D2',
+      'G2','G2','D3','G2', 'D2','D2','A2','D2', 'C2','C2','G2','C2', 'D2','D2','A2','D2',
+      'G2','G2','D3','G2', 'C2','C2','G2','C2', 'D2','D2','A2','D2', 'G2','REST','REST','REST'
+    ],
+    rhythm: [
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','K','S','REST'
+    ]
   },
-  // 🌌 星辰の邪神（宇宙・未知のアンビエント空間）
+
+  // 🌌 星辰の邪神（Lv.600〜699）- 『星辰の深淵 〜 狂気のコズミック 〜』 (約54秒 / 96ステップ / 宇宙アンビエント)
   cosmic: {
-    tempo: 360,
+    tempo: 280,
     melodyType: 'sine',
-    bassType: 'sine',
-    volume: 0.075,
-    melody: ['C4', 'E4', 'Ab4', 'C5', 'E5', 'Ab4', 'E4', 'REST', 'Db4', 'F4', 'A4', 'Db5', 'F5', 'A4', 'F4', 'REST'],
-    bass:   ['C2', 'REST', 'REST', 'REST', 'Ab2', 'REST', 'REST', 'REST', 'Db2', 'REST', 'REST', 'REST', 'A2', 'REST', 'REST', 'REST']
-  },
-  // 👑 超越神（神界・荘厳な天上のハープ）
-  god: {
-    tempo: 290,
-    melodyType: 'sine',
+    harmonyType: 'sine',
     bassType: 'triangle',
-    volume: 0.072,
-    melody: ['E4', 'G4', 'B4', 'E5', 'D5', 'B4', 'C5', 'B4', 'G4', 'A4', 'B4', 'G4', 'Fs4', 'G4', 'E4', 'REST'],
-    bass:   ['E2', 'REST', 'B2', 'REST', 'C3', 'REST', 'G2', 'REST', 'A2', 'REST', 'E2', 'REST', 'B2', 'REST', 'E2', 'REST']
+    volume: 0.08,
+    melody: [
+      'C4','E4','Ab4','C5', 'E5','Ab4','E4','REST', 'Db4','F4','A4','Db5', 'F5','A4','F4','REST',
+      'D4','Fs4','Bb4','D5', 'Fs5','Bb4','Fs4','REST', 'Eb4','G4','B4','Eb5', 'G5','B4','G4','REST',
+      'C5','E5','Ab5','C6', 'B5','Ab5','E5','C5', 'Db5','F5','A5','Db6', 'C6','A5','F5','Db5',
+      'Eb5','G5','B5','Eb6', 'D6','B5','G5','Eb5', 'F5','A5','Db6','F6', 'E6','Db6','A5','F5',
+      'Ab5','C6','E6','Ab6', 'G6','E6','C6','Ab5', 'A5','Db6','F6','A6', 'Ab6','F6','Db6','A5',
+      'C6','Ab5','E5','C5', 'Db5','A4','F4','Db4', 'C4','E4','Ab4','C5', 'C4','REST','REST','REST'
+    ],
+    harmony: [
+      'C3','E3','Ab3','E3', 'C3','E3','Ab3','E3', 'Db3','F3','A3','F3', 'Db3','F3','A3','F3',
+      'D3','Fs3','Bb3','Fs3', 'D3','Fs3','Bb3','Fs3', 'Eb3','G3','B3','G3', 'Eb3','G3','B3','G3',
+      'C3','E3','Ab3','E3', 'C3','E3','Ab3','E3', 'Db3','F3','A3','F3', 'Db3','F3','A3','F3',
+      'Eb3','G3','B3','G3', 'Eb3','G3','B3','G3', 'F3','A3','Db4','A3', 'F3','A3','Db4','A3',
+      'Ab3','C4','E4','C4', 'Ab3','C4','E4','C4', 'A3','Db4','F4','Db4', 'A3','Db4','F4','Db4',
+      'C3','E3','Ab3','E3', 'Db3','F3','A3','F3', 'C3','E3','Ab3','E3', 'C3','REST','REST','REST'
+    ],
+    bass: [
+      'C2','REST','REST','REST', 'Ab1','REST','REST','REST', 'Db2','REST','REST','REST', 'A1','REST','REST','REST',
+      'D2','REST','REST','REST', 'Bb1','REST','REST','REST', 'Eb2','REST','REST','REST', 'B1','REST','REST','REST',
+      'C2','C2','G2','C2', 'Ab1','Ab1','Eb2','Ab1', 'Db2','Db2','Ab2','Db2', 'A1','A1','E2','A1',
+      'Eb2','Eb2','Bb2','Eb2', 'B1','B1','Fs2','B1', 'F2','F2','C3','F2', 'Db2','Db2','Ab2','Db2',
+      'Ab1','Ab1','Eb2','Ab1', 'E1','E1','B1','E1', 'A1','A1','E2','A1', 'F1','F1','C2','F1',
+      'C2','C2','G2','C2', 'Db2','Db2','Ab2','Db2', 'C2','G1','C2','REST', 'C2','REST','REST','REST'
+    ],
+    rhythm: [
+      'H','REST','H','REST', 'H','REST','H','REST', 'H','REST','H','REST', 'H','REST','H','REST',
+      'H','REST','H','REST', 'H','REST','H','REST', 'H','REST','H','REST', 'H','REST','H','REST',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','REST','REST','REST'
+    ]
+  },
+
+  // 👑 超越神（Lv.700〜）- 『神々の黄昏 〜 究極の聖域 〜』 (約54秒 / 96ステップ / 荘厳な天上界讃美歌)
+  god: {
+    tempo: 280,
+    melodyType: 'sine',
+    harmonyType: 'sine',
+    bassType: 'triangle',
+    volume: 0.08,
+    melody: [
+      'E4','G4','B4','E5', 'D5','B4','C5','B4', 'G4','A4','B4','G4', 'Fs4','G4','E4','REST',
+      'E4','A4','C5','E5', 'D5','C5','B4','G4', 'A4','B4','C5','A4', 'Fs4','E4','Ds4','REST',
+      'G4','B4','D5','G5', 'Fs5','D5','E5','D5', 'B4','C5','D5','B4', 'A4','B4','G4','REST',
+      'A4','C5','E5','A5', 'G5','E5','Fs5','E5', 'C5','D5','E5','C5', 'B4','A4','Gs4','REST',
+      'E5','G5','B5','E6', 'D6','B5','C6','B5', 'G5','A5','B5','G5', 'Fs5','G5','E5','REST',
+      'C5','B4','A4','G4', 'Fs4','E4','Ds4','Fs4', 'E4','G4','B4','Ds5', 'E4','REST','REST','REST'
+    ],
+    harmony: [
+      'E3','G3','B3','G3', 'B2','D3','G3','D3', 'C3','E3','G3','E3', 'B2','D3','Fs3','D3',
+      'A2','C3','E3','C3', 'E2','G2','B2','G2', 'F2','A2','C3','A2', 'B2','Ds3','Fs3','Ds3',
+      'G2','B2','D3','B2', 'D2','Fs2','A2','Fs2', 'E2','G2','B2','G2', 'D2','Fs2','A2','Fs2',
+      'A2','C3','E3','C3', 'E2','G2','B2','G2', 'F2','A2','C3','A2', 'E2','Gs2','B2','Gs2',
+      'E3','G3','B3','G3', 'B2','D3','G3','D3', 'C3','E3','G3','E3', 'B2','D3','Fs3','D3',
+      'A2','C3','E3','C3', 'B2','Ds3','Fs3','Ds3', 'E2','G2','B2','G2', 'E3','REST','REST','REST'
+    ],
+    bass: [
+      'E2','REST','B2','REST', 'G2','REST','D3','REST', 'C2','REST','G2','REST', 'B1','REST','Fs2','REST',
+      'A1','REST','E2','REST', 'E1','REST','B1','REST', 'F1','REST','C2','REST', 'B1','REST','Fs2','REST',
+      'G1','G1','D2','G1', 'D2','D2','A2','D2', 'E2','E2','B2','E2', 'D2','D2','A2','D2',
+      'A1','A1','E2','A1', 'E1','E1','B1','E1', 'F1','F1','C2','F1', 'E1','E1','B1','E1',
+      'E2','E2','B2','E2', 'G2','G2','D3','G2', 'C2','C2','G2','C2', 'B1','B1','Fs2','B1',
+      'A1','A1','E2','A1', 'B1','B1','Fs2','B1', 'E1','E1','B1','E1', 'E2','REST','REST','REST'
+    ],
+    rhythm: [
+      'H','REST','H','REST', 'H','REST','H','REST', 'H','REST','H','REST', 'H','REST','H','REST',
+      'H','REST','H','REST', 'H','REST','H','REST', 'H','REST','H','REST', 'H','REST','H','REST',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','H','S','H',
+      'K','H','S','H', 'K','H','S','H', 'K','H','S','H', 'K','REST','REST','REST'
+    ]
   }
 };
 
@@ -706,7 +1030,7 @@ class SoundController {
     if (!this.bgmEnabled) return;
 
     const track = BGM_TRACKS[this.currentTrack] || BGM_TRACKS.slime;
-    const interval = track.tempo || 260;
+    const interval = track.tempo || 220;
 
     this.bgmTimer = setInterval(() => {
       this.tickBgmStep();
@@ -735,30 +1059,83 @@ class SoundController {
     if (!this.bgmEnabled || !this.ctx || this.ctx.state === 'suspended') return;
 
     const track = BGM_TRACKS[this.currentTrack] || BGM_TRACKS.slime;
-    const step = this.bgmStep % track.melody.length;
-    const melNote = track.melody[step];
-    const bassNote = track.bass[step % track.bass.length];
-    const dur = (track.tempo / 1000) * 0.85;
-    
-    // スライダー音量を乗算して反映
-    const baseVol = track.volume || 0.075;
+    const len = track.melody.length;
+    const step = this.bgmStep % len;
+
+    const melNote = track.melody ? track.melody[step] : null;
+    const harmNote = track.harmony ? track.harmony[step % track.harmony.length] : null;
+    const bassNote = track.bass ? track.bass[step % track.bass.length] : null;
+    const rhythmType = track.rhythm ? track.rhythm[step % track.rhythm.length] : null;
+
+    const dur = (track.tempo / 1000) * 0.9;
+    const baseVol = track.volume || 0.08;
     const vol = baseVol * this.bgmVolume;
 
-    if (vol <= 0.0001) {
-      this.bgmStep++;
-      return;
-    }
-
-    // メロディ発音
-    if (melNote && melNote !== 'REST' && BGM_NOTES[melNote]) {
-      this.playSynthNote(BGM_NOTES[melNote], track.melodyType || 'sine', dur, vol);
-    }
-    // ベース発音
-    if (bassNote && bassNote !== 'REST' && BGM_NOTES[bassNote]) {
-      this.playSynthNote(BGM_NOTES[bassNote], track.bassType || 'triangle', dur * 1.1, vol * 0.85);
+    if (vol > 0.0001) {
+      // 1. 主旋律 (Lead Melody)
+      if (melNote && melNote !== 'REST' && BGM_NOTES[melNote]) {
+        this.playSynthNote(BGM_NOTES[melNote], track.melodyType || 'triangle', dur, vol);
+      }
+      // 2. 和音・対旋律 (Harmony / Chord Arpeggio)
+      if (harmNote && harmNote !== 'REST' && BGM_NOTES[harmNote]) {
+        this.playSynthNote(BGM_NOTES[harmNote], track.harmonyType || 'sine', dur * 0.95, vol * 0.65);
+      }
+      // 3. ベースライン (Bass)
+      if (bassNote && bassNote !== 'REST' && BGM_NOTES[bassNote]) {
+        this.playSynthNote(BGM_NOTES[bassNote], track.bassType || 'triangle', dur * 1.1, vol * 0.85);
+      }
+      // 4. リズムパーカッション (Percussion: Kick/Snare/HiHat)
+      if (rhythmType && rhythmType !== 'REST' && rhythmType !== '.') {
+        this.playDrumSound(rhythmType, 0.05);
+      }
     }
 
     this.bgmStep++;
+  }
+
+  playDrumSound(type, gainVal = 0.05) {
+    if (!this.bgmEnabled || !this.ctx || this.ctx.state !== 'running') return;
+    const actualGain = gainVal * this.bgmVolume;
+    if (actualGain <= 0.0001) return;
+
+    try {
+      const now = this.ctx.currentTime;
+      if (type === 'K') { // バスドラム (Kick)
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.frequency.setValueAtTime(110, now);
+        osc.frequency.exponentialRampToValueAtTime(0.01, now + 0.12);
+        gain.gain.setValueAtTime(actualGain * 1.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      } else if (type === 'S') { // スネアドラム (Snare)
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.exponentialRampToValueAtTime(30, now + 0.08);
+        gain.gain.setValueAtTime(actualGain * 0.8, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.08);
+      } else if (type === 'H') { // ハイハット (HiHat)
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(1000 + Math.random() * 400, now);
+        gain.gain.setValueAtTime(actualGain * 0.35, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.035);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.035);
+      }
+    } catch (e) {}
   }
 
   playSynthNote(freq, type = 'sine', duration = 0.2, gainVal = 0.05) {
@@ -771,7 +1148,7 @@ class SoundController {
       osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
 
       gain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(gainVal, this.ctx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(gainVal, this.ctx.currentTime + 0.015);
       gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
 
       osc.connect(gain);
