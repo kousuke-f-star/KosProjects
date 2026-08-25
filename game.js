@@ -1352,7 +1352,7 @@ class Game {
       skills: {},
       rebirthSkills: {},     // 習得した古代の秘術 { skillId: level }
       pets: {},              // 所持ペット { petId: { level: 1 } }
-      equippedPet: null,     // 装備中のペットID (null or "pet_slime" など)
+      equippedPets: [],      // 装備中のペットID配列 (最大2体まで)
       meteorRushTimer: 120,  // ☄️ 120秒周期 20秒間の隕石ラッシュカウントダウン
       meteorRushActiveTime: 0,// 隕石ラッシュ発動中の残り時間
       meteorRushParticleTimer: 0,
@@ -1482,29 +1482,46 @@ class Game {
     return total;
   }
 
-  // クリック攻撃力の計算（基礎 + 剣術鍛錬 + パッシブ + DPS連動ボーナス + 隕石ラッシュ倍率）
+  // 🐾 装備中ペットリストの取得（最大2体）
+  getEquippedPetsList() {
+    if (Array.isArray(this.state.equippedPets)) {
+      return this.state.equippedPets.filter(id => id && this.state.pets && this.state.pets[id]);
+    }
+    if (this.state.equippedPet && this.state.pets && this.state.pets[this.state.equippedPet]) {
+      return [this.state.equippedPet];
+    }
+    return [];
+  }
+
+  // 🐾 ペット効果の合算計算（装備中の全ペットのボーナスを合算！）
   getPetBonus(type) {
-    if (!this.state.equippedPet || !this.state.pets || !this.state.pets[this.state.equippedPet]) return 0;
-    const petId = this.state.equippedPet;
-    const petLvl = this.state.pets[petId].level || 1;
-    const petDef = PETS_DATA.find(p => p.id === petId);
-    if (!petDef) return 0;
+    const equippedList = this.getEquippedPetsList();
+    if (equippedList.length === 0) return 0;
 
-    const val = petDef.baseVal + (petLvl - 1) * petDef.perLevel;
+    let totalBonus = 0;
 
-    if (type === "click" && petId === "pet_slime") return val * 0.01; // +5% (+2%/Lv)
-    if (type === "crit_chance" && petId === "pet_skeleton") return val * 0.01; // +3% (+1%/Lv)
-    if (type === "crit_mult" && petId === "pet_skeleton") return 0.15 + (petLvl - 1) * 0.05; // +0.15倍 (+0.05倍/Lv)
-    if (type === "gold" && petId === "pet_goblin") return val * 0.01; // +6% (+2%/Lv)
-    if (type === "dps" && petId === "pet_golem") return val * 0.01; // +5% (+2%/Lv)
-    if (type === "boss_dmg" && petId === "pet_demon") return val * 0.01; // +8% (+3%/Lv)
-    if (type === "all_dmg" && petId === "pet_dragon") return val * 0.01; // +6% (+2%/Lv)
-    if (type === "meteor_cd" && petId === "pet_dragon") return 4 + (petLvl - 1) * 1; // -4秒 (-1秒/Lv)
-    if (type === "sp_bonus_chance" && petId === "pet_cosmic") return val * 0.01; // +5% (+2%/Lv)
-    if (type === "all_dmg" && petId === "pet_god") return val * 0.01; // +8% (+3%/Lv)
-    if (type === "gold" && petId === "pet_god") return val * 0.01; // +8% (+3%/Lv)
+    equippedList.forEach(petId => {
+      if (!this.state.pets || !this.state.pets[petId]) return;
+      const petLvl = this.state.pets[petId].level || 1;
+      const petDef = PETS_DATA.find(p => p.id === petId);
+      if (!petDef) return;
 
-    return 0;
+      const val = petDef.baseVal + (petLvl - 1) * petDef.perLevel;
+
+      if (type === "click" && petId === "pet_slime") totalBonus += val * 0.01; // +5% (+2%/Lv)
+      if (type === "crit_chance" && petId === "pet_skeleton") totalBonus += val * 0.01; // +3% (+1%/Lv)
+      if (type === "crit_mult" && petId === "pet_skeleton") totalBonus += 0.15 + (petLvl - 1) * 0.05; // +0.15倍 (+0.05倍/Lv)
+      if (type === "gold" && petId === "pet_goblin") totalBonus += val * 0.01; // +6% (+2%/Lv)
+      if (type === "dps" && petId === "pet_golem") totalBonus += val * 0.01; // +5% (+2%/Lv)
+      if (type === "boss_dmg" && petId === "pet_demon") totalBonus += val * 0.01; // +8% (+3%/Lv)
+      if (type === "all_dmg" && petId === "pet_dragon") totalBonus += val * 0.01; // +6% (+2%/Lv)
+      if (type === "meteor_cd" && petId === "pet_dragon") totalBonus += 4 + (petLvl - 1) * 1; // -4秒 (-1秒/Lv)
+      if (type === "sp_bonus_chance" && petId === "pet_cosmic") totalBonus += val * 0.01; // +5% (+2%/Lv)
+      if (type === "all_dmg" && petId === "pet_god") totalBonus += val * 0.01; // +8% (+3%/Lv)
+      if (type === "gold" && petId === "pet_god") totalBonus += val * 0.01; // +8% (+3%/Lv)
+    });
+
+    return totalBonus;
   }
 
   getClickPower() {
@@ -2625,8 +2642,11 @@ class Game {
     const isNew = !this.state.pets[petDef.id];
     if (isNew) {
       this.state.pets[petDef.id] = { level: 1 };
-      if (!this.state.equippedPet) {
-        this.state.equippedPet = petDef.id;
+      if (!Array.isArray(this.state.equippedPets)) {
+        this.state.equippedPets = this.state.equippedPet ? [this.state.equippedPet] : [];
+      }
+      if (this.state.equippedPets.length < 2 && !this.state.equippedPets.includes(petDef.id)) {
+        this.state.equippedPets.push(petDef.id);
       }
       this.showToast(`✨ なかまになりたそうにこちらを見ている…！\nペット「${petDef.icon} ${petDef.name}」を仲間にした！🎉`);
       this.sound.playLevelUp();
@@ -3257,10 +3277,11 @@ class Game {
     if (!container) return;
 
     if (!this.state.pets) this.state.pets = {};
+    const equippedList = this.getEquippedPetsList();
 
     container.innerHTML = PETS_DATA.map(pet => {
       const owned = this.state.pets[pet.id];
-      const isEquipped = this.state.equippedPet === pet.id;
+      const isEquipped = equippedList.includes(pet.id);
       const lvl = owned ? (owned.level || 1) : 0;
       const currentVal = pet.baseVal + Math.max(0, lvl - 1) * pet.perLevel;
       let effectText = pet.effectDesc.replace("{val}", currentVal);
@@ -3306,10 +3327,10 @@ class Game {
           <div>
             ${isEquipped 
               ? `<button class="pet-equip-btn equipped" data-pet-unequip="${pet.id}">
-                   ✅ 装備中
+                   ✅ 外す
                  </button>`
               : `<button class="pet-equip-btn" data-pet-equip="${pet.id}">
-                   🐾 装備する
+                   🐾 装備する (${equippedList.length}/2)
                  </button>`
             }
           </div>
@@ -3322,19 +3343,45 @@ class Game {
     });
 
     container.querySelectorAll("[data-pet-unequip]").forEach(btn => {
-      btn.onclick = () => this.equipPet(null);
+      btn.onclick = () => this.unequipPet(btn.dataset.petUnequip);
     });
   }
 
   equipPet(petId) {
-    this.state.equippedPet = petId;
-    this.sound.playBuy();
-    if (petId) {
-      const petDef = PETS_DATA.find(p => p.id === petId);
-      this.showToast(`🐾 ペット「${petDef.icon} ${petDef.name}」をお供に設定しました！✨`);
-    } else {
-      this.showToast(`🐾 ペットの装備を解除しました。`);
+    if (!Array.isArray(this.state.equippedPets)) {
+      this.state.equippedPets = this.state.equippedPet ? [this.state.equippedPet] : [];
     }
+
+    if (this.state.equippedPets.includes(petId)) {
+      return;
+    }
+
+    if (this.state.equippedPets.length >= 2) {
+      this.showToast(`⚠️ ペットは最大2体までしか装備できません！先にどちらかを外してください。`);
+      return;
+    }
+
+    this.state.equippedPets.push(petId);
+    this.sound.playBuy();
+    const petDef = PETS_DATA.find(p => p.id === petId);
+    this.showToast(`🐾 ペット「${petDef.icon} ${petDef.name}」をお供に装備しました！ (現在 ${this.state.equippedPets.length}/2体)✨`);
+
+    this.renderPetsTab();
+    this.renderEquippedPetInArena();
+    this.renderCombatStats();
+    this.saveGame();
+  }
+
+  unequipPet(petId) {
+    if (!Array.isArray(this.state.equippedPets)) {
+      this.state.equippedPets = this.state.equippedPet ? [this.state.equippedPet] : [];
+    }
+
+    this.state.equippedPets = this.state.equippedPets.filter(id => id !== petId);
+    this.sound.playBuy();
+    const petDef = PETS_DATA.find(p => p.id === petId);
+    this.showToast(`🐾 ペット「${petDef ? petDef.name : ''}」の装備を解除しました。(残り ${this.state.equippedPets.length}/2体)`);
+
     this.renderPetsTab();
     this.renderEquippedPetInArena();
     this.renderCombatStats();
@@ -3345,32 +3392,37 @@ class Game {
     const arena = document.getElementById("slime-arena");
     if (!arena) return;
 
-    let petEl = document.getElementById("arena-pet-companion");
+    // 既存のペット要素を削除
+    arena.querySelectorAll(".arena-pet-companion").forEach(el => el.remove());
 
-    if (!this.state.equippedPet || !this.state.pets || !this.state.pets[this.state.equippedPet]) {
-      if (petEl) petEl.remove();
-      return;
-    }
+    const equippedList = this.getEquippedPetsList();
+    if (equippedList.length === 0) return;
 
-    const petDef = PETS_DATA.find(p => p.id === this.state.equippedPet);
-    if (!petDef) {
-      if (petEl) petEl.remove();
-      return;
-    }
+    // 1体または2体を配置（1体目・2体目で重ならないように左右に配置）
+    const positions = [
+      { left: "14%", bottom: "28px", animDelay: "0s" },
+      { left: "28%", bottom: "42px", animDelay: "0.8s" }
+    ];
 
-    const petLvl = this.state.pets[this.state.equippedPet].level || 1;
+    equippedList.forEach((petId, idx) => {
+      const petDef = PETS_DATA.find(p => p.id === petId);
+      if (!petDef || !this.state.pets || !this.state.pets[petId]) return;
 
-    if (!petEl) {
-      petEl = document.createElement("div");
-      petEl.id = "arena-pet-companion";
+      const petLvl = this.state.pets[petId].level || 1;
+      const pos = positions[idx] || positions[0];
+
+      const petEl = document.createElement("div");
       petEl.className = "arena-pet-companion";
-      arena.appendChild(petEl);
-    }
+      petEl.style.left = pos.left;
+      petEl.style.bottom = pos.bottom;
+      petEl.style.animationDelay = pos.animDelay;
 
-    petEl.innerHTML = `
-      <span>${petDef.icon}</span>
-      <span class="pet-name-tag">Lv.${petLvl} ${petDef.name}</span>
-    `;
+      petEl.innerHTML = `
+        <span>${petDef.icon}</span>
+        <span class="pet-name-tag">Lv.${petLvl} ${petDef.name}</span>
+      `;
+      arena.appendChild(petEl);
+    });
   }
 
   renderActiveSkillBar() {
@@ -3915,9 +3967,12 @@ class Game {
         this.state.pets[pId].level = Number(this.state.pets[pId].level) || 1;
       }
     }
-    if (this.state.equippedPet && !this.state.pets[this.state.equippedPet]) {
-      this.state.equippedPet = null;
+
+    // equippedPet (単一) から equippedPets (配列) への安全な自動移行とサニタイズ（最大2体）
+    if (!Array.isArray(this.state.equippedPets)) {
+      this.state.equippedPets = this.state.equippedPet && this.state.pets[this.state.equippedPet] ? [this.state.equippedPet] : [];
     }
+    this.state.equippedPets = this.state.equippedPets.filter(id => id && this.state.pets && this.state.pets[id]).slice(0, 2);
 
     this.state.activeCooldowns = this.state.activeCooldowns || {};
     ['skill_berserk', 'skill_goldrush', 'skill_meteor', 'skill_cyclone'].forEach(sId => {
