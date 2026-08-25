@@ -1,0 +1,1345 @@
+:root {
+  --bg-main: #0b0f19;
+  --bg-card: rgba(22, 30, 46, 0.88);
+  --bg-card-hover: rgba(30, 41, 59, 0.95);
+  --border-color: rgba(255, 255, 255, 0.12);
+  --border-gold: rgba(251, 191, 36, 0.4);
+  --border-purple: rgba(168, 85, 247, 0.5);
+  --text-main: #f8fafc;
+  --text-sub: #94a3b8;
+  --accent-gold: #fbbf24;
+  --accent-gold-dark: #d97706;
+  --accent-green: #22c55e;
+  --accent-blue: #38bdf8;
+  --accent-purple: #a855f7;
+  --accent-purple-light: #d8b4fe;
+  --accent-red: #ef4444;
+  --hp-bar: #ef4444;
+  --hp-bg: #1e293b;
+  --font-sans: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  --shadow-glow: 0 0 25px rgba(56, 189, 248, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-main);
+  background-image: 
+    radial-gradient(at 10% 10%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+    radial-gradient(at 90% 90%, rgba(168, 85, 247, 0.15) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(11, 15, 25, 1) 0px, rgba(15, 23, 42, 0.9) 100%);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* ヘッダー */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: rgba(11, 15, 25, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  font-size: 1.8rem;
+  animation: bounce-small 2s infinite ease-in-out;
+}
+
+.logo-area h1 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #38bdf8, #a855f7, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.06em;
+}
+
+.header-stats {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.gold-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  padding: 6px 14px;
+  border-radius: 999px;
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.2);
+}
+
+.gold-icon {
+  font-size: 1.2rem;
+  animation: spin-slow 8s linear infinite;
+}
+
+.gold-value {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.gps-value {
+  font-size: 0.75rem;
+  color: var(--text-sub);
+}
+
+/* 転生の水晶表示バッジ */
+.crystal-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(56, 189, 248, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  padding: 6px 14px;
+  border-radius: 999px;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+}
+
+.crystal-icon {
+  font-size: 1.2rem;
+  animation: magic-float 2.5s infinite ease-in-out;
+}
+
+.crystal-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #7dd3fc;
+}
+
+/* 古代スキルポイント(SP)表示バッジ */
+.soul-display {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(168, 85, 247, 0.18);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  padding: 6px 12px;
+  border-radius: 999px;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
+}
+
+.soul-icon {
+  font-size: 1.2rem;
+  animation: pulse-glow 3s infinite ease-in-out;
+}
+
+.soul-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--accent-purple-light);
+}
+
+.header-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* メインレイアウト */
+.game-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1320px;
+  margin: 0 auto;
+  flex: 1;
+  width: 100%;
+}
+
+@media (max-width: 960px) {
+  .game-container {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 16px;
+  }
+}
+
+/* 左側：バトル＆スライムエリア */
+.battle-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stage-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: 16px;
+  padding: 14px 20px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.stage-info h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent-gold);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stage-progress-text {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.boss-timer-badge {
+  background: rgba(239, 68, 68, 0.25);
+  border: 1px solid var(--accent-red);
+  color: #fca5a5;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  display: none;
+}
+
+.boss-timer-badge.active {
+  display: inline-block;
+  animation: pulse-red 1s infinite;
+}
+
+/* ===================================================
+   本格ゲーム風バトルアリーナ ＆ 背景環境レイヤー
+   =================================================== */
+.slime-arena {
+  border: 3px solid rgba(251, 191, 36, 0.5);
+  border-radius: 24px;
+  padding: 24px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  min-height: 460px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.5);
+  transition: background 0.6s ease;
+}
+
+.slime-arena::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  pointer-events: none;
+  z-index: 8;
+}
+
+/* 各ステージのダイナミックグラフィック背景 */
+.slime-arena.env-stage-1 {
+  background: linear-gradient(180deg, #38bdf8 0%, #7dd3fc 40%, #86efac 48%, #16a34a 75%, #14532d 100%);
+}
+
+.slime-arena.env-stage-2 {
+  background: linear-gradient(180deg, #090d16 0%, #1e1b4b 45%, #2e1065 70%, #0f172a 100%);
+}
+
+.slime-arena.env-stage-3 {
+  background: linear-gradient(180deg, #2e1065 0%, #581c87 40%, #3b0764 75%, #170728 100%);
+}
+
+.slime-arena.env-stage-4 {
+  background: linear-gradient(180deg, #450a0a 0%, #7f1d1d 40%, #b91c1c 70%, #1c0505 100%);
+}
+
+.slime-arena.env-stage-5 {
+  background: linear-gradient(180deg, #0284c7 0%, #38bdf8 35%, #fef08a 65%, #ca8a04 100%);
+}
+
+.slime-arena.env-stage-6 {
+  background: linear-gradient(180deg, #020617 0%, #1e1b4b 35%, #4c0519 75%, #050505 100%);
+}
+
+.arena-environment {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.celestial-body {
+  position: absolute;
+  top: 25px;
+  right: 40px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fef08a 20%, #f59e0b 80%);
+  box-shadow: 0 0 35px rgba(251, 191, 36, 0.8), 0 0 60px rgba(251, 191, 36, 0.4);
+  animation: pulse-glow 3s infinite ease-in-out;
+}
+
+.env-mountains {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  opacity: 0.6;
+}
+
+.env-cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.75);
+  border-radius: 50px;
+  height: 22px;
+  width: 70px;
+  filter: blur(1px);
+  animation: float-clouds linear infinite;
+}
+
+.env-cloud::after, .env-cloud::before {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+.env-cloud::after { width: 32px; height: 32px; top: -14px; left: 12px; }
+.env-cloud::before { width: 26px; height: 26px; top: -10px; left: 34px; }
+
+.cloud-1 { top: 12%; left: -90px; animation-duration: 20s; }
+.cloud-2 { top: 26%; left: -90px; animation-duration: 30s; animation-delay: 7s; transform: scale(0.75); opacity: 0.55; }
+.cloud-3 { top: 38%; left: -90px; animation-duration: 25s; animation-delay: 14s; transform: scale(0.9); opacity: 0.65; }
+
+.env-windmill {
+  position: absolute;
+  bottom: 85px;
+  right: 25px;
+  font-size: 2.2rem;
+  opacity: 0.8;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.env-windmill .blades {
+  display: inline-block;
+  animation: spin-slow 6s linear infinite;
+}
+
+.env-foreground-decor {
+  position: absolute;
+  bottom: 12px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.5rem;
+  z-index: 2;
+  opacity: 0.9;
+}
+
+.slime-shadow {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 190px;
+  height: 28px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ===================================================
+   購入した建物・仲間のフィールドレイヤー
+   =================================================== */
+.field-buildings-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.field-unit {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.5));
+}
+
+.field-unit-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.field-unit-count {
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--accent-gold);
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  border: 1px solid rgba(251, 191, 36, 0.5);
+  margin-top: 3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.unit-trap { bottom: 35px; left: 32%; animation: trap-snap 3s infinite ease-in-out; }
+.unit-trap-2 { bottom: 38px; right: 32%; animation: trap-snap 3s infinite ease-in-out 1.5s; }
+.unit-novice { bottom: 65px; left: 14%; animation: sword-slash 1.2s infinite ease-in-out; }
+.unit-archer { top: 35%; left: 8%; animation: bow-aim 1.5s infinite ease-in-out; }
+.unit-mage_tower { top: 32%; right: 8%; animation: magic-float 2.0s infinite ease-in-out; }
+.unit-ranch { bottom: 55px; right: 14%; animation: bounce-small 1.8s infinite ease-in-out; }
+.unit-cannon { bottom: 22px; left: 4%; animation: cannon-recoil 2.5s infinite ease-out; }
+.unit-guild { bottom: 22px; right: 4%; animation: banner-wave 2.5s infinite ease-in-out; }
+.unit-dragon { top: 6%; right: 22%; font-size: 2.5rem; animation: dragon-fly 3.2s infinite ease-in-out; }
+
+/* 妖精（オートタップ習得時） */
+.unit-fairy {
+  top: 45%;
+  right: 25%;
+  font-size: 1.8rem;
+  animation: magic-float 1.8s infinite ease-in-out;
+  filter: drop-shadow(0 0 8px #d8b4fe);
+}
+
+.attack-projectile {
+  position: absolute;
+  pointer-events: none;
+  z-index: 15;
+  font-size: 1.4rem;
+  transition: all 0.25s linear;
+}
+
+/* 敵情報 */
+.enemy-info {
+  text-align: center;
+  z-index: 5;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.enemy-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9), 0 0 12px rgba(0, 0, 0, 0.7);
+}
+
+.enemy-hp-container {
+  width: 270px;
+  height: 22px;
+  background: var(--hp-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.enemy-hp-bar {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #ef4444, #f87171);
+  transition: width 0.15s ease-out;
+  border-radius: 10px;
+}
+
+.enemy-hp-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
+}
+
+/* スライム本体 */
+.slime-wrapper {
+  position: relative;
+  cursor: pointer;
+  z-index: 5;
+  margin: 15px 0 35px 0;
+  transition: transform 0.05s ease;
+  touch-action: manipulation;
+}
+
+.slime-wrapper:active { transform: scale(0.92, 0.85); }
+.slime-svg {
+  width: 190px;
+  height: 190px;
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, 0.5));
+  animation: slime-idle 2.4s ease-in-out infinite alternate;
+  transform-origin: bottom center;
+}
+.slime-wrapper.hit .slime-svg { animation: slime-squish 0.18s ease-out; }
+.slime-wrapper.defeat .slime-svg { animation: slime-defeat 0.3s ease-out forwards; }
+
+/* エフェクトレイヤー */
+.effect-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 20;
+  overflow: hidden;
+}
+
+.damage-number {
+  position: absolute;
+  font-size: 1.45rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.95), 0 0 8px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  animation: float-damage 0.75s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+  z-index: 22;
+}
+
+.damage-number.crit {
+  font-size: 2.0rem;
+  color: #fff7ed;
+  text-shadow: 0 0 10px #f97316, 0 0 20px #ea580c, 0 2px 4px #000;
+  z-index: 24;
+}
+
+.damage-number.auto-dmg {
+  font-size: 1.1rem;
+  color: #7dd3fc;
+  text-shadow: 0 0 6px #0284c7, 0 1px 3px #000;
+  opacity: 0.95;
+  z-index: 21;
+}
+
+.coin-popup {
+  position: absolute;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fef08a;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  padding: 1px 6px;
+  border-radius: 6px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  animation: float-coin-side 0.85s ease-out forwards;
+  z-index: 23;
+  pointer-events: none;
+}
+
+.coin-popup.bounty {
+  font-size: 1.3rem;
+  color: #fbbf24;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid #fbbf24;
+  padding: 3px 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
+  animation: float-damage 1s ease-out forwards;
+  z-index: 26;
+}
+
+.coin-popup.soul-bounty {
+  font-size: 1.35rem;
+  color: #d8b4fe;
+  background: rgba(88, 28, 135, 0.85);
+  border: 2px solid #a855f7;
+  padding: 4px 12px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+  animation: float-damage 1.2s ease-out forwards;
+  z-index: 28;
+}
+
+.coin-popup.crystal-bounty {
+  font-size: 1.35rem;
+  color: #7dd3fc;
+  background: rgba(2, 132, 199, 0.85);
+  border: 2px solid #38bdf8;
+  padding: 4px 14px;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.7);
+  animation: float-damage 1.2s ease-out forwards;
+  z-index: 28;
+}
+
+/* 戦闘ステータス */
+.combat-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.stat-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.stat-label { font-size: 0.85rem; color: var(--text-sub); font-weight: 600; }
+.stat-val { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
+
+/* アクティブスキルエリア */
+.skills-action-bar {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.skills-action-bar-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-sub);
+  display: flex;
+  justify-content: space-between;
+}
+
+.active-skills-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.active-skill-btn {
+  background: rgba(11, 15, 25, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s;
+  color: var(--text-main);
+}
+
+.active-skill-btn:hover:not(:disabled) {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-purple);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(168, 85, 247, 0.3);
+}
+
+.active-skill-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(0.6); }
+.active-skill-btn.active {
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+  background: rgba(251, 191, 36, 0.15);
+}
+
+.skill-icon { font-size: 1.6rem; }
+.skill-name { font-size: 0.8rem; font-weight: 700; }
+.skill-cooldown-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  background: rgba(11, 15, 25, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #fff;
+  transition: height 0.1s linear;
+  pointer-events: none;
+}
+
+/* ===================================================
+   超見やすい目立つ転生バナー
+   =================================================== */
+.rebirth-banner-container {
+  padding: 12px 16px 6px 16px;
+  background: rgba(11, 15, 25, 0.85);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.rebirth-banner {
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.8), rgba(30, 27, 75, 0.9));
+  border: 2px solid var(--accent-purple);
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.25);
+  transition: all 0.3s ease;
+}
+
+.rebirth-banner.locked {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(255, 255, 255, 0.15);
+  opacity: 0.75;
+  box-shadow: none;
+}
+
+.rebirth-banner.available {
+  background: linear-gradient(135deg, #6b21a8, #3b0764);
+  border: 2px solid #fbbf24;
+  box-shadow: 0 0 25px rgba(251, 191, 36, 0.4), 0 0 15px rgba(168, 85, 247, 0.5);
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+.rebirth-banner-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rebirth-banner-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rebirth-banner.available .rebirth-banner-title {
+  color: var(--accent-gold);
+}
+
+.rebirth-banner-sub {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.rebirth-banner-btn {
+  background: linear-gradient(135deg, #a855f7, #7e22ce);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+}
+
+.rebirth-banner-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #c084fc, #9333ea);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(168, 85, 247, 0.6);
+}
+
+.rebirth-banner-btn:disabled {
+  background: #334155;
+  color: #64748b;
+  border-color: transparent;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 転生タブ・古代の秘術カード */
+.rebirth-intro-card {
+  background: rgba(88, 28, 135, 0.2);
+  border: 1px solid var(--border-purple);
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+
+.rebirth-skill-card {
+  background: rgba(11, 15, 25, 0.6);
+  border: 1px solid var(--border-purple);
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.rebirth-skill-card.maxed {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.rebirth-skill-btn {
+  background: linear-gradient(135deg, #a855f7, #7e22ce);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  min-width: 95px;
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.rebirth-skill-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #c084fc, #9333ea);
+  transform: translateY(-1px);
+}
+
+.rebirth-skill-btn:disabled {
+  background: #334155;
+  color: #64748b;
+  cursor: not-allowed;
+  border-color: transparent;
+}
+
+/* 右側：ショップ・育成・タブセクション */
+.upgrade-section {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  min-height: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.tab-bar {
+  display: flex;
+  background: rgba(11, 15, 25, 0.7);
+  border-bottom: 1px solid var(--border-color);
+  padding: 6px;
+  gap: 6px;
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-sub);
+  padding: 12px 6px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.tab-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.05); }
+.tab-btn.active {
+  color: var(--text-main);
+  background: var(--bg-card-hover);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.tab-content {
+  padding: 16px;
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 220px);
+}
+
+.tab-pane {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tab-pane.active { display: flex; }
+
+.building-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.buy-multiplier-group {
+  display: flex;
+  gap: 4px;
+  background: rgba(11, 15, 25, 0.7);
+  padding: 3px;
+  border-radius: 8px;
+}
+
+.mult-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-sub);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.mult-btn.active {
+  background: var(--accent-blue);
+  color: #0f172a;
+}
+
+.building-card {
+  background: rgba(11, 15, 25, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.building-card:hover {
+  background: rgba(30, 41, 59, 0.85);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.building-card.cant-afford { opacity: 0.65; }
+.building-icon-wrap {
+  width: 50px;
+  height: 50px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+}
+
+.building-details { display: flex; flex-direction: column; gap: 3px; }
+.building-name-row { display: flex; align-items: center; gap: 8px; }
+.building-name { font-size: 0.95rem; font-weight: 800; }
+.building-level { font-size: 0.8rem; color: var(--accent-blue); font-weight: 800; }
+.building-production { font-size: 0.8rem; color: var(--text-sub); }
+
+.building-buy-btn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 95px;
+  transition: all 0.15s;
+}
+
+.building-buy-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}
+
+.building-buy-btn:disabled {
+  background: #334155;
+  color: #64748b;
+  cursor: not-allowed;
+  border-color: transparent;
+}
+
+.building-cost { font-size: 0.8rem; color: var(--accent-gold); }
+
+/* スキルカード */
+.skill-card {
+  background: rgba(11, 15, 25, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.skill-card.unlocked {
+  border-color: rgba(34, 197, 94, 0.4);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.skill-card-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+}
+
+.skill-card-info { display: flex; flex-direction: column; gap: 3px; }
+.skill-card-name { font-size: 0.95rem; font-weight: 800; }
+.skill-card-desc { font-size: 0.8rem; color: var(--text-sub); }
+
+.skill-unlock-btn {
+  background: linear-gradient(135deg, #a855f7, #7e22ce);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  min-width: 95px;
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.skill-unlock-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #c084fc, #9333ea);
+  transform: translateY(-1px);
+}
+
+.skill-unlock-btn:disabled {
+  background: #334155;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.skill-badge-max {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--accent-green);
+  border: 1px solid var(--accent-green);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+/* 実績・設定 */
+.stats-list { display: flex; flex-direction: column; gap: 8px; }
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(11, 15, 25, 0.5);
+  border-radius: 10px;
+  font-size: 0.9rem;
+}
+
+.setting-buttons-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.danger-btn {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid var(--accent-red);
+  color: #fca5a5;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 800;
+  transition: all 0.2s;
+}
+
+.danger-btn:hover { background: rgba(239, 68, 68, 0.3); }
+
+/* モーダル */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-backdrop.show { opacity: 1; pointer-events: auto; }
+.modal-box {
+  background: #1e293b;
+  border: 2px solid var(--border-gold);
+  border-radius: 24px;
+  padding: 30px;
+  max-width: 450px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+  transform: scale(0.9);
+  transition: transform 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.modal-backdrop.show .modal-box { transform: scale(1); }
+.modal-icon {
+  font-size: 3.2rem;
+  margin-bottom: 12px;
+  animation: bounce-small 2s infinite ease-in-out;
+}
+
+.modal-title {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  color: var(--accent-gold);
+  font-weight: 800;
+}
+
+.modal-desc {
+  color: var(--text-sub);
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.modal-reward-box {
+  background: rgba(11, 15, 25, 0.7);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-reward-val {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+}
+
+.modal-close-btn {
+  background: linear-gradient(135deg, #fbbf24, #d97706);
+  border: none;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 800;
+  padding: 14px 28px;
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s;
+  box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+}
+
+.modal-close-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 2000;
+  pointer-events: none;
+}
+
+.toast {
+  background: rgba(22, 30, 46, 0.96);
+  border: 1px solid var(--accent-gold);
+  color: var(--text-main);
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  font-size: 0.9rem;
+  font-weight: 700;
+  animation: slide-toast 0.3s ease-out forwards;
+}
+
+/* アニメーションキーフレーム */
+@keyframes slime-idle {
+  0% { transform: scale(1, 1) translateY(0); }
+  50% { transform: scale(1.05, 0.95) translateY(4px); }
+  100% { transform: scale(0.96, 1.04) translateY(-6px); }
+}
+
+@keyframes slime-squish {
+  0% { transform: scale(1.25, 0.75) translateY(12px); }
+  50% { transform: scale(0.85, 1.15) translateY(-6px); }
+  100% { transform: scale(1, 1) translateY(0); }
+}
+
+@keyframes slime-defeat {
+  0% { transform: scale(1, 1); opacity: 1; filter: brightness(2.5); }
+  50% { transform: scale(1.35, 0.5); opacity: 0.8; }
+  100% { transform: scale(0.1, 0.1) translateY(40px); opacity: 0; }
+}
+
+@keyframes float-damage {
+  0% { opacity: 1; transform: translate(-50%, 0) scale(0.8); }
+  25% { transform: translate(calc(-50% + (var(--rand-x, 0) * 0.8px)), -32px) scale(1.2); }
+  100% { opacity: 0; transform: translate(calc(-50% + (var(--rand-x, 0) * 1.2px)), -75px) scale(0.9); }
+}
+
+@keyframes float-coin-side {
+  0% { opacity: 0; transform: translate(10px, 0) scale(0.7); }
+  20% { opacity: 1; transform: translate(25px, -18px) scale(1.0); }
+  80% { opacity: 0.9; transform: translate(40px, -40px) scale(0.95); }
+  100% { opacity: 0; transform: translate(50px, -55px) scale(0.85); }
+}
+
+@keyframes float-clouds {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(700px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.5)); }
+  50% { transform: scale(1.02); filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.8)); }
+}
+
+@keyframes float-up-particle {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  20% { opacity: 0.8; }
+  80% { opacity: 0.8; }
+  100% { transform: translateY(-80px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes sword-slash {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  30% { transform: rotate(-30deg) translateY(-6px); }
+  50% { transform: rotate(40deg) translateY(6px) scale(1.15); }
+}
+
+@keyframes bow-aim {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px) scale(1.08); }
+}
+
+@keyframes magic-float {
+  0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 6px #a855f7); }
+  50% { transform: translateY(-10px) scale(1.1); filter: drop-shadow(0 0 18px #c084fc); }
+}
+
+@keyframes trap-snap {
+  0%, 80%, 100% { transform: scale(1); }
+  85% { transform: scale(1.25, 0.65); }
+  90% { transform: scale(0.9, 1.15); }
+}
+
+@keyframes cannon-recoil {
+  0%, 85%, 100% { transform: translateX(0) scale(1); }
+  90% { transform: translateX(-8px) scale(1.15, 0.85); }
+}
+
+@keyframes banner-wave {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(4deg); }
+}
+
+@keyframes dragon-fly {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(5deg) scale(1.06); }
+}
+
+@keyframes bounce-small {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes pulse-red {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { rotate(360deg); }
+}
+
+@keyframes slide-toast {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
