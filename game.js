@@ -881,192 +881,213 @@ class Game {
     let bodySvg = "";
 
     if (race.includes("スケルトン") || race.includes("ガイコツ") || race.includes("ボーン") || et === "skull" || name.includes("スケルトン") || name.includes("ボーン") || name.includes("ガイコツ")) {
-      // 💀 スケルトン族（頭蓋骨 ＆ 後ろの交差する大腿骨）
+      // 💀 スケルトン族（角ばった頭蓋骨 ＆ 飛び出すクロスボーン ＆ 歯並び）
       bodySvg = `
-        <!-- 後ろの交差する大腿骨（クロスボーン） -->
-        <g stroke="#cbd5e1" stroke-width="12" stroke-linecap="round" fill="none">
-          <line x1="28" y1="28" x2="172" y2="172" />
-          <line x1="172" y1="28" x2="28" y2="172" />
+        <!-- 後ろの交差する大腿骨（クロスボーン 🦴） -->
+        <g stroke="#e2e8f0" stroke-width="14" stroke-linecap="round" fill="none">
+          <line x1="22" y1="22" x2="178" y2="178" />
+          <line x1="178" y1="22" x2="22" y2="178" />
         </g>
-        <circle cx="24" cy="24" r="9" fill="#e2e8f0" /><circle cx="34" cy="34" r="9" fill="#e2e8f0" />
-        <circle cx="176" cy="24" r="9" fill="#e2e8f0" /><circle cx="166" cy="34" r="9" fill="#e2e8f0" />
-        <circle cx="24" cy="176" r="9" fill="#e2e8f0" /><circle cx="34" cy="166" r="9" fill="#e2e8f0" />
-        <circle cx="176" cy="176" r="9" fill="#e2e8f0" /><circle cx="166" cy="166" r="9" fill="#e2e8f0" />
+        <circle cx="18" cy="18" r="10" fill="#f8fafc" /><circle cx="30" cy="30" r="10" fill="#f8fafc" />
+        <circle cx="182" cy="18" r="10" fill="#f8fafc" /><circle cx="170" cy="30" r="10" fill="#f8fafc" />
+        <circle cx="18" cy="182" r="10" fill="#f8fafc" /><circle cx="30" cy="170" r="10" fill="#f8fafc" />
+        <circle cx="182" cy="182" r="10" fill="#f8fafc" /><circle cx="170" cy="170" r="10" fill="#f8fafc" />
         
-        <!-- 頭蓋骨ボディ -->
-        <path d="M100,24 C148,24 175,54 175,100 C175,130 155,145 135,150 L135,182 L65,182 L65,150 C45,145 25,130 25,100 C25,54 52,24 100,24 Z" 
-              fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#475569" stroke-width="3.5" />
+        <!-- 頭蓋骨本体（丸い頭頂部＋こめかみのくびれ＋四角い下顎骨） -->
+        <path d="M100,18 C155,18 172,48 168,85 C164,110 142,120 138,135 L138,180 L62,180 L62,135 C58,120 36,110 32,85 C28,48 45,18 100,18 Z" 
+              fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#334155" stroke-width="4" />
         
         <!-- 額のひび割れ -->
-        <path d="M100,28 L94,48 L104,64 L98,82" stroke="#334155" stroke-width="2.5" fill="none" stroke-linecap="round" />
+        <path d="M100,24 L92,46 L106,62 L96,82" stroke="#1e293b" stroke-width="3" fill="none" stroke-linecap="round" />
+        <path d="M106,62 L120,54" stroke="#1e293b" stroke-width="2.5" fill="none" stroke-linecap="round" />
         
-        <!-- 深い暗黒眼窩 ＆ 赤い発光眼 -->
-        <ellipse cx="65" cy="100" rx="22" ry="24" fill="#0f172a" stroke="#334155" stroke-width="3" />
-        <circle cx="65" cy="100" r="7" fill="#ef4444" filter="drop-shadow(0 0 8px #ef4444)" />
-        <ellipse cx="135" cy="100" rx="22" ry="24" fill="#0f172a" stroke="#334155" stroke-width="3" />
-        <circle cx="135" cy="100" r="7" fill="#ef4444" filter="drop-shadow(0 0 8px #ef4444)" />
+        <!-- 深い暗黒眼窩 ＆ 赤くギラつく瞳 -->
+        <ellipse cx="66" cy="96" rx="20" ry="22" fill="#0f172a" stroke="#1e293b" stroke-width="3" />
+        <circle cx="66" cy="96" r="8" fill="#ef4444" filter="drop-shadow(0 0 10px #ef4444)" />
+        <circle cx="68" cy="94" r="3" fill="#ffffff" />
+        
+        <ellipse cx="134" cy="96" rx="20" ry="22" fill="#0f172a" stroke="#1e293b" stroke-width="3" />
+        <circle cx="134" cy="96" r="8" fill="#ef4444" filter="drop-shadow(0 0 10px #ef4444)" />
+        <circle cx="136" cy="94" r="3" fill="#ffffff" />
         
         <!-- 三角形の鼻腔 -->
-        <polygon points="100,120 92,138 108,138" fill="#0f172a" />
+        <polygon points="100,116 90,136 110,136" fill="#0f172a" />
         
-        <!-- 歯並びと顎骨 -->
-        <rect x="75" y="156" width="50" height="22" rx="3" fill="#0f172a" />
-        <path d="M80,156 L80,178 M90,156 L90,178 M100,156 L100,178 M110,156 L110,178 M120,156 L120,178 M75,167 L125,167" 
-              stroke="#f8fafc" stroke-width="3" stroke-linecap="square" />
+        <!-- 歯並びと顎骨（四角いブロックに並ぶ白い歯） -->
+        <rect x="70" y="152" width="60" height="26" rx="4" fill="#0f172a" stroke="#1e293b" stroke-width="2" />
+        <path d="M78,152 L78,178 M90,152 L90,178 M100,152 L100,178 M110,152 L110,178 M122,152 L122,178 M70,165 L130,165" 
+              stroke="#f8fafc" stroke-width="3.5" stroke-linecap="square" />
       `;
     } else if (race.includes("ゴブリン") || race.includes("グブリン") || race.includes("魔獣") || race.includes("オーク") || race.includes("トロール") || et === "goblin" || name.includes("ゴブリン") || name.includes("オーク") || name.includes("トロール")) {
-      // 👺 ゴブリン族（Lv.200-249: 緑ゴブリン / Lv.250-299: 赤ゴブリン）
+      // 👺 ゴブリン族（巨大な尖ったエルフ耳 ＆ 鉤鼻 ＆ 突き出た下牙 ＆ バンダナ・モヒカン）
       bodySvg = `
-        <!-- 尖った大耳（左右） -->
-        <polygon points="35,100 0,55 40,80" fill="${color2}" stroke="${color3}" stroke-width="3" />
-        <polygon points="165,100 200,55 160,80" fill="${color2}" stroke="${color3}" stroke-width="3" />
-        <polygon points="32,95 8,65 36,82" fill="#fca5a5" opacity="0.6" />
-        <polygon points="168,95 192,65 164,82" fill="#fca5a5" opacity="0.6" />
+        <!-- 左右に大きく突き出た巨大な尖り耳（0px〜200px） -->
+        <polygon points="45,95 2,45 35,115" fill="${color2}" stroke="${color3}" stroke-width="3.5" />
+        <polygon points="40,92 10,55 35,108" fill="#fca5a5" opacity="0.75" />
+        <polygon points="155,95 198,45 165,115" fill="${color2}" stroke="${color3}" stroke-width="3.5" />
+        <polygon points="160,92 190,55 165,108" fill="#fca5a5" opacity="0.75" />
         
-        <!-- ゴブリンヘッド -->
-        <path d="M100,32 C150,32 170,78 165,130 C160,170 140,185 100,185 C60,185 40,170 35,130 C30,78 50,32 100,32 Z" 
-              fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="${color3}" stroke-width="3.5" />
+        <!-- 耳の金ピアス -->
+        <circle cx="16" cy="65" r="5" fill="#fbbf24" stroke="#d97706" stroke-width="2" />
         
-        <!-- トゲトゲの頭髪 -->
-        <polygon points="90,34 100,8 110,34" fill="#1e293b" />
-        <polygon points="72,38 82,16 94,38" fill="#1e293b" />
-        <polygon points="106,38 118,16 128,38" fill="#1e293b" />
+        <!-- ゴブリンの顔輪郭（頬骨が張り、顎がシャープな小鬼ヘッド） -->
+        <path d="M100,38 C145,38 168,70 162,105 C156,145 130,175 100,188 C70,175 44,145 38,105 C32,70 55,38 100,38 Z" 
+              fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="${color3}" stroke-width="4" />
         
-        <!-- ギラつく黄色い目 -->
-        <ellipse cx="68" cy="95" rx="14" ry="18" fill="#fef08a" stroke="#0f172a" stroke-width="3" />
-        <ellipse cx="68" cy="95" rx="4" ry="10" fill="#7f1d1d" />
-        <ellipse cx="132" cy="95" rx="14" ry="18" fill="#fef08a" stroke="#0f172a" stroke-width="3" />
-        <ellipse cx="132" cy="95" rx="4" ry="10" fill="#7f1d1d" />
+        <!-- ボサボサの黒髪モヒカン -->
+        <polygon points="90,40 100,8 110,40" fill="#0f172a" />
+        <polygon points="72,44 82,16 94,44" fill="#0f172a" />
+        <polygon points="106,44 118,16 128,44" fill="#0f172a" />
+        <polygon points="58,52 68,28 80,52" fill="#0f172a" />
+        <polygon points="120,52 132,28 142,52" fill="#0f172a" />
         
-        <!-- 鉤鼻 -->
-        <polygon points="100,88 90,126 110,126" fill="${color3}" stroke="#0f172a" stroke-width="2" />
+        <!-- 額の赤バンダナ（ハチマキ） -->
+        <path d="M38,68 Q100,85 162,68 L162,54 Q100,71 38,54 Z" fill="#b91c1c" stroke="#450a0a" stroke-width="2" />
         
-        <!-- 裂けた口と突き出た下牙 -->
-        <path d="M65,145 Q100,170 135,145" stroke="#0f172a" stroke-width="5" fill="none" stroke-linecap="round" />
-        <polygon points="78,158 84,136 90,158" fill="#ffffff" stroke="#0f172a" stroke-width="1.5" />
-        <polygon points="110,158 116,136 122,158" fill="#ffffff" stroke="#0f172a" stroke-width="1.5" />
+        <!-- ギラつく黄色い目（吊り目・邪悪） -->
+        <polygon points="50,92 84,106 58,114" fill="#fef08a" stroke="#0f172a" stroke-width="2.5" />
+        <circle cx="68" cy="104" r="5" fill="#7f1d1d" />
+        <circle cx="70" cy="102" r="2" fill="#ffffff" />
+        
+        <polygon points="150,92 116,106 142,114" fill="#fef08a" stroke="#0f172a" stroke-width="2.5" />
+        <circle cx="132" cy="104" r="5" fill="#7f1d1d" />
+        <circle cx="130" cy="102" r="2" fill="#ffffff" />
+        
+        <!-- 尖った巨大な鉤鼻（鷲鼻） -->
+        <polygon points="100,84 86,128 114,128" fill="${color3}" stroke="#0f172a" stroke-width="2.5" />
+        <circle cx="92" cy="124" r="3" fill="#0f172a" />
+        <circle cx="108" cy="124" r="3" fill="#0f172a" />
+        
+        <!-- 裂けた口と突き出た2本の大牙（下顎から上向き） -->
+        <path d="M60,146 Q100,172 140,146" stroke="#0f172a" stroke-width="5" fill="none" stroke-linecap="round" />
+        <polygon points="70,160 78,128 88,160" fill="#ffffff" stroke="#0f172a" stroke-width="2" />
+        <polygon points="112,160 122,128 130,160" fill="#ffffff" stroke="#0f172a" stroke-width="2" />
       `;
     } else if (race.includes("ゴーレム") || race.includes("巨神") || et === "golem" || name.includes("ゴーレム") || name.includes("巨神")) {
-      // 🗿 ゴーレム・魔導巨神族（角ばった岩石ブロック + 発光する古代の単眼コア）
+      // 🗿 ゴーレム・魔導巨神族（カクカクの巨岩ブロック ＆ 発光する青色古代ルーン単眼）
       bodySvg = `
-        <!-- 巨岩ブロックボディ -->
-        <polygon points="100,18 168,48 178,130 148,185 52,185 22,130 32,48" 
-                 fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#1e293b" stroke-width="5" />
+        <!-- 左右の巨岩ショルダーアーマー -->
+        <polygon points="5,55 35,25 45,85 10,105" fill="${color3}" stroke="#0f172a" stroke-width="3.5" />
+        <polygon points="195,55 165,25 155,85 190,105" fill="${color3}" stroke="#0f172a" stroke-width="3.5" />
         
-        <!-- 岩の亀裂ライン -->
-        <path d="M32,48 L80,75 L65,120 L100,140 L150,110 L168,48 M100,140 L100,185 M80,75 L120,75" 
-              stroke="#0f172a" stroke-width="3.5" fill="none" />
+        <!-- 巨岩多角形ブロックボディ -->
+        <polygon points="100,15 168,38 178,125 145,185 55,185 22,125 32,38" 
+                 fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#0f172a" stroke-width="5" />
         
-        <!-- 単眼バイザー・発光コアスリット -->
-        <rect x="45" y="85" width="110" height="26" rx="8" fill="#0f172a" stroke="#334155" stroke-width="2.5" />
-        <circle cx="100" cy="98" r="11" fill="#38bdf8" filter="drop-shadow(0 0 14px #38bdf8)" />
-        <circle cx="100" cy="98" r="4" fill="#ffffff" />
+        <!-- 岩石の深い亀裂ライン -->
+        <path d="M32,38 L80,70 L60,120 L100,140 L145,110 L168,38 M100,140 L100,185 M80,70 L120,70" 
+              stroke="#0f172a" stroke-width="4" fill="none" />
         
-        <!-- 無骨な口スリット -->
-        <path d="M68,155 L132,155" stroke="#0f172a" stroke-width="8" stroke-linecap="round" />
+        <!-- 魔導古代ルーン単眼バイザー -->
+        <rect x="42" y="82" width="116" height="28" rx="10" fill="#0f172a" stroke="#334155" stroke-width="3" />
+        <circle cx="100" cy="96" r="12" fill="#38bdf8" filter="drop-shadow(0 0 16px #38bdf8)" />
+        <circle cx="100" cy="96" r="5" fill="#ffffff" />
+        
+        <!-- 無骨な石の口スリット -->
+        <path d="M65,155 L135,155" stroke="#0f172a" stroke-width="9" stroke-linecap="square" />
       `;
     } else if (race.includes("デーモン") || race.includes("魔王") || et === "demon" || name.includes("デーモン") || name.includes("魔王") || name.includes("インプ") || name.includes("リーパー")) {
-      // 👿 デーモン・魔王軍族（湾曲した悪魔の角 + 翼 + 邪悪な吊り目）
+      // 👿 デーモン・魔王軍族（湾曲した巨大な悪魔の2本角 ＆ コウモリ翼）
       bodySvg = `
-        <!-- 悪魔の角（左右） -->
-        <path d="M60,60 C30,10 10,20 0,5 C20,35 35,45 50,75 Z" fill="#7f1d1d" stroke="#450a0a" stroke-width="2.5" />
-        <path d="M140,60 C170,10 190,20 200,5 C180,35 165,45 150,75 Z" fill="#7f1d1d" stroke="#450a0a" stroke-width="2.5" />
+        <!-- 湾曲した巨大悪魔角（2本） -->
+        <path d="M65,55 C25,-5 5,5 0,-10 C15,25 35,45 50,75 Z" fill="#450a0a" stroke="#000000" stroke-width="3" />
+        <path d="M135,55 C175,-5 195,5 200,-10 C185,25 165,45 150,75 Z" fill="#450a0a" stroke="#000000" stroke-width="3" />
         
         <!-- コウモリ翼（左右） -->
-        <path d="M30,110 Q0,80 5,140 Q25,130 30,110 Z" fill="#450a0a" opacity="0.85" />
-        <path d="M170,110 Q200,80 195,140 Q175,130 170,110 Z" fill="#450a0a" opacity="0.85" />
+        <path d="M35,100 Q-15,50 5,145 Q25,125 35,100 Z" fill="#1e1b4b" stroke="#000000" stroke-width="2.5" />
+        <path d="M165,100 Q215,50 195,145 Q175,125 165,100 Z" fill="#1e1b4b" stroke="#000000" stroke-width="2.5" />
         
-        <!-- デーモンボディ -->
-        <path d="M100,42 C150,42 175,85 170,135 C165,175 145,185 100,185 C55,185 35,175 30,135 C25,85 50,42 100,42 Z" 
-              fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#450a0a" stroke-width="3.5" />
+        <!-- デーモンシャープボディ -->
+        <path d="M100,38 C145,38 165,75 160,120 C155,160 135,185 100,188 C65,185 45,160 40,120 C35,75 55,38 100,38 Z" 
+              fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#450a0a" stroke-width="4" />
         
         <!-- 邪悪な吊り目 -->
-        <polygon points="50,95 85,108 55,115" fill="#fbbf24" stroke="#0f172a" stroke-width="2" />
-        <circle cx="68" cy="106" r="4" fill="#7f1d1d" />
-        <polygon points="150,95 115,108 145,115" fill="#fbbf24" stroke="#0f172a" stroke-width="2" />
-        <circle cx="132" cy="106" r="4" fill="#7f1d1d" />
+        <polygon points="48,92 84,106 54,114" fill="#fbbf24" stroke="#0f172a" stroke-width="2.5" />
+        <circle cx="68" cy="104" r="5" fill="#7f1d1d" />
+        <polygon points="152,92 116,106 146,114" fill="#fbbf24" stroke="#0f172a" stroke-width="2.5" />
+        <circle cx="132" cy="104" r="5" fill="#7f1d1d" />
         
         <!-- 額の魔王紋章 -->
-        <circle cx="100" cy="70" r="8" fill="#dc2626" filter="drop-shadow(0 0 8px #dc2626)" />
+        <circle cx="100" cy="65" r="9" fill="#dc2626" filter="drop-shadow(0 0 10px #dc2626)" />
         
         <!-- 牙の並ぶ邪悪な口 -->
-        <path d="M70,145 Q100,175 130,145" stroke="#0f172a" stroke-width="4" fill="#450a0a" />
-        <polygon points="80,145 85,156 90,145" fill="#ffffff" />
-        <polygon points="110,145 115,156 120,145" fill="#ffffff" />
+        <path d="M68,144 Q100,174 132,144" stroke="#0f172a" stroke-width="5" fill="#450a0a" />
+        <polygon points="78,144 84,156 90,144" fill="#ffffff" />
+        <polygon points="110,144 116,156 122,144" fill="#ffffff" />
       `;
     } else if (race.includes("ドラゴン") || race.includes("飛竜") || race.includes("竜") || et === "dragon" || name.includes("ドラゴン") || name.includes("ワイバーン") || name.includes("竜")) {
-      // 🐉 契約飛竜・ドラゴン族（竜の角 + 爬虫類の縦瞳 + 鋭い牙）
+      // 🐉 契約飛竜・ドラゴン族（竜の角 ＆ 爬虫類の縦スリット瞳 ＆ 牙）
       bodySvg = `
         <!-- 竜の角（4本） -->
-        <polygon points="65,55 35,8 50,55" fill="#78350f" stroke="#451a03" stroke-width="2" />
-        <polygon points="135,55 165,8 150,55" fill="#78350f" stroke="#451a03" stroke-width="2" />
-        <polygon points="75,50 60,18 70,50" fill="#9a3412" />
-        <polygon points="125,50 140,18 130,50" fill="#9a3412" />
+        <polygon points="65,55 30,5 50,55" fill="#78350f" stroke="#451a03" stroke-width="2.5" />
+        <polygon points="135,55 170,5 150,55" fill="#78350f" stroke="#451a03" stroke-width="2.5" />
+        <polygon points="75,48 55,15 68,48" fill="#9a3412" />
+        <polygon points="125,48 145,15 132,48" fill="#9a3412" />
         
         <!-- ドラゴンヘッド -->
-        <path d="M100,32 C155,32 180,75 175,130 C170,170 140,185 100,185 C60,185 30,170 25,130 C20,75 45,32 100,32 Z" 
-              fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#451a03" stroke-width="3.5" />
+        <path d="M100,30 C155,30 180,70 175,125 C170,165 140,185 100,185 C60,185 30,165 25,125 C20,70 45,30 100,30 Z" 
+              fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#451a03" stroke-width="4" />
         
         <!-- ドラゴンの瞳（縦スリット） -->
-        <ellipse cx="65" cy="98" rx="15" ry="12" fill="#fbbf24" stroke="#0f172a" stroke-width="2" />
-        <rect x="63" y="88" width="4" height="20" rx="2" fill="#0f172a" />
-        <ellipse cx="135" cy="98" rx="15" ry="12" fill="#fbbf24" stroke="#0f172a" stroke-width="2" />
-        <rect x="133" y="88" width="4" height="20" rx="2" fill="#0f172a" />
+        <ellipse cx="65" cy="96" rx="16" ry="13" fill="#fbbf24" stroke="#0f172a" stroke-width="2.5" />
+        <rect x="63" y="85" width="4" height="22" rx="2" fill="#0f172a" />
+        <ellipse cx="135" cy="96" rx="16" ry="13" fill="#fbbf24" stroke="#0f172a" stroke-width="2.5" />
+        <rect x="133" y="85" width="4" height="22" rx="2" fill="#0f172a" />
         
         <!-- 鼻孔 -->
-        <circle cx="88" cy="132" r="4" fill="#0f172a" />
-        <circle cx="112" cy="132" r="4" fill="#0f172a" />
+        <circle cx="86" cy="130" r="4.5" fill="#0f172a" />
+        <circle cx="114" cy="130" r="4.5" fill="#0f172a" />
         
         <!-- 牙の並ぶ顎 -->
-        <path d="M60,148 Q100,175 140,148" stroke="#0f172a" stroke-width="4" fill="none" />
-        <polygon points="75,148 80,162 85,148" fill="#ffffff" />
-        <polygon points="95,150 100,165 105,150" fill="#ffffff" />
-        <polygon points="115,148 120,162 125,148" fill="#ffffff" />
+        <path d="M58,146 Q100,175 142,146" stroke="#0f172a" stroke-width="5" fill="none" />
+        <polygon points="72,146 78,162 84,146" fill="#ffffff" />
+        <polygon points="94,148 100,165 106,148" fill="#ffffff" />
+        <polygon points="116,146 122,162 128,146" fill="#ffffff" />
       `;
     } else if (race.includes("宇宙") || race.includes("星辰") || race.includes("邪神") || race.includes("コズミック") || et === "cosmic" || name.includes("コズミック") || name.includes("アザトース") || name.includes("星")) {
-      // 🌌 星辰の邪神・宇宙支配者族（蠢く触手 + 巨大な第三の目 + 無数の瞳）
+      // 🌌 星辰の邪神・宇宙支配者族（うねる触手 ＆ 巨大な第三の目）
       bodySvg = `
-        <!-- 蠢く触手 -->
-        <path d="M30,130 Q0,160 10,190" stroke="#7e22ce" stroke-width="12" stroke-linecap="round" fill="none" />
-        <path d="M170,130 Q200,160 190,190" stroke="#7e22ce" stroke-width="12" stroke-linecap="round" fill="none" />
-        <path d="M50,150 Q30,190 50,200" stroke="#a855f7" stroke-width="10" stroke-linecap="round" fill="none" />
-        <path d="M150,150 Q170,190 150,200" stroke="#a855f7" stroke-width="10" stroke-linecap="round" fill="none" />
+        <!-- 蠢く触手（6本） -->
+        <path d="M30,125 Q-10,155 5,190" stroke="#7e22ce" stroke-width="14" stroke-linecap="round" fill="none" />
+        <path d="M170,125 Q210,155 195,190" stroke="#7e22ce" stroke-width="14" stroke-linecap="round" fill="none" />
+        <path d="M45,145 Q20,185 40,200" stroke="#a855f7" stroke-width="11" stroke-linecap="round" fill="none" />
+        <path d="M155,145 Q180,185 160,200" stroke="#a855f7" stroke-width="11" stroke-linecap="round" fill="none" />
         
         <!-- コズミックボディ -->
-        <circle cx="100" cy="110" r="70" fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#c084fc" stroke-width="4" />
+        <circle cx="100" cy="105" r="70" fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#c084fc" stroke-width="4.5" />
         
         <!-- 開眼した第三の目（中央巨大） -->
-        <ellipse cx="100" cy="78" rx="26" ry="18" fill="#f472b6" stroke="#0f172a" stroke-width="3" />
-        <circle cx="100" cy="78" r="10" fill="#3b0764" />
-        <circle cx="100" cy="78" r="4" fill="#ffffff" />
+        <ellipse cx="100" cy="74" rx="28" ry="19" fill="#f472b6" stroke="#0f172a" stroke-width="3" />
+        <circle cx="100" cy="74" r="11" fill="#3b0764" />
+        <circle cx="100" cy="74" r="4" fill="#ffffff" />
         
         <!-- 怪異な瞳群 -->
-        <ellipse cx="65" cy="120" rx="12" ry="12" fill="#fef08a" />
-        <circle cx="65" cy="120" r="5" fill="#7f1d1d" />
-        <ellipse cx="135" cy="120" rx="12" ry="12" fill="#fef08a" />
-        <circle cx="135" cy="120" r="5" fill="#7f1d1d" />
-        <circle cx="82" cy="148" r="8" fill="#fef08a" /><circle cx="82" cy="148" r="3" fill="#7f1d1d" />
-        <circle cx="118" cy="148" r="8" fill="#fef08a" /><circle cx="118" cy="148" r="3" fill="#7f1d1d" />
+        <ellipse cx="62" cy="115" rx="13" ry="13" fill="#fef08a" />
+        <circle cx="62" cy="115" r="5" fill="#7f1d1d" />
+        <ellipse cx="138" cy="115" rx="13" ry="13" fill="#fef08a" />
+        <circle cx="138" cy="115" r="5" fill="#7f1d1d" />
+        <circle cx="80" cy="145" r="9" fill="#fef08a" /><circle cx="80" cy="145" r="3.5" fill="#7f1d1d" />
+        <circle cx="120" cy="145" r="9" fill="#fef08a" /><circle cx="120" cy="145" r="3.5" fill="#7f1d1d" />
       `;
     } else if (race.includes("超越") || race.includes("アルティメット") || race.includes("神") || name.includes("至高神") || name.includes("覇帝") || name.includes("創世龍")) {
-      // 👑 超越神・アルティメット族（幾何学光輪 + 至高の王冠 + 黄金の神眼）
+      // 👑 超越神・アルティメット族（八芒星幾何学光輪 ＆ 至高の神眼）
       bodySvg = `
-        <!-- 背後の幾何学光輪 -->
-        <circle cx="100" cy="100" r="85" fill="none" stroke="#fbbf24" stroke-width="3" stroke-dasharray="6,6" />
-        <polygon points="100,10 190,100 100,190 10,100" fill="none" stroke="#fef08a" stroke-width="2" opacity="0.7" />
-        <polygon points="100,15 185,100 100,185 15,100" fill="none" stroke="#f59e0b" stroke-width="2" opacity="0.7" transform="rotate(45 100 100)" />
+        <!-- 背後の八芒星光輪 -->
+        <circle cx="100" cy="100" r="88" fill="none" stroke="#fbbf24" stroke-width="3" stroke-dasharray="6,6" />
+        <polygon points="100,8 192,100 100,192 8,100" fill="none" stroke="#fef08a" stroke-width="2.5" opacity="0.8" />
+        <polygon points="100,12 188,100 100,188 12,100" fill="none" stroke="#f59e0b" stroke-width="2.5" opacity="0.8" transform="rotate(45 100 100)" />
         
         <!-- 神性ボディ -->
-        <path d="M100,28 C150,28 180,75 175,130 C170,175 145,185 100,185 C55,185 30,175 25,130 C20,75 50,28 100,28 Z" 
-              fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#fef08a" stroke-width="4" />
+        <path d="M100,25 C150,25 180,70 175,125 C170,170 145,185 100,185 C55,185 30,170 25,125 C20,70 50,25 100,25 Z" 
+              fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#fef08a" stroke-width="4.5" />
         
         <!-- 神眼 -->
-        <ellipse cx="70" cy="105" rx="16" ry="10" fill="#ffffff" stroke="#d97706" stroke-width="2" />
-        <circle cx="70" cy="105" r="6" fill="#38bdf8" />
-        <ellipse cx="130" cy="105" rx="16" ry="10" fill="#ffffff" stroke="#d97706" stroke-width="2" />
-        <circle cx="130" cy="105" r="6" fill="#38bdf8" />
-        <circle cx="100" cy="72" r="10" fill="#fef08a" stroke="#d97706" stroke-width="2" filter="drop-shadow(0 0 10px #fbbf24)" />
-        <circle cx="100" cy="72" r="4" fill="#7c3aed" />
+        <ellipse cx="68" cy="102" rx="17" ry="11" fill="#ffffff" stroke="#d97706" stroke-width="2.5" />
+        <circle cx="68" cy="102" r="6" fill="#38bdf8" />
+        <ellipse cx="132" cy="102" rx="17" ry="11" fill="#ffffff" stroke="#d97706" stroke-width="2.5" />
+        <circle cx="132" cy="102" r="6" fill="#38bdf8" />
+        <circle cx="100" cy="68" r="11" fill="#fef08a" stroke="#d97706" stroke-width="2" filter="drop-shadow(0 0 12px #fbbf24)" />
+        <circle cx="100" cy="68" r="4.5" fill="#7c3aed" />
       `;
     } else {
       // 💧 スライム族（ぷるぷるスライムボディ + 光沢 + ほっぺ）
