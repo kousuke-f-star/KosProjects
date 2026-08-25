@@ -209,37 +209,61 @@ const STAGES = [
   }
 ];
 
-// --- 2. モンスター種族・カテゴリデータ (100レベルごとに新たな種族へ進化！) ---
+// --- 2. モンスター種族・カテゴリデータ (100レベルごとに大進化＆50レベルごとに見た目・装備が進化！) ---
 const MONSTER_CATEGORIES = [
+  // 💧 スライム族（Lv.1〜99）
   {
     minLevel: 1,
-    maxLevel: 99,
-    raceName: "スライム族",
+    maxLevel: 49,
+    raceName: "スライム族（初級）",
     icon: "💧",
     types: [
       { name: "グリーンスライム", color1: "#86efac", color2: "#22c55e", color3: "#15803d", eyeType: "cute" },
       { name: "ブルースライム", color1: "#7dd3fc", color2: "#0284c7", color3: "#0369a1", eyeType: "cute" },
-      { name: "ポイズンスライム", color1: "#d8b4fe", color2: "#9333ea", color3: "#581c87", eyeType: "evil" },
-      { name: "フレイムスライム", color1: "#fca5a5", color2: "#ef4444", color3: "#991b1b", eyeType: "fierce" },
-      { name: "ホーリーライム", color1: "#fef08a", color2: "#eab308", color3: "#854d0e", eyeType: "cute" },
-      { name: "ダークスライム", color1: "#94a3b8", color2: "#334155", color3: "#0f172a", eyeType: "evil" }
+      { name: "ポイズンスライム", color1: "#d8b4fe", color2: "#9333ea", color3: "#581c87", eyeType: "evil" }
     ],
     bossPrefix: "キング"
   },
   {
+    minLevel: 50,
+    maxLevel: 99,
+    raceName: "武装スライム族（上級）",
+    icon: "💧",
+    types: [
+      { name: "ナイトスライム", color1: "#fca5a5", color2: "#ef4444", color3: "#991b1b", eyeType: "fierce" },
+      { name: "ホーリーライム", color1: "#fef08a", color2: "#eab308", color3: "#854d0e", eyeType: "cute" },
+      { name: "ダークスライム", color1: "#94a3b8", color2: "#334155", color3: "#0f172a", eyeType: "evil" }
+    ],
+    bossPrefix: "覇王"
+  },
+
+  // 💀 スケルトン族（Lv.100〜199）
+  {
     minLevel: 100,
-    maxLevel: 199,
-    raceName: "スケルトン族",
+    maxLevel: 149,
+    raceName: "スケルトン歩兵隊",
     icon: "💀",
     types: [
       { name: "ガイコツ見張り兵", color1: "#f8fafc", color2: "#cbd5e1", color3: "#64748b", eyeType: "skull" },
       { name: "ボーンウォリアー", color1: "#e2e8f0", color2: "#94a3b8", color3: "#475569", eyeType: "skull" },
-      { name: "スカルメイジ", color1: "#c084fc", color2: "#9333ea", color3: "#581c87", eyeType: "magic" },
-      { name: "カースドスケルトン", color1: "#fca5a5", color2: "#dc2626", color3: "#7f1d1d", eyeType: "fierce" },
-      { name: "ファントムナイト", color1: "#67e8f9", color2: "#0891b2", color3: "#164e63", eyeType: "magic" }
+      { name: "スカルメイジ", color1: "#c084fc", color2: "#9333ea", color3: "#581c87", eyeType: "magic" }
     ],
     bossPrefix: "スケルトンロード"
   },
+  {
+    minLevel: 150,
+    maxLevel: 199,
+    raceName: "重装スカルナイト族",
+    icon: "💀",
+    types: [
+      { name: "カースドスケルトン", color1: "#fca5a5", color2: "#dc2626", color3: "#7f1d1d", eyeType: "fierce" },
+      { name: "ファントム重装騎士", color1: "#67e8f9", color2: "#0891b2", color3: "#164e63", eyeType: "magic" },
+      { name: "漆黒のデスナイト", color1: "#94a3b8", color2: "#334155", color3: "#020617", eyeType: "skull" }
+    ],
+    bossPrefix: "骸骨大将軍"
+  },
+
+  // 👺 ゴブリン族（Lv.200〜299）
   {
     minLevel: 200,
     maxLevel: 249,
@@ -256,7 +280,7 @@ const MONSTER_CATEGORIES = [
   {
     minLevel: 250,
     maxLevel: 299,
-    raceName: "レッドゴブリン族",
+    raceName: "レッドゴブリン狂戦士族",
     icon: "👺",
     types: [
       { name: "レッドゴブリン", color1: "#fca5a5", color2: "#ef4444", color3: "#7f1d1d", eyeType: "goblin" },
@@ -266,69 +290,133 @@ const MONSTER_CATEGORIES = [
     ],
     bossPrefix: "大頭領レッドゴブリン"
   },
+
+  // 🗿 ゴーレム族（Lv.300〜399）
   {
     minLevel: 300,
-    maxLevel: 399,
-    raceName: "ゴーレム・魔導巨神族",
+    maxLevel: 349,
+    raceName: "遺跡の巨岩ゴーレム族",
     icon: "🗿",
     types: [
       { name: "ロックゴーレム", color1: "#d6d3d1", color2: "#78716c", color3: "#44403c", eyeType: "golem" },
       { name: "アイアンゴーレム", color1: "#cbd5e1", color2: "#64748b", color3: "#1e293b", eyeType: "golem" },
-      { name: "マグマゴーレム", color1: "#fdba74", color2: "#dc2626", color3: "#7f1d1d", eyeType: "fierce" },
       { name: "クリスタルゴーレム", color1: "#7dd3fc", color2: "#0284c7", color3: "#1e3a8a", eyeType: "magic" }
     ],
-    bossPrefix: "古代巨神"
+    bossPrefix: "古代守護巨神"
   },
   {
+    minLevel: 350,
+    maxLevel: 399,
+    raceName: "古代魔導機神コロッサス",
+    icon: "🗿",
+    types: [
+      { name: "マグマ機神ゴーレム", color1: "#fdba74", color2: "#dc2626", color3: "#7f1d1d", eyeType: "fierce" },
+      { name: "黄金ルーンコロッサス", color1: "#fef08a", color2: "#eab308", color3: "#78350f", eyeType: "golem" },
+      { name: "虚空の魔導巨神", color1: "#c084fc", color2: "#7e22ce", color3: "#3b0764", eyeType: "magic" }
+    ],
+    bossPrefix: "古代殲滅機神"
+  },
+
+  // 👿 デーモン族（Lv.400〜499）
+  {
     minLevel: 400,
-    maxLevel: 499,
-    raceName: "デーモン・魔王軍族",
+    maxLevel: 449,
+    raceName: "魔王軍・尖兵デーモン族",
     icon: "👿",
     types: [
       { name: "シャドウインプ", color1: "#c084fc", color2: "#7e22ce", color3: "#3b0764", eyeType: "demon" },
       { name: "レッサーデーモン", color1: "#f87171", color2: "#dc2626", color3: "#450a0a", eyeType: "demon" },
-      { name: "死神リーパー", color1: "#94a3b8", color2: "#1e293b", color3: "#020617", eyeType: "skull" },
-      { name: "アークデーモン", color1: "#fb7185", color2: "#e11d48", color3: "#881337", eyeType: "fierce" }
+      { name: "死神リーパー", color1: "#94a3b8", color2: "#1e293b", color3: "#020617", eyeType: "skull" }
     ],
-    bossPrefix: "魔王"
+    bossPrefix: "魔王軍幹部"
   },
   {
+    minLevel: 450,
+    maxLevel: 499,
+    raceName: "大魔王・ヘルロード族",
+    icon: "👿",
+    types: [
+      { name: "アークデーモン", color1: "#fb7185", color2: "#e11d48", color3: "#881337", eyeType: "fierce" },
+      { name: "地獄の大公爵", color1: "#f87171", color2: "#991b1b", color3: "#450a0a", eyeType: "demon" },
+      { name: "冥界の支配王", color1: "#c084fc", color2: "#581c87", color3: "#020617", eyeType: "magic" }
+    ],
+    bossPrefix: "極悪大魔王"
+  },
+
+  // 🐉 ドラゴン族（Lv.500〜599）
+  {
     minLevel: 500,
-    maxLevel: 599,
-    raceName: "契約飛竜・ドラゴン族",
+    maxLevel: 549,
+    raceName: "契約飛竜・ワイバーン族",
     icon: "🐉",
     types: [
-      { name: "ワイバーン", color1: "#86efac", color2: "#15803d", color3: "#052e16", eyeType: "dragon" },
-      { name: "フレイムドラゴン", color1: "#fca5a5", color2: "#b91c1c", color3: "#450a0a", eyeType: "dragon" },
+      { name: "グリーンワイバーン", color1: "#86efac", color2: "#15803d", color3: "#052e16", eyeType: "dragon" },
       { name: "フロストドラゴン", color1: "#bae6fd", color2: "#0284c7", color3: "#0c4a6e", eyeType: "dragon" },
       { name: "カオスドラゴン", color1: "#e879f9", color2: "#86198f", color3: "#4a044e", eyeType: "dragon" }
     ],
-    bossPrefix: "太古の覇竜"
+    bossPrefix: "天空の覇竜"
   },
   {
+    minLevel: 550,
+    maxLevel: 599,
+    raceName: "太古の炎龍帝・エンペラー族",
+    icon: "🐉",
+    types: [
+      { name: "フレイムエンペラー", color1: "#fca5a5", color2: "#b91c1c", color3: "#450a0a", eyeType: "dragon" },
+      { name: "黒炎の神竜", color1: "#94a3b8", color2: "#0f172a", color3: "#000000", eyeType: "dragon" },
+      { name: "黄金の極竜王", color1: "#fef08a", color2: "#f59e0b", color3: "#78350f", eyeType: "dragon" }
+    ],
+    bossPrefix: "創世の炎龍帝"
+  },
+
+  // 🌌 星辰の邪神（Lv.600〜699）
+  {
     minLevel: 600,
-    maxLevel: 699,
-    raceName: "星辰の邪神・宇宙支配者族",
+    maxLevel: 649,
+    raceName: "星辰の邪神・コズミック族",
     icon: "🌌",
     types: [
       { name: "コズミックビースト", color1: "#c084fc", color2: "#3b0764", color3: "#000000", eyeType: "cosmic" },
       { name: "星喰らいの影", color1: "#f472b6", color2: "#831843", color3: "#0f172a", eyeType: "cosmic" },
-      { name: "虚無の巨神", color1: "#38bdf8", color2: "#1e1b4b", color3: "#020617", eyeType: "cosmic" },
-      { name: "アザトースの化身", color1: "#fbbf24", color2: "#7c2d12", color3: "#000000", eyeType: "cosmic" }
+      { name: "虚無の巨怪", color1: "#38bdf8", color2: "#1e1b4b", color3: "#020617", eyeType: "cosmic" }
     ],
-    bossPrefix: "万物の支配神"
+    bossPrefix: "宇宙支配神"
   },
   {
+    minLevel: 650,
+    maxLevel: 699,
+    raceName: "深淵の旧支配者・アザトース族",
+    icon: "🌌",
+    types: [
+      { name: "アザトースの化身", color1: "#fbbf24", color2: "#7c2d12", color3: "#000000", eyeType: "cosmic" },
+      { name: "混沌の盲目神", color1: "#f43f5e", color2: "#581c87", color3: "#020617", eyeType: "cosmic" },
+      { name: "次元を喰らう終焉神", color1: "#38bdf8", color2: "#0f172a", color3: "#000000", eyeType: "cosmic" }
+    ],
+    bossPrefix: "万物の根源神"
+  },
+
+  // 👑 超越神（Lv.700〜）
+  {
     minLevel: 700,
-    maxLevel: 999999,
-    raceName: "超越神・アルティメット族",
+    maxLevel: 749,
+    raceName: "超越神・至高神界族",
     icon: "👑",
     types: [
       { name: "光輪の至高神", color1: "#fef08a", color2: "#f59e0b", color3: "#78350f", eyeType: "cosmic" },
-      { name: "時空の覇帝", color1: "#c084fc", color2: "#7c3aed", color3: "#2e1065", eyeType: "demon" },
-      { name: "終焉の創世龍", color1: "#f43f5e", color2: "#991b1b", color3: "#000000", eyeType: "dragon" }
+      { name: "時空の覇帝", color1: "#c084fc", color2: "#7c3aed", color3: "#2e1065", eyeType: "demon" }
     ],
     bossPrefix: "全知全能の"
+  },
+  {
+    minLevel: 750,
+    maxLevel: 999999,
+    raceName: "アルティメット創世覇神族",
+    icon: "👑",
+    types: [
+      { name: "終焉の創世龍神", color1: "#f43f5e", color2: "#991b1b", color3: "#000000", eyeType: "dragon" },
+      { name: "全宇宙の創造神", color1: "#fef08a", color2: "#f59e0b", color3: "#3b0764", eyeType: "cosmic" }
+    ],
+    bossPrefix: "アルティメット至高神"
   }
 ];
 
@@ -864,7 +952,7 @@ class Game {
     this.renderEnemyUI();
   }
 
-  // --- モンスターの外見・SVG動的描画（全端末・WebKit/Safari互換 100%確実描画） ---
+  // --- モンスターの外見・SVG動的描画（全端末・WebKit/Safari互換 100%確実描画 ＆ 50Lvごとの装備・衣装進化！） ---
   updateSlimeAppearance() {
     const wrapper = document.getElementById("slime-target");
     if (!wrapper || !this.enemy) return;
@@ -877,11 +965,54 @@ class Game {
     const name = this.enemy.name || "";
     const isBoss = this.enemy.isBoss;
     const isMetal = this.enemy.isMetal;
+    const level = this.enemy.level || 1;
+
+    // 50レベルごとの前後半判定（false: 前半50Lv / true: 後半50Lv の上位装備・進化形態！）
+    const tier50 = Math.floor((level - 1) / 50) % 2 === 1;
 
     let bodySvg = "";
 
     if (race.includes("スケルトン") || race.includes("ガイコツ") || race.includes("ボーン") || et === "skull" || name.includes("スケルトン") || name.includes("ボーン") || name.includes("ガイコツ")) {
-      // 💀 スケルトン族（頭蓋骨 ＋ 肋骨・脊椎・骨盤の胴体 ＋ 剣 ＋ 盾 ＋ クロスボーン 🦴）
+      // 💀 スケルトン族（前半: スケルトン歩兵 / 後半50Lv: 重装スカルナイト・大剣・鉄盾・マント！）
+      const capeSvg = tier50 ? `
+        <!-- なびく真紅のナイトマント（後半50Lv専用） -->
+        <path d="M48,95 Q15,145 10,195 Q50,185 70,195 Q60,145 55,100 Z" fill="#991b1b" stroke="#450a0a" stroke-width="2" />
+        <path d="M152,95 Q185,145 190,195 Q150,185 130,195 Q140,145 145,100 Z" fill="#991b1b" stroke="#450a0a" stroke-width="2" />
+      ` : "";
+
+      const helmSvg = tier50 ? `
+        <!-- 角付き鉄の騎士ヘルム（後半50Lv専用） -->
+        <path d="M42,40 Q100,10 158,40 L160,65 Q100,48 40,65 Z" fill="#475569" stroke="#0f172a" stroke-width="2.5" />
+        <polygon points="45,40 25,12 50,28" fill="#94a3b8" stroke="#1e293b" stroke-width="1.5" />
+        <polygon points="155,40 175,12 150,28" fill="#94a3b8" stroke="#1e293b" stroke-width="1.5" />
+        <line x1="60" y1="54" x2="140" y2="54" stroke="#0f172a" stroke-width="3" />
+      ` : "";
+
+      const shieldSvg = tier50 ? `
+        <!-- 鉄製スパイクシールド（後半50Lv専用） -->
+        <polygon points="8,125 42,118 46,168 25,186 6,162" fill="#334155" stroke="#0f172a" stroke-width="3" />
+        <circle cx="25" cy="150" r="9" fill="#ef4444" stroke="#0f172a" stroke-width="2" />
+        <polygon points="25,140 21,128 29,128" fill="#f8fafc" />
+      ` : `
+        <!-- 古びた木の盾（前半50Lv） -->
+        <polygon points="12,130 38,122 42,165 24,180 8,160" fill="#78350f" stroke="#451a03" stroke-width="2.5" />
+        <polygon points="18,138 34,132 36,160 24,170 14,158" fill="#9a3412" />
+        <line x1="25" y1="130" x2="25" y2="172" stroke="#451a03" stroke-width="2" />
+      `;
+
+      const swordSvg = tier50 ? `
+        <!-- 銀色の大剣 クレイモア（後半50Lv専用） -->
+        <polygon points="168,145 198,75 180,150" fill="#f8fafc" stroke="#334155" stroke-width="2.5" filter="drop-shadow(0 0 8px #38bdf8)" />
+        <line x1="162" y1="148" x2="182" y2="148" stroke="#fbbf24" stroke-width="5" stroke-linecap="round" />
+        <circle cx="188" cy="110" r="3.5" fill="#38bdf8" />
+        <line x1="172" y1="148" x2="172" y2="166" stroke="#451a03" stroke-width="4" stroke-linecap="round" />
+      ` : `
+        <!-- 錆びたショートソード（前半50Lv） -->
+        <polygon points="168,145 192,105 178,148" fill="#94a3b8" stroke="#334155" stroke-width="2" />
+        <line x1="162" y1="148" x2="178" y2="148" stroke="#78350f" stroke-width="4" stroke-linecap="round" />
+        <line x1="170" y1="148" x2="170" y2="162" stroke="#451a03" stroke-width="3" stroke-linecap="round" />
+      `;
+
       bodySvg = `
         <!-- 背後の交差する大腿骨（クロスボーン 🦴） -->
         <g stroke="#e2e8f0" stroke-width="12" stroke-linecap="round" fill="none">
@@ -893,49 +1024,37 @@ class Game {
         <circle cx="16" cy="184" r="8" fill="#f8fafc" /><circle cx="26" cy="174" r="8" fill="#f8fafc" />
         <circle cx="184" cy="184" r="8" fill="#f8fafc" /><circle cx="174" cy="174" r="8" fill="#f8fafc" />
 
+        ${capeSvg}
+
         <!-- 💀 胴体セクション（首・鎖骨・肋骨・脊椎・骨盤） -->
         <g id="skeleton-torso">
-          <!-- 首骨（頚椎） -->
           <rect x="94" y="85" width="12" height="15" rx="3" fill="#cbd5e1" stroke="#1e293b" stroke-width="2" />
-          
-          <!-- 鎖骨 -->
           <path d="M50,102 Q100,110 150,102" stroke="#f8fafc" stroke-width="6" stroke-linecap="round" fill="none" />
-          
-          <!-- 背骨（脊椎） -->
           <rect x="95" y="100" width="10" height="85" rx="3" fill="#f8fafc" stroke="#1e293b" stroke-width="2" />
           
-          <!-- 肋骨（あばら骨 4段） -->
           <path d="M56,115 Q100,126 144,115" stroke="#f8fafc" stroke-width="5.5" fill="none" stroke-linecap="round" />
           <path d="M60,132 Q100,143 140,132" stroke="#f8fafc" stroke-width="5.5" fill="none" stroke-linecap="round" />
           <path d="M66,149 Q100,158 134,149" stroke="#f8fafc" stroke-width="5" fill="none" stroke-linecap="round" />
           <path d="M72,165 Q100,172 128,165" stroke="#f8fafc" stroke-width="4.5" fill="none" stroke-linecap="round" />
           
-          <!-- 骨盤（腰骨） -->
           <path d="M65,182 Q100,196 135,182 L128,198 L72,198 Z" fill="#e2e8f0" stroke="#1e293b" stroke-width="2.5" />
           
-          <!-- 左腕 ＆ 古びた木の盾 -->
+          <!-- 左腕 ＆ 盾 -->
           <path d="M50,104 L26,142 L32,165" stroke="#cbd5e1" stroke-width="6" fill="none" stroke-linecap="round" />
-          <polygon points="12,130 38,122 42,165 24,180 8,160" fill="#78350f" stroke="#451a03" stroke-width="2.5" />
-          <polygon points="18,138 34,132 36,160 24,170 14,158" fill="#9a3412" />
-          <line x1="25" y1="130" x2="25" y2="172" stroke="#451a03" stroke-width="2" />
+          ${shieldSvg}
           
-          <!-- 右腕 ＆ 錆びたショートソード -->
+          <!-- 右腕 ＆ 剣 -->
           <path d="M150,104 L174,138 L170,158" stroke="#cbd5e1" stroke-width="6" fill="none" stroke-linecap="round" />
-          <!-- 剣身 -->
-          <polygon points="168,145 192,105 178,148" fill="#94a3b8" stroke="#334155" stroke-width="2" />
-          <line x1="162" y1="148" x2="178" y2="148" stroke="#78350f" stroke-width="4" stroke-linecap="round" />
-          <line x1="170" y1="148" x2="170" y2="162" stroke="#451a03" stroke-width="3" stroke-linecap="round" />
+          ${swordSvg}
         </g>
 
-        <!-- 💀 頭部セクション（リアルな頭蓋骨） -->
+        <!-- 💀 頭部セクション -->
         <g id="skeleton-head">
           <path d="M100,12 C142,12 158,35 155,65 C152,85 135,92 130,104 L130,118 L70,118 L70,104 C65,92 48,85 45,65 C42,35 58,12 100,12 Z" 
                 fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#334155" stroke-width="3.5" />
           
-          <!-- 額のひび割れ -->
           <path d="M100,16 L94,34 L104,46 L96,62" stroke="#1e293b" stroke-width="2.5" fill="none" stroke-linecap="round" />
           
-          <!-- 深い暗黒眼窩 ＆ 赤くギラつく瞳 -->
           <ellipse cx="72" cy="62" rx="16" ry="17" fill="#0f172a" stroke="#1e293b" stroke-width="2.5" />
           <circle cx="72" cy="62" r="6" fill="#ef4444" filter="drop-shadow(0 0 8px #ef4444)" />
           <circle cx="74" cy="60" r="2" fill="#ffffff" />
@@ -944,75 +1063,103 @@ class Game {
           <circle cx="128" cy="62" r="6" fill="#ef4444" filter="drop-shadow(0 0 8px #ef4444)" />
           <circle cx="130" cy="60" r="2" fill="#ffffff" />
           
-          <!-- 三角形の鼻腔 -->
           <polygon points="100,75 92,90 108,90" fill="#0f172a" />
           
-          <!-- 歯並びと顎骨 -->
           <rect x="76" y="98" width="48" height="20" rx="3" fill="#0f172a" stroke="#1e293b" stroke-width="2" />
           <path d="M82,98 L82,118 M91,98 L91,118 M100,98 L100,118 M109,98 L109,118 M118,98 L118,118 M76,108 L124,108" 
                 stroke="#f8fafc" stroke-width="2.5" stroke-linecap="square" />
+          
+          ${helmSvg}
         </g>
       `;
     } else if (race.includes("ゴブリン") || race.includes("グブリン") || race.includes("魔獣") || race.includes("オーク") || race.includes("トロール") || et === "goblin" || name.includes("ゴブリン") || name.includes("オーク") || name.includes("トロール")) {
-      // 👺 ゴブリン族（ゴブリン頭部 ＋ 筋肉質な胴体 ＋ レザーベスト鎧 ＋ 太いベルト ＋ 短剣 🗡️）
+      // 👺 ゴブリン族（前半50Lv: グリーンゴブリン短剣 / 後半50Lv: レッドゴブリン狂戦士 二刀流戦斧＆毛皮＆紫マント！）
+      const capeSvg = tier50 ? `
+        <!-- 紫の狂戦士マント（後半50Lv専用） -->
+        <path d="M38,100 Q10,150 15,195 Q50,185 65,190" fill="#581c87" stroke="#3b0764" stroke-width="2" />
+        <path d="M162,100 Q190,150 185,195 Q150,185 135,190" fill="#581c87" stroke="#3b0764" stroke-width="2" />
+      ` : "";
+
+      const furArmors = tier50 ? `
+        <!-- 獣毛ファージャケット（後半50Lv専用） -->
+        <ellipse cx="48" cy="98" rx="16" ry="12" fill="#d97706" stroke="#78350f" stroke-width="2" />
+        <ellipse cx="152" cy="98" rx="16" ry="12" fill="#d97706" stroke="#78350f" stroke-width="2" />
+      ` : "";
+
+      const headGear = tier50 ? `
+        <!-- 角付き鉄のサークレット（後半50Lv専用） -->
+        <path d="M46,44 Q100,56 154,44 L152,32 Q100,44 48,32 Z" fill="#334155" stroke="#0f172a" stroke-width="2" />
+        <polygon points="68,40 58,16 76,34" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5" />
+        <polygon points="132,40 142,16 124,34" fill="#f8fafc" stroke="#0f172a" stroke-width="1.5" />
+        <circle cx="100" cy="45" r="4.5" fill="#dc2626" />
+      ` : `
+        <!-- 額の赤バンダナ（前半50Lv） -->
+        <path d="M48,46 Q100,60 152,46 L152,34 Q100,48 48,34 Z" fill="#b91c1c" stroke="#450a0a" stroke-width="2" />
+      `;
+
+      const weaponsSvg = tier50 ? `
+        <!-- 左手 トマホーク戦斧（二刀流 🪓） -->
+        <polygon points="10,120 0,105 16,100 22,115" fill="#cbd5e1" stroke="#0f172a" stroke-width="2" />
+        <line x1="6" y1="135" x2="20" y2="100" stroke="#78350f" stroke-width="4" stroke-linecap="round" />
+        
+        <!-- 右手 トマホーク戦斧（二刀流 🪓） -->
+        <polygon points="190,120 200,105 184,100 178,115" fill="#cbd5e1" stroke="#0f172a" stroke-width="2" />
+        <line x1="194" y1="135" x2="180" y2="100" stroke="#78350f" stroke-width="4" stroke-linecap="round" />
+      ` : `
+        <!-- 右手 ゴブリンダガー（短剣 🗡️） -->
+        <polygon points="176,148 198,95 186,155" fill="#e2e8f0" stroke="#334155" stroke-width="2.5" />
+        <line x1="172" y1="150" x2="190" y2="150" stroke="#fbbf24" stroke-width="4" stroke-linecap="round" />
+        <line x1="180" y1="150" x2="180" y2="168" stroke="#78350f" stroke-width="3.5" stroke-linecap="round" />
+      `;
+
       bodySvg = `
-        <!-- 👺 胴体セクション（肩・胸・革ベスト・太いベルト・腕・短剣） -->
+        ${capeSvg}
+
+        <!-- 👺 胴体セクション -->
         <g id="goblin-torso">
-          <!-- たくましい緑の首と肩・胸部 -->
           <rect x="85" y="80" width="30" height="25" fill="${color2}" stroke="${color3}" stroke-width="2.5" />
           <path d="M30,118 C30,96 68,96 100,96 C132,96 170,96 170,118 L165,190 L35,190 Z" 
                 fill="${color2}" stroke="${color3}" stroke-width="3.5" />
           
-          <!-- レザーベスト（茶色の革アーマー） -->
           <path d="M45,98 L76,98 L72,172 L36,172 Z" fill="#78350f" stroke="#451a03" stroke-width="2" />
           <path d="M155,98 L124,98 L128,172 L164,172 Z" fill="#78350f" stroke="#451a03" stroke-width="2" />
           
-          <!-- ベストの編み上げ紐 -->
           <path d="M72,112 L128,122 M128,112 L72,122 M70,135 L130,145 M130,135 L70,145 M70,158 L130,165" 
                 stroke="#fbbf24" stroke-width="2" stroke-linecap="round" />
           
-          <!-- 太い革ベルト ＆ 金のバックル -->
           <rect x="34" y="170" width="132" height="20" fill="#451a03" stroke="#0f172a" stroke-width="2.5" />
           <rect x="86" y="165" width="28" height="30" rx="5" fill="#fbbf24" stroke="#d97706" stroke-width="2.5" />
           <rect x="93" y="172" width="14" height="16" rx="2" fill="#451a03" />
           
-          <!-- 左腕 ＆ リストバンド -->
+          ${furArmors}
+
           <path d="M35,115 L14,148 L18,175" stroke="${color2}" stroke-width="12" stroke-linecap="round" fill="none" />
           <rect x="8" y="148" width="16" height="12" rx="3" fill="#451a03" stroke="#000" stroke-width="1.5" />
           
-          <!-- 右腕 ＆ 握りしめたゴブリンダガー（短剣 🗡️） -->
           <path d="M165,115 L186,148 L180,168" stroke="${color2}" stroke-width="12" stroke-linecap="round" fill="none" />
           <rect x="176" y="148" width="16" height="12" rx="3" fill="#451a03" stroke="#000" stroke-width="1.5" />
-          <!-- 短剣（刃・鍔・柄） -->
-          <polygon points="176,148 198,95 186,155" fill="#e2e8f0" stroke="#334155" stroke-width="2.5" />
-          <line x1="172" y1="150" x2="190" y2="150" stroke="#fbbf24" stroke-width="4" stroke-linecap="round" />
-          <line x1="180" y1="150" x2="180" y2="168" stroke="#78350f" stroke-width="3.5" stroke-linecap="round" />
+
+          ${weaponsSvg}
         </g>
 
-        <!-- 👺 頭部セクション（大耳・モヒカン・赤バンダナ・小鬼顔・鉤鼻・大牙） -->
+        <!-- 👺 頭部セクション -->
         <g id="goblin-head">
-          <!-- 左右に大きく突き出た巨大な尖り耳（0px〜200px） -->
           <polygon points="42,75 0,30 32,95" fill="${color2}" stroke="${color3}" stroke-width="3" />
           <polygon points="38,72 8,38 32,90" fill="#fca5a5" opacity="0.8" />
           <polygon points="158,75 200,30 168,95" fill="${color2}" stroke="${color3}" stroke-width="3" />
           <polygon points="162,72 192,38 168,90" fill="#fca5a5" opacity="0.8" />
           
-          <!-- 耳の金ピアス -->
           <circle cx="12" cy="48" r="4.5" fill="#fbbf24" stroke="#d97706" stroke-width="1.5" />
           
-          <!-- ゴブリンの顔輪郭（シャープな小鬼ヘッド） -->
           <path d="M100,20 C138,20 156,48 152,78 C148,108 126,128 100,138 C74,128 52,108 48,78 C44,48 62,20 100,20 Z" 
                 fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="${color3}" stroke-width="3.5" />
           
-          <!-- ボサボサの黒髪モヒカン -->
           <polygon points="92,22 100,-4 108,22" fill="#0f172a" />
           <polygon points="76,26 84,2 96,26" fill="#0f172a" />
           <polygon points="104,26 116,2 124,26" fill="#0f172a" />
           
-          <!-- 額の赤バンダナ（ハチマキ） -->
-          <path d="M48,46 Q100,60 152,46 L152,34 Q100,48 48,34 Z" fill="#b91c1c" stroke="#450a0a" stroke-width="2" />
-          
-          <!-- ギラつく黄色い目（吊り目） -->
+          ${headGear}
+
           <polygon points="60,68 86,78 66,85" fill="#fef08a" stroke="#0f172a" stroke-width="2" />
           <circle cx="74" cy="76" r="4" fill="#7f1d1d" />
           <circle cx="76" cy="74" r="1.5" fill="#ffffff" />
@@ -1021,170 +1168,221 @@ class Game {
           <circle cx="126" cy="76" r="4" fill="#7f1d1d" />
           <circle cx="124" cy="74" r="1.5" fill="#ffffff" />
           
-          <!-- 尖った鉤鼻（鷲鼻） -->
           <polygon points="100,62 88,96 112,96" fill="${color3}" stroke="#0f172a" stroke-width="2" />
           <circle cx="94" cy="92" r="2.5" fill="#0f172a" />
           <circle cx="106" cy="92" r="2.5" fill="#0f172a" />
           
-          <!-- 裂けた口と突き出た2本の大牙（下顎から上向き） -->
           <path d="M68,110 Q100,130 132,110" stroke="#0f172a" stroke-width="4" fill="none" stroke-linecap="round" />
           <polygon points="76,122 82,96 90,122" fill="#ffffff" stroke="#0f172a" stroke-width="1.5" />
           <polygon points="110,122 118,96 124,122" fill="#ffffff" stroke="#0f172a" stroke-width="1.5" />
         </g>
       `;
     } else if (race.includes("ゴーレム") || race.includes("巨神") || et === "golem" || name.includes("ゴーレム") || name.includes("巨神")) {
-      // 🗿 ゴーレム・魔導巨神族（巨石頭部 ＋ 巨岩胸部プレート ＋ 巨大ショルダーアーマー ＋ 魔導コア 💎）
+      // 🗿 ゴーレム族（前半50Lv: 遺跡の巨像 / 後半50Lv: 古代魔導機神コロッサス 黄金装甲・灼熱メガコア・浮遊ビット！）
+      const bitWeapons = tier50 ? `
+        <!-- 浮遊する3つの古代ビット兵器（後半50Lv専用） -->
+        <polygon points="25,45 35,35 30,55 20,50" fill="#38bdf8" filter="drop-shadow(0 0 8px #38bdf8)" stroke="#0284c7" stroke-width="1.5" />
+        <polygon points="175,45 185,35 180,55 170,50" fill="#38bdf8" filter="drop-shadow(0 0 8px #38bdf8)" stroke="#0284c7" stroke-width="1.5" />
+        <polygon points="100,-2 108,-12 100,-17 92,-12" fill="#38bdf8" filter="drop-shadow(0 0 8px #38bdf8)" stroke="#0284c7" stroke-width="1.5" />
+      ` : "";
+
+      const coreSvg = tier50 ? `
+        <!-- 灼熱の超古代メガコア（後半50Lv専用 🔥） -->
+        <polygon points="100,114 125,138 100,162 75,138" fill="#ef4444" filter="drop-shadow(0 0 20px #ef4444)" stroke="#991b1b" stroke-width="3" />
+        <circle cx="100" cy="138" r="9" fill="#fbbf24" filter="drop-shadow(0 0 10px #fbbf24)" />
+        <circle cx="100" cy="138" r="4" fill="#ffffff" />
+      ` : `
+        <!-- 古代魔法動力コア（前半50Lv 💎） -->
+        <polygon points="100,118 120,138 100,158 80,138" fill="#38bdf8" filter="drop-shadow(0 0 16px #38bdf8)" stroke="#0284c7" stroke-width="2.5" />
+        <polygon points="100,126 110,138 100,150 90,138" fill="#ffffff" />
+      `;
+
+      const goldenArmors = tier50 ? `
+        <!-- 黄金ルーン装甲プレート（後半50Lv専用） -->
+        <polygon points="100,8 126,22 100,32 74,22" fill="#fbbf24" stroke="#d97706" stroke-width="2" />
+        <polygon points="5,70 30,45 42,95 15,110" fill="#fbbf24" stroke="#d97706" stroke-width="2.5" />
+        <polygon points="195,70 170,45 158,95 185,110" fill="#fbbf24" stroke="#d97706" stroke-width="2.5" />
+      ` : "";
+
       bodySvg = `
-        <!-- 🗿 胴体セクション（巨大ショルダーアーマー・巨岩胸部・魔導コア・岩の剛腕） -->
+        ${bitWeapons}
+
+        <!-- 🗿 胴体セクション -->
         <g id="golem-torso">
-          <!-- 左右の巨岩ショルダーアーマー -->
           <polygon points="0,75 35,45 48,110 15,130" fill="${color3}" stroke="#0f172a" stroke-width="4" />
           <polygon points="200,75 165,45 152,110 185,130" fill="${color3}" stroke="#0f172a" stroke-width="4" />
           
-          <!-- 巨岩の剛腕（左右） -->
           <polygon points="12,125 38,118 45,185 18,190" fill="${color3}" stroke="#0f172a" stroke-width="3.5" />
           <polygon points="188,125 162,118 155,185 182,190" fill="${color3}" stroke="#0f172a" stroke-width="3.5" />
           
-          <!-- 重厚な胸部巨岩プレート -->
           <polygon points="45,95 155,95 165,195 35,195" 
                    fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#0f172a" stroke-width="5" />
           
-          <!-- 岩石の深い亀裂ライン -->
           <path d="M45,95 L85,135 L65,175 M155,95 L115,135 L135,175 M85,135 L115,135" 
                 stroke="#0f172a" stroke-width="4" fill="none" />
           
-          <!-- 胸の中央に輝く古代魔法動力コア 💎 -->
-          <polygon points="100,118 120,138 100,158 80,138" fill="#38bdf8" filter="drop-shadow(0 0 16px #38bdf8)" stroke="#0284c7" stroke-width="2.5" />
-          <polygon points="100,126 110,138 100,150 90,138" fill="#ffffff" />
+          ${coreSvg}
+          ${goldenArmors}
         </g>
 
-        <!-- 🗿 頭部セクション（多角形巨石ブロック・単眼バイザー） -->
+        <!-- 🗿 頭部セクション -->
         <g id="golem-head">
           <polygon points="100,12 155,30 162,88 138,108 62,108 38,88 45,30" 
                    fill="url(#monster-grad)" stroke="#0f172a" stroke-width="4.5" />
           
-          <!-- 魔導古代ルーン単眼バイザー -->
           <rect x="52" y="48" width="96" height="24" rx="8" fill="#0f172a" stroke="#334155" stroke-width="2.5" />
           <circle cx="100" cy="60" r="10" fill="#38bdf8" filter="drop-shadow(0 0 14px #38bdf8)" />
           <circle cx="100" cy="60" r="4" fill="#ffffff" />
           
-          <!-- 無骨な石の口スリット -->
           <path d="M72,92 L128,92" stroke="#0f172a" stroke-width="7" stroke-linecap="square" />
         </g>
       `;
     } else if (race.includes("デーモン") || race.includes("魔王") || et === "demon" || name.includes("デーモン") || name.includes("魔王") || name.includes("インプ") || name.includes("リーパー")) {
-      // 👿 デーモン・魔王軍族（巨大悪魔角 ＋ コウモリ大翼 ＋ 筋骨隆々の上半身 ＋ 黒棘肩当て ＋ 悪魔の爪）
+      // 👿 デーモン族（前半50Lv: 尖兵デーモン / 後半50Lv: 大魔王・ヘルロード 4本角・漆黒魔王マント・魔剣ダークセイバー！）
+      const extraHorns = tier50 ? `
+        <!-- 追加の第2魔王角（後半50Lv専用） -->
+        <path d="M50,45 C15,-25 -5,-15 -10,-35 C5,0 25,20 40,55 Z" fill="#991b1b" stroke="#000" stroke-width="3" />
+        <path d="M150,45 C185,-25 205,-15 210,-35 C195,0 175,20 160,55 Z" fill="#991b1b" stroke="#000" stroke-width="3" />
+      ` : "";
+
+      const darkSaber = tier50 ? `
+        <!-- 魔剣ダークセイバー（後半50Lv専用 ⚡🗡️） -->
+        <polygon points="175,135 204,65 186,145" fill="#a855f7" filter="drop-shadow(0 0 14px #c084fc)" stroke="#ffffff" stroke-width="2" />
+        <circle cx="190" cy="100" r="4" fill="#f43f5e" />
+      ` : "";
+
       bodySvg = `
-        <!-- 背後の巨大コウモリ翼（左右） -->
+        <!-- 背後の巨大コウモリ翼 -->
         <path d="M35,85 Q-30,25 0,155 Q30,125 40,85 Z" fill="#1e1b4b" stroke="#000000" stroke-width="3" />
         <path d="M165,85 Q230,25 200,155 Q170,125 160,85 Z" fill="#1e1b4b" stroke="#000000" stroke-width="3" />
 
-        <!-- 👿 胴体セクション（筋肉質な胸筋・腹筋・肩の黒棘アーマー・悪魔の爪腕） -->
+        <!-- 👿 胴体セクション -->
         <g id="demon-torso">
-          <!-- たくましい筋肉質の上半身 -->
           <path d="M45,95 C45,80 75,80 100,80 C125,80 155,80 155,95 L145,190 L55,190 Z" 
                 fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#450a0a" stroke-width="4" />
           
-          <!-- 大胸筋 ＆ 腹筋ライン -->
           <path d="M100,90 L100,175 M62,120 Q100,130 138,120 M68,142 Q100,150 132,142 M74,162 Q100,168 126,162" 
                 stroke="#450a0a" stroke-width="3" fill="none" />
           
-          <!-- 肩の黒棘アーマー -->
           <polygon points="38,90 18,65 48,80" fill="#0f172a" stroke="#000" stroke-width="2" />
           <polygon points="162,90 182,65 152,80" fill="#0f172a" stroke="#000" stroke-width="2" />
           
-          <!-- 悪魔の爪腕（左右） -->
           <path d="M45,100 L22,135 L26,165" stroke="#7f1d1d" stroke-width="10" stroke-linecap="round" fill="none" />
           <polygon points="20,165 24,180 28,165" fill="#ffffff" />
           <path d="M155,100 L178,135 L174,165" stroke="#7f1d1d" stroke-width="10" stroke-linecap="round" fill="none" />
           <polygon points="168,165 174,180 180,165" fill="#ffffff" />
+
+          ${darkSaber}
         </g>
 
-        <!-- 👿 頭部セクション（湾曲悪魔角・邪悪な吊り目・魔王紋章・鋭い牙） -->
+        <!-- 👿 頭部セクション -->
         <g id="demon-head">
-          <!-- 湾曲した巨大悪魔角（2本） -->
           <path d="M68,42 C30,-15 10,-5 0,-20 C15,15 35,32 52,60 Z" fill="#450a0a" stroke="#000000" stroke-width="3" />
           <path d="M132,42 C170,-15 190,-5 200,-20 C185,15 165,32 148,60 Z" fill="#450a0a" stroke="#000000" stroke-width="3" />
           
-          <!-- デーモンフェイス -->
+          ${extraHorns}
+
           <path d="M100,22 C138,22 155,50 150,82 C145,110 128,125 100,128 C72,125 55,110 50,82 C45,50 62,22 100,22 Z" 
                 fill="url(#monster-grad)" stroke="#450a0a" stroke-width="3.5" />
           
-          <!-- 額の魔王紋章 -->
           <circle cx="100" cy="45" r="7.5" fill="#dc2626" filter="drop-shadow(0 0 10px #dc2626)" />
           
-          <!-- 邪悪な吊り目 -->
           <polygon points="56,66 84,78 60,84" fill="#fbbf24" stroke="#0f172a" stroke-width="2" />
           <circle cx="72" cy="76" r="4" fill="#7f1d1d" />
           <polygon points="144,66 116,78 140,84" fill="#fbbf24" stroke="#0f172a" stroke-width="2" />
           <circle cx="128" cy="76" r="4" fill="#7f1d1d" />
           
-          <!-- 牙の並ぶ邪悪な口 -->
           <path d="M72,100 Q100,120 128,100" stroke="#0f172a" stroke-width="4" fill="#450a0a" />
           <polygon points="80,100 85,110 90,100" fill="#ffffff" />
           <polygon points="110,100 115,110 120,100" fill="#ffffff" />
         </g>
       `;
     } else if (race.includes("ドラゴン") || race.includes("飛竜") || race.includes("竜") || et === "dragon" || name.includes("ドラゴン") || name.includes("ワイバーン") || name.includes("竜")) {
-      // 🐉 契約飛竜・ドラゴン族（竜頭 ＋ 頑丈な首と鱗の胴体 ＋ 竜翼 ＋ 鉤爪前足 🦅）
+      // 🐉 ドラゴン族（前半50Lv: ワイバーン / 後半50Lv: 太古の炎龍帝 6本黄金神角・ブレス発光・火の粉エフェクト！）
+      const extraDragonHorns = tier50 ? `
+        <!-- 黄金に輝く6本神角（後半50Lv専用） -->
+        <polygon points="50,40 20,-8 40,40" fill="#fbbf24" stroke="#d97706" stroke-width="2" />
+        <polygon points="150,40 180,-8 160,40" fill="#fbbf24" stroke="#d97706" stroke-width="2" />
+      ` : "";
+
+      const breathGlow = tier50 ? `
+        <!-- 喉元のブレス発光帯 ＆ 舞い散る火の粉（後半50Lv専用 🔥） -->
+        <path d="M90,75 L100,105 L110,75 Z" fill="#fbbf24" filter="drop-shadow(0 0 14px #f59e0b)" />
+        <circle cx="35" cy="55" r="3" fill="#ef4444" filter="drop-shadow(0 0 6px #ef4444)" />
+        <circle cx="165" cy="55" r="3" fill="#ef4444" filter="drop-shadow(0 0 6px #ef4444)" />
+        <circle cx="100" cy="2" r="4" fill="#fbbf24" filter="drop-shadow(0 0 8px #fbbf24)" />
+      ` : "";
+
       bodySvg = `
-        <!-- 背後の広がる竜翼（左右） -->
         <polygon points="30,85 0,35 15,140" fill="#78350f" stroke="#451a03" stroke-width="2.5" />
         <polygon points="170,85 200,35 185,140" fill="#78350f" stroke="#451a03" stroke-width="2.5" />
 
-        <!-- 🐉 胴体セクション（頑丈な首・硬い腹部プレート・鉤爪前足） -->
+        <!-- 🐉 胴体セクション -->
         <g id="dragon-torso">
-          <!-- 竜の胴体 -->
           <path d="M45,95 C45,75 155,75 155,95 L145,190 L55,190 Z" 
                 fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#451a03" stroke-width="4" />
           
-          <!-- 腹部の黄金鱗プレート（段々蛇腹） -->
           <path d="M68,100 Q100,110 132,100 L126,188 Q100,195 74,188 Z" fill="#fef08a" stroke="#d97706" stroke-width="2.5" />
           <line x1="70" y1="120" x2="130" y2="120" stroke="#d97706" stroke-width="2" />
           <line x1="72" y1="140" x2="128" y2="140" stroke="#d97706" stroke-width="2" />
           <line x1="74" y1="160" x2="126" y2="160" stroke="#d97706" stroke-width="2" />
           <line x1="75" y1="178" x2="125" y2="178" stroke="#d97706" stroke-width="2" />
           
-          <!-- 竜の鋭い鉤爪前足（左右） -->
           <path d="M45,105 L20,140 L26,165" stroke="${color2}" stroke-width="10" stroke-linecap="round" fill="none" />
           <polygon points="18,165 24,180 30,165" fill="#fef08a" stroke="#d97706" stroke-width="1.5" />
           <path d="M155,105 L180,140 L174,165" stroke="${color2}" stroke-width="10" stroke-linecap="round" fill="none" />
           <polygon points="170,165 176,180 182,165" fill="#fef08a" stroke="#d97706" stroke-width="1.5" />
         </g>
 
-        <!-- 🐉 頭部セクション（竜角・縦スリット瞳・マズル・牙） -->
+        <!-- 🐉 頭部セクション -->
         <g id="dragon-head">
-          <!-- 竜の4本角 -->
           <polygon points="70,45 35,2 55,45" fill="#78350f" stroke="#451a03" stroke-width="2.5" />
           <polygon points="130,45 165,2 145,45" fill="#78350f" stroke="#451a03" stroke-width="2.5" />
           <polygon points="80,40 60,12 72,40" fill="#9a3412" />
           <polygon points="120,40 140,12 128,40" fill="#9a3412" />
           
-          <!-- ドラゴンヘッド -->
+          ${extraDragonHorns}
+
           <path d="M100,18 C145,18 165,48 160,85 C155,115 132,125 100,125 C68,125 45,115 40,85 C35,48 55,18 100,18 Z" 
                 fill="url(#monster-grad)" stroke="#451a03" stroke-width="3.5" />
           
-          <!-- ドラゴンの瞳（縦スリット） -->
           <ellipse cx="70" cy="65" rx="14" ry="11" fill="#fbbf24" stroke="#0f172a" stroke-width="2" />
           <rect x="68" cy="56" width="3.5" height="18" rx="1.5" fill="#0f172a" />
           <ellipse cx="130" cy="65" rx="14" ry="11" fill="#fbbf24" stroke="#0f172a" stroke-width="2" />
           <rect x="128" cy="56" width="3.5" height="18" rx="1.5" fill="#0f172a" />
           
-          <!-- 鼻孔 -->
           <circle cx="88" cy="95" r="3.5" fill="#0f172a" />
           <circle cx="112" cy="95" r="3.5" fill="#0f172a" />
           
-          <!-- 牙の並ぶ顎 -->
           <path d="M65,108 Q100,128 135,108" stroke="#0f172a" stroke-width="4" fill="none" />
           <polygon points="76,108 81,118 86,108" fill="#ffffff" />
           <polygon points="96,109 100,120 104,109" fill="#ffffff" />
           <polygon points="114,108 119,118 124,108" fill="#ffffff" />
+
+          ${breathGlow}
         </g>
       `;
     } else if (race.includes("宇宙") || race.includes("星辰") || race.includes("邪神") || race.includes("コズミック") || et === "cosmic" || name.includes("コズミック") || name.includes("アザトース") || name.includes("星")) {
-      // 🌌 星辰の邪神・宇宙支配者族（うねる触手 ＆ 巨大な第三の目 ＆ 異形胴体）
+      // 🌌 星辰の邪神（前半50Lv: コズミック / 後半50Lv: アザトース 12本触手・超邪眼・ブラックホール魔方陣！）
+      const cosmicCircle = tier50 ? `
+        <!-- コズミックブラックホール魔方陣（後半50Lv専用） -->
+        <circle cx="100" cy="100" r="92" fill="none" stroke="#a855f7" stroke-width="3" stroke-dasharray="4,8" opacity="0.85" />
+      ` : "";
+
+      const eyeSvg = tier50 ? `
+        <!-- 真紅の超邪眼（後半50Lv専用） -->
+        <ellipse cx="100" cy="65" rx="30" ry="22" fill="#ef4444" filter="drop-shadow(0 0 16px #ef4444)" stroke="#0f172a" stroke-width="3" />
+        <circle cx="100" cy="65" r="11" fill="#450a0a" /><circle cx="100" cy="65" r="4" fill="#ffffff" />
+      ` : `
+        <!-- 開眼した第三の目（前半50Lv） -->
+        <ellipse cx="100" cy="65" rx="26" ry="18" fill="#f472b6" stroke="#0f172a" stroke-width="3" />
+        <circle cx="100" cy="65" r="10" fill="#3b0764" /><circle cx="100" cy="65" r="3.5" fill="#ffffff" />
+      `;
+
       bodySvg = `
-        <!-- 蠢く太い触手（8本） -->
+        ${cosmicCircle}
+
+        <!-- 蠢く太い触手群 -->
         <path d="M25,115 Q-15,145 0,185" stroke="#7e22ce" stroke-width="14" stroke-linecap="round" fill="none" />
         <path d="M175,115 Q215,145 200,185" stroke="#7e22ce" stroke-width="14" stroke-linecap="round" fill="none" />
         <path d="M40,135 Q15,175 35,195" stroke="#a855f7" stroke-width="11" stroke-linecap="round" fill="none" />
@@ -1195,10 +1393,7 @@ class Game {
         <!-- コズミック胴体 -->
         <circle cx="100" cy="100" r="68" fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#c084fc" stroke-width="4.5" />
         
-        <!-- 開眼した第三の目（中央巨大） -->
-        <ellipse cx="100" cy="65" rx="26" ry="18" fill="#f472b6" stroke="#0f172a" stroke-width="3" />
-        <circle cx="100" cy="65" r="10" fill="#3b0764" />
-        <circle cx="100" cy="65" r="3.5" fill="#ffffff" />
+        ${eyeSvg}
         
         <!-- 怪異な瞳群 -->
         <ellipse cx="62" cy="105" rx="12" ry="12" fill="#fef08a" />
@@ -1209,19 +1404,30 @@ class Game {
         <circle cx="120" cy="135" r="8" fill="#fef08a" /><circle cx="120" cy="135" r="3" fill="#7f1d1d" />
       `;
     } else if (race.includes("超越") || race.includes("アルティメット") || race.includes("神") || name.includes("至高神") || name.includes("覇帝") || name.includes("創世龍")) {
-      // 👑 超越神・アルティメット族（八芒星幾何学光輪 ＆ 聖なる白金法衣 ＆ 浮遊オーブ ＆ 至高神眼）
+      // 👑 超越神（前半50Lv: 八芒星・神衣 / 後半50Lv: アルティメット 6枚神翼・創世神杖・黄金オーラ！）
+      const wingsAndStaff = tier50 ? `
+        <!-- 純白の6枚神翼（後半50Lv専用 🪽） -->
+        <path d="M30,65 Q-30,15 10,105" stroke="#f8fafc" stroke-width="8" stroke-linecap="round" fill="none" filter="drop-shadow(0 0 10px #fbbf24)" />
+        <path d="M170,65 Q230,15 190,105" stroke="#f8fafc" stroke-width="8" stroke-linecap="round" fill="none" filter="drop-shadow(0 0 10px #fbbf24)" />
+        
+        <!-- 創世の神杖（セプター 🪄） -->
+        <line x1="175" y1="85" x2="175" y2="185" stroke="#fbbf24" stroke-width="4.5" stroke-linecap="round" />
+        <polygon points="175,70 186,85 175,94 164,85" fill="#38bdf8" filter="drop-shadow(0 0 12px #38bdf8)" />
+      ` : "";
+
       bodySvg = `
         <!-- 背後の八芒星光輪 -->
         <circle cx="100" cy="100" r="88" fill="none" stroke="#fbbf24" stroke-width="3" stroke-dasharray="6,6" />
         <polygon points="100,8 192,100 100,192 8,100" fill="none" stroke="#fef08a" stroke-width="2.5" opacity="0.8" />
         <polygon points="100,12 188,100 100,188 12,100" fill="none" stroke="#f59e0b" stroke-width="2.5" opacity="0.8" transform="rotate(45 100 100)" />
         
+        ${wingsAndStaff}
+
         <!-- 聖なる白金の神衣（ローブ胴体） -->
         <path d="M45,90 L155,90 L168,195 L32,195 Z" fill="#f8fafc" stroke="#fbbf24" stroke-width="4" />
         <path d="M75,90 L100,140 L125,90" fill="#fbbf24" opacity="0.85" />
         <circle cx="100" cy="155" r="8" fill="#38bdf8" filter="drop-shadow(0 0 10px #38bdf8)" />
         
-        <!-- 浮遊する神のオーブ（左右） -->
         <circle cx="22" cy="120" r="9" fill="#38bdf8" filter="drop-shadow(0 0 12px #38bdf8)" />
         <circle cx="178" cy="120" r="9" fill="#38bdf8" filter="drop-shadow(0 0 12px #38bdf8)" />
 
@@ -1229,7 +1435,6 @@ class Game {
         <path d="M100,20 C145,20 168,55 162,95 C158,125 135,135 100,135 C65,135 42,125 38,95 C32,55 55,20 100,20 Z" 
               fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#fef08a" stroke-width="4" />
         
-        <!-- 神眼 -->
         <ellipse cx="68" cy="78" rx="15" ry="10" fill="#ffffff" stroke="#d97706" stroke-width="2" />
         <circle cx="68" cy="78" r="5.5" fill="#38bdf8" />
         <ellipse cx="132" cy="78" rx="15" ry="10" fill="#ffffff" stroke="#d97706" stroke-width="2" />
@@ -1238,7 +1443,16 @@ class Game {
         <circle cx="100" cy="50" r="4" fill="#7c3aed" />
       `;
     } else {
-      // 💧 スライム族（ぷるぷるスライムボディ + 光沢 + ほっぺ）
+      // 💧 スライム族（前半50Lv: かわいいスライム / 後半50Lv: ナイト兜 ＆ 初心者リボンタイ 🎀）
+      const knightSlimeGear = tier50 ? `
+        <!-- ナイトバイザー兜（後半50Lv専用 🛡️） -->
+        <path d="M58,48 Q100,26 142,48 L144,66 Q100,50 56,66 Z" fill="#64748b" stroke="#1e293b" stroke-width="2" />
+        <line x1="75" y1="56" x2="125" y2="56" stroke="#0f172a" stroke-width="2.5" />
+        <!-- 勇敢なリボンタイ（🎀） -->
+        <polygon points="100,134 88,148 112,148" fill="#ef4444" stroke="#991b1b" stroke-width="1.5" />
+        <circle cx="100" cy="134" r="3.5" fill="#fbbf24" />
+      ` : "";
+
       bodySvg = `
         <path fill="url(#monster-grad)" filter="url(#slime-glow)"
               d="M100,30 C150,30 185,85 185,135 C185,175 155,185 100,185 C45,185 15,175 15,135 C15,85 50,30 100,30 Z" />
@@ -1251,6 +1465,7 @@ class Game {
         <ellipse cx="52" cy="130" rx="9" ry="5" fill="#f43f5e" opacity="0.6" />
         <ellipse cx="148" cy="130" rx="9" ry="5" fill="#f43f5e" opacity="0.6" />
         <path d="M92,128 Q100,136 108,128" stroke="#0f172a" stroke-width="3" fill="none" stroke-linecap="round" />
+        ${knightSlimeGear}
       `;
     }
 
