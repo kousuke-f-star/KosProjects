@@ -2574,8 +2574,8 @@ class Game {
     let droppedCrystal = false;
     if (isBoss) {
       this.sound.playBossDefeat();
-      // 💎 ボス討伐時の転生の水晶ドロップ確率（通常ボス: 1/3, ボス再戦: 1/6）
-      const crystalChance = this.state.isBossReplay ? (1 / 6) : (1 / 3);
+      // 💎 ボス討伐時の転生の水晶ドロップ確率（通常ボス: 1/3, ボス再戦: 1/10）
+      const crystalChance = this.state.isBossReplay ? (1 / 10) : (1 / 3);
       if (Math.random() < crystalChance) {
         droppedCrystal = true;
         this.state.crystals += 1;
@@ -3148,7 +3148,7 @@ class Game {
       if (openBossBtn) openBossBtn.style.display = "none";
       if (exitBossBtn) exitBossBtn.style.display = "inline-block";
       if (progressEl) {
-        progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚔️ ボス再戦モード中 (Lv.${this.state.currentLevel}) 💎水晶(確率1/6) & 🐾ペットドロップ！</span>`;
+        progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚔️ ボス再戦モード中 (Lv.${this.state.currentLevel}) 💎水晶(確率1/10) & 🐾ペットドロップ！</span>`;
       }
     } else {
       if (openBossBtn) openBossBtn.style.display = "inline-block";
