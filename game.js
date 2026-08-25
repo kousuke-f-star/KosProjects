@@ -2574,9 +2574,9 @@ class Game {
     let droppedCrystal = false;
     if (isBoss) {
       this.sound.playBossDefeat();
-      // 💎 ボス討伐時の転生の水晶ドロップ確率（通常ボス: 1/3, ボス再戦: 1/10）
-      const crystalChance = this.state.isBossReplay ? (1 / 10) : (1 / 3);
-      if (Math.random() < crystalChance) {
+      // 💎 転生の水晶ドロップ（通常冒険ボス: 必ず確定ドロップ！ / ボス再戦: 1/10の確率）
+      const shouldDrop = !this.state.isBossReplay || (Math.random() < 1 / 10);
+      if (shouldDrop) {
         droppedCrystal = true;
         this.state.crystals += 1;
         this.state.totalCrystals += 1;
@@ -3155,7 +3155,7 @@ class Game {
       if (exitBossBtn) exitBossBtn.style.display = "none";
       if (progressEl) {
         if (this.enemy.isBoss) {
-          progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚠️ BOSS戦！ (Lv.${this.state.currentLevel}) 💎水晶(確率1/3)ドロップ！</span>`;
+          progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚠️ BOSS戦！ (Lv.${this.state.currentLevel}) 💎水晶確定ドロップ！</span>`;
         } else {
           progressEl.textContent = `種族: ${this.enemy.raceName} | 進行度: ${currentInStage} / 50 (Lv.${this.state.currentLevel})`;
         }
