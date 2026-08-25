@@ -311,28 +311,28 @@ const BUILDINGS_MASTER = [
   { id: "trap", name: "スライム捕獲罠", icon: "🪤", attackIcon: "🪤", desc: "自動でスライムを捕獲して少しずつコインを稼ぐ", baseCost: 15, baseDPS: 1 },
   { id: "novice", name: "見習い剣士", icon: "🗡️", attackIcon: "⚔️", desc: "駆け出しの冒険者が定期的にスライムを斬りつける", baseCost: 100, baseDPS: 8 },
   { id: "archer", name: "弓兵の物見櫓", icon: "🏹", attackIcon: "🏹", desc: "遠距離から矢を雨のように降らせて討伐支援", baseCost: 1100, baseDPS: 45 },
-  { id: "mage_tower", name: "魔導オートタワー", icon: "🔮", attackIcon: "🔮", desc: "魔力で自動追尾の魔法弾を連射する古代兵器", baseCost: 12000, baseDPS: 220 },
-  { id: "ranch", name: "スライム自動牧場", icon: "🏡", attackIcon: "🍖", desc: "スライムを繁殖・出荷して大量の素材と富を得る", baseCost: 130000, baseDPS: 1000 },
-  { id: "cannon", name: "錬金術カノン砲", icon: "💥", attackIcon: "💥", desc: "超高圧の錬金エネルギー弾でまとめて粉砕する", baseCost: 1400000, baseDPS: 6000 },
-  { id: "guild", name: "冒険者ギルド本部", icon: "🏰", attackIcon: "🛡️", desc: "精鋭の冒険者部隊を一斉派遣して掃討作戦を展開", baseCost: 20000000, baseDPS: 40000 },
-  { id: "dragon", name: "契約ドラゴン", icon: "🐉", attackIcon: "🔥", desc: "伝説の竜を召喚し圧倒的ブレスで殲滅する", baseCost: 330000000, baseDPS: 300000 }
+  { id: "mage_tower", name: "魔導オートタワー", icon: "🔮", attackIcon: "🔮", desc: "魔力で自動追尾の魔法弾を連射する古代兵器", baseCost: 12000, baseDPS: 120 },
+  { id: "ranch", name: "スライム自動牧場", icon: "🏡", attackIcon: "🍖", desc: "スライムを繁殖・出荷して大量の素材と富を得る", baseCost: 130000, baseDPS: 450 },
+  { id: "cannon", name: "錬金術カノン砲", icon: "💥", attackIcon: "💥", desc: "超高圧の錬金エネルギー弾でまとめて粉砕する", baseCost: 1400000, baseDPS: 2000 },
+  { id: "guild", name: "冒険者ギルド本部", icon: "🏰", attackIcon: "🛡️", desc: "精鋭の冒険者部隊を一斉派遣して掃討作戦を展開", baseCost: 20000000, baseDPS: 10000 },
+  { id: "dragon", name: "契約ドラゴン", icon: "🐉", attackIcon: "🔥", desc: "伝説の竜を召喚し圧倒的ブレスで殲滅する", baseCost: 330000000, baseDPS: 60000 }
 ];
 
 const SKILLS_MASTER = [
-  { id: "click_power_1", name: "力任せの打撃", icon: "👊", desc: "クリック攻撃力が +100% (2倍) 増加する", cost: 50, type: "passive" },
+  { id: "click_power_1", name: "力任せの打撃", icon: "👊", desc: "クリック攻撃力が +50% 増加する", cost: 50, type: "passive" },
   { id: "crit_chance_1", name: "弱点見極め", icon: "🎯", desc: "クリティカル率+10%、クリティカル倍率が2.5倍になる", cost: 300, type: "passive" },
   { id: "trap_mastery", name: "罠の改良術", icon: "⚙️", desc: "「スライム捕獲罠」の生産効率が3倍になる", cost: 800, type: "passive" },
   { id: "click_combo", name: "連撃の心得", icon: "⚡", desc: "クリック時、25%の確率で2回連続ダメージを与える", cost: 1500, type: "passive" },
   { id: "skill_berserk", name: "スキル: バーサーク", icon: "🔥", desc: "【アクティブ】15秒間、クリック攻撃力とDPSが3倍になる (CD: 60秒)", cost: 2000, type: "active", cd: 60, duration: 15 },
-  { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の15%がクリック攻撃力に加算される", cost: 8000, type: "passive" },
-  { id: "sword_spell", name: "魔剣の一閃", icon: "🗡️", desc: "DPS（秒間自動攻撃力）の30%がさらにクリック攻撃力に加算される", cost: 20000, type: "passive" },
+  { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の 5% がクリック攻撃力に加算される", cost: 8000, type: "passive" },
+  { id: "sword_spell", name: "魔剣の一閃", icon: "🗡️", desc: "DPS（秒間自動攻撃力）の 8% がさらにクリック攻撃力に加算される", cost: 20000, type: "passive" },
   { id: "bounty_hunter", name: "賞金首ハンター", icon: "💎", desc: "スライム討伐時の獲得ゴールドが +50% 増加する", cost: 40000, type: "passive" },
   { id: "skill_goldrush", name: "スキル: ゴールドラッシュ", icon: "💰", desc: "【アクティブ】即座に秒間DPSの30秒分のゴールドを獲得する (CD: 90秒)", cost: 60000, type: "active", cd: 90 },
   { id: "building_synergy", name: "連携の極意", icon: "🤝", desc: "すべての建物の攻撃力・生産力が 2倍 になる", cost: 150000, type: "passive" },
-  { id: "giant_strength", name: "巨人の腕力", icon: "🦾", desc: "クリック攻撃力がさらに 3倍 に跳ね上がる", cost: 350000, type: "passive" },
+  { id: "giant_strength", name: "巨人の腕力", icon: "🦾", desc: "クリック攻撃力が +100% (2倍) に増加する", cost: 350000, type: "passive" },
   { id: "skill_meteor", name: "スキル: メテオ落とし", icon: "☄️", desc: "【アクティブ】巨大な隕石を落とし、スライムに現在DPSの50倍ダメージを一撃で与える (CD: 120秒)", cost: 500000, type: "active", cd: 120 },
   { id: "crit_power_2", name: "会心の極意", icon: "⚡", desc: "クリティカル率+15%、クリティカル倍率が 5倍 に跳ね上がる", cost: 1500000, type: "passive" },
-  { id: "overlord_aura", name: "覇王の気迫", icon: "👑", desc: "DPSの 70% がクリック攻撃力に加算！クリックが最強の一撃に進化する", cost: 5000000, type: "passive" },
+  { id: "overlord_aura", name: "覇王の気迫", icon: "👑", desc: "DPSの 15% がクリック攻撃力に加算！", cost: 5000000, type: "passive" },
   { id: "golden_touch", name: "ミダスタッチ", icon: "✨", desc: "クリック時、10%の確率でスライムの最大HP20%相当のボーナスゴールドを獲得", cost: 15000000, type: "passive" }
 ];
 
@@ -342,10 +342,10 @@ const REBIRTH_SKILLS_MASTER = [
     id: "soul_strike", 
     name: "魂の研鑽", 
     icon: "👊", 
-    desc: "クリック攻撃力が永続で +25% 増加する (現在: +{val}%)", 
+    desc: "クリック攻撃力が永続で +15% 増加する (現在: +{val}%)", 
     maxLevel: 5, 
     costPerLevel: 1, 
-    valuePerLevel: 25 
+    valuePerLevel: 15 
   },
   { 
     id: "ancient_craft", 
@@ -589,26 +589,26 @@ class Game {
   // クリック攻撃力の計算（基礎 + 剣術鍛錬 + パッシブ + DPS連動ボーナス）
   getClickPower() {
     const lvl = this.state.clickLevel || 0;
-    let base = 1 + lvl * 2 + Math.floor(Math.pow(lvl, 1.35) * 0.8);
+    let base = 1 + lvl * 1 + Math.floor(lvl * 0.4);
 
-    if (this.state.skills["click_power_1"]) base *= 2;
-    if (this.state.skills["giant_strength"]) base *= 3;
+    if (this.state.skills["click_power_1"]) base = Math.floor(base * 1.5);
+    if (this.state.skills["giant_strength"]) base *= 2;
 
-    // DPS連動ボーナス（自動攻撃が伸びるほどクリックも爆発的に強くなる！）
+    // DPS連動ボーナス（過剰になりすぎないよう適度な割合に調整）
     const dps = this.getDPS(false);
     let dpsBonusRatio = 0;
-    if (this.state.skills["click_power_2"]) dpsBonusRatio += 0.15;
-    if (this.state.skills["sword_spell"]) dpsBonusRatio += 0.30;
-    if (this.state.skills["overlord_aura"]) dpsBonusRatio += 0.70;
+    if (this.state.skills["click_power_2"]) dpsBonusRatio += 0.05;
+    if (this.state.skills["sword_spell"]) dpsBonusRatio += 0.08;
+    if (this.state.skills["overlord_aura"]) dpsBonusRatio += 0.15;
 
     if (dpsBonusRatio > 0) {
       base += Math.floor(dps * dpsBonusRatio);
     }
 
-    // 転生パッシブ: 魂の研鑽 (+25%/Lv)
+    // 転生パッシブ: 魂の研鑽 (+15%/Lv)
     const soulStrikeLvl = this.state.rebirthSkills["soul_strike"] || 0;
     if (soulStrikeLvl > 0) {
-      base = Math.floor(base * (1 + soulStrikeLvl * 0.25));
+      base = Math.floor(base * (1 + soulStrikeLvl * 0.15));
     }
     if (this.state.activeBuffs.berserk > 0) base *= 3;
     return Math.max(1, base);
