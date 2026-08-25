@@ -242,16 +242,29 @@ const MONSTER_CATEGORIES = [
   },
   {
     minLevel: 200,
-    maxLevel: 299,
-    raceName: "ゴブリン・魔獣族",
+    maxLevel: 249,
+    raceName: "グリーングブリン族",
     icon: "👺",
     types: [
-      { name: "ゴブリンシーフ", color1: "#86efac", color2: "#16a34a", color3: "#14532d", eyeType: "goblin" },
-      { name: "ゴブリンファイター", color1: "#fdba74", color2: "#ea580c", color3: "#9a3412", eyeType: "goblin" },
-      { name: "オークウォーリアー", color1: "#a3e635", color2: "#65a30d", color3: "#365314", eyeType: "fierce" },
-      { name: "トロールバーサーカー", color1: "#fca5a5", color2: "#b91c1c", color3: "#450a0a", eyeType: "fierce" }
+      { name: "ゴブリンシーフ", color1: "#86efac", color2: "#22c55e", color3: "#14532d", eyeType: "goblin" },
+      { name: "ゴブリンスカウト", color1: "#4ade80", color2: "#16a34a", color3: "#052e16", eyeType: "goblin" },
+      { name: "オークウォーリアー", color1: "#a3e635", color2: "#65a30d", color3: "#365314", eyeType: "goblin" },
+      { name: "ゴブリンファイター", color1: "#86efac", color2: "#15803d", color3: "#052e16", eyeType: "goblin" }
     ],
-    bossPrefix: "大頭領ゴブリン"
+    bossPrefix: "頭領グリーングブリン"
+  },
+  {
+    minLevel: 250,
+    maxLevel: 299,
+    raceName: "レッドゴブリン族",
+    icon: "👺",
+    types: [
+      { name: "レッドゴブリン", color1: "#fca5a5", color2: "#ef4444", color3: "#7f1d1d", eyeType: "goblin" },
+      { name: "ブラッドオーク", color1: "#f87171", color2: "#dc2626", color3: "#450a0a", eyeType: "goblin" },
+      { name: "トロールバーサーカー", color1: "#fca5a5", color2: "#b91c1c", color3: "#450a0a", eyeType: "goblin" },
+      { name: "獄炎ゴブリン呪術師", color1: "#fed7aa", color2: "#ea580c", color3: "#7c2d12", eyeType: "goblin" }
+    ],
+    bossPrefix: "大頭領レッドゴブリン"
   },
   {
     minLevel: 300,
@@ -902,17 +915,17 @@ class Game {
                 stroke="#f8fafc" stroke-width="3" stroke-linecap="square" />
         `;
       } else if (race.includes("ゴブリン") || race.includes("魔獣")) {
-        // 👺 ゴブリン・魔獣族（尖った大きな耳 + 鉤鼻 + 下牙 + ギョロ目）
+        // 👺 ゴブリン族（Lv.200-249: 緑ゴブリン / Lv.250-299: 赤ゴブリン）
         contentGroup.innerHTML = `
           <!-- 尖った大耳（左右） -->
-          <polygon points="35,100 0,55 40,80" fill="${this.enemy.color2}" stroke="#14532d" stroke-width="3" />
-          <polygon points="165,100 200,55 160,80" fill="${this.enemy.color2}" stroke="#14532d" stroke-width="3" />
+          <polygon points="35,100 0,55 40,80" fill="${this.enemy.color2}" stroke="${this.enemy.color3}" stroke-width="3" />
+          <polygon points="165,100 200,55 160,80" fill="${this.enemy.color2}" stroke="${this.enemy.color3}" stroke-width="3" />
           <polygon points="32,95 8,65 36,82" fill="#fca5a5" opacity="0.6" />
           <polygon points="168,95 192,65 164,82" fill="#fca5a5" opacity="0.6" />
           
           <!-- ゴブリンヘッド -->
           <path d="M100,32 C150,32 170,78 165,130 C160,170 140,185 100,185 C60,185 40,170 35,130 C30,78 50,32 100,32 Z" 
-                fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="#14532d" stroke-width="3.5" />
+                fill="url(#monster-grad)" filter="url(#slime-glow)" stroke="${this.enemy.color3}" stroke-width="3.5" />
           
           <!-- トゲトゲの頭髪 -->
           <polygon points="90,34 100,8 110,34" fill="#1e293b" />
