@@ -2432,6 +2432,11 @@ class Game {
     const arena = document.getElementById("slime-arena");
     if (!arena) return;
 
+    const existingSlashes = arena.querySelectorAll(".slash-effect");
+    if (existingSlashes.length >= 4) {
+      existingSlashes[0].remove();
+    }
+
     const effect = document.createElement("div");
     effect.className = "slash-effect";
 
@@ -2450,7 +2455,7 @@ class Game {
     }
 
     arena.appendChild(effect);
-    setTimeout(() => effect.remove(), 260);
+    setTimeout(() => effect.remove(), 200);
   }
 
   // --- クリック攻撃 ---
@@ -3167,7 +3172,13 @@ class Game {
 
   renderBossTimer() {
     const badge = document.getElementById("boss-timer-val");
-    if (badge) badge.textContent = Math.ceil(this.state.bossTimer);
+    if (badge) {
+      const sec = Math.ceil(this.state.bossTimer);
+      if (badge._lastSec !== sec) {
+        badge._lastSec = sec;
+        badge.textContent = sec;
+      }
+    }
   }
 
   renderEnemyUI() {
@@ -3480,63 +3491,51 @@ class Game {
 
     const highest = this.state.highestLevel || 1;
 
-    // MONSTER_CATEGORIES からボスリストを抽出・分類
-    container.innerHTML = MONSTER_CATEGORIES.map(cat => {
-      const isCategoryUnlocked = highest >= cat.minLevel;
-      
-      // そのカテゴリ内に含まれるボスレベル（10レベルごと）
-      const bossLevels = [];
-      for (let l = cat.minLevel; l <= cat.maxLevel; l++) {
-        if (this.isBossLevel(l)) {
-          bossLevels.push(l);
-        }
-      }
+    // 1種族1ステージ（代表ボス）の定義（全8種族）
+    const REPRESENTATIVE_BOSSES = [
+      { catIdx: 0, lvl: 50, reqLvl: 10, name: "キングスライム", icon: "💧", desc: "スライム族の王。ぷるぷる巨大ボディ！" },
+      { catIdx: 1, lvl: 100, reqLvl: 100, name: "スカルジェネラル", icon: "💀", desc: "骨の軍団を率いる白骨の将軍！" },
+      { catIdx: 2, lvl: 200, reqLvl: 200, name: "ゴブリンキング", icon: "👺", desc: "略奪と金貨を好む小鬼の首領！" },
+      { catIdx: 3, lvl: 300, reqLvl: 300, name: "エンシェントタイタン", icon: "🗿", desc: "巨石の古代遺跡を守護する巨像！" },
+      { catIdx: 4, lvl: 400, reqLvl: 400, name: "アークデーモン", icon: "👿", desc: "紅蓮の魔界から現れた上位悪魔！" },
+      { catIdx: 5, lvl: 500, reqLvl: 500, name: "覇竜バハムート", icon: "🐉", desc: "業火を纏い天空を統べる伝説の竜！" },
+      { catIdx: 6, lvl: 600, reqLvl: 600, name: "コズミック・ゴッド", icon: "🌌", desc: "星々の深淵に座す名状しがたき邪神！" },
+      { catIdx: 7, lvl: 700, reqLvl: 700, name: "アルティメット・ゴッド", icon: "👑", desc: "宇宙を統べる超越の至高神！" }
+    ];
 
-      if (!isCategoryUnlocked) {
+    container.innerHTML = REPRESENTATIVE_BOSSES.map(b => {
+      const isUnlocked = highest >= b.reqLvl;
+      const cat = MONSTER_CATEGORIES[b.catIdx];
+
+      if (!isUnlocked) {
         return `
-          <div class="boss-category-card" style="opacity: 0.5; filter: grayscale(0.8);">
-            <div class="boss-category-header">
-              <span>🔒 ${cat.icon} ${cat.raceName} (Lv.${cat.minLevel}〜)</span>
-              <span style="font-size: 0.75rem; color: var(--text-sub);">未到達</span>
+          <div class="boss-category-card" style="opacity: 0.5; filter: grayscale(0.8); display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.6rem;">🔒</span>
+              <div>
+                <div style="font-weight: 800; color: var(--text-sub);">🔒 ${b.icon} ${cat.raceName}ボス</div>
+                <div style="font-size: 0.75rem; color: var(--text-sub);">Lv.${b.reqLvl} 到達で解放</div>
+              </div>
             </div>
-            <div style="font-size: 0.78rem; color: var(--text-sub);">ステージを進めると解放されます</div>
+            <button class="boss-fight-btn" disabled style="opacity: 0.4; cursor: not-allowed; min-width: 80px;">
+              未到達
+            </button>
           </div>
         `;
       }
-
-      // 到達済みのボスレベルのみ有効化
-      const btnsHtml = bossLevels.map(bLvl => {
-        const isBossUnlocked = highest >= bLvl;
-        const typeIdx = (bLvl - 1) % cat.types.length;
-        const type = cat.types[typeIdx];
-        const bossName = `${cat.bossPrefix}${type.name}`;
-
-        if (!isBossUnlocked) {
-          return `
-            <button class="boss-fight-btn" disabled style="opacity: 0.45; cursor: not-allowed;">
-              <span>🔒 Lv.${bLvl}</span>
-              <span style="font-size: 0.7rem; color: var(--text-sub);">未到達</span>
-            </button>
-          `;
-        }
-
-        return `
-          <button class="boss-fight-btn" data-boss-lvl="${bLvl}">
-            <span style="color: #fca5a5;">👑 Lv.${bLvl}</span>
-            <span style="font-size: 0.72rem; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px;">${bossName}</span>
-          </button>
-        `;
-      }).join("");
 
       return `
-        <div class="boss-category-card">
-          <div class="boss-category-header">
-            <span>${cat.icon} ${cat.raceName}</span>
-            <span style="font-size: 0.75rem; color: #86efac;">解放済み</span>
+        <div class="boss-category-card" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 1.6rem;">${b.icon}</span>
+            <div>
+              <div style="font-weight: 800; color: #fca5a5;">👑 Lv.${b.lvl} ${b.name}</div>
+              <div style="font-size: 0.75rem; color: var(--text-sub);">${b.desc}</div>
+            </div>
           </div>
-          <div class="boss-btn-grid">
-            ${btnsHtml}
-          </div>
+          <button class="boss-fight-btn" data-boss-lvl="${b.lvl}" style="min-width: 90px; padding: 8px 12px; background: linear-gradient(135deg, #ef4444, #b91c1c);">
+            ⚔️ 挑戦
+          </button>
         </div>
       `;
     }).join("");
@@ -3683,6 +3682,14 @@ class Game {
     const arena = document.getElementById("slime-arena");
     if (!arena) return;
 
+    // ⚡ ラグ防止: DOM上にポップアップが10個以上ある場合は最も古いものを即座に消去
+    const existingPopups = arena.querySelectorAll(".damage-number, .coin-popup");
+    if (existingPopups.length >= 10) {
+      for (let i = 0; i < existingPopups.length - 7; i++) {
+        existingPopups[i].remove();
+      }
+    }
+
     const popup = document.createElement("div");
     if (isCrystal) {
       popup.className = "coin-popup crystal-bounty";
@@ -3704,11 +3711,11 @@ class Game {
     popup.style.left = `${relX}px`;
     popup.style.top = `${relY}px`;
     if (!isCoin && !isSoul && !isCrystal) {
-      popup.style.setProperty('--rand-x', (Math.random() * 50 - 25));
+      popup.style.setProperty('--rand-x', (Math.random() * 40 - 20));
     }
 
     arena.appendChild(popup);
-    setTimeout(() => popup.remove(), (isBounty || isSoul || isCrystal) ? 1200 : 850);
+    setTimeout(() => popup.remove(), (isBounty || isSoul || isCrystal) ? 800 : 550);
   }
 
   showToast(msg) {
