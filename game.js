@@ -608,22 +608,34 @@ class Game {
     layer.innerHTML = html;
   }
 
-  // --- 仲間たちの自動攻撃アクション ---
+  // --- 仲間たちの自動攻撃アクション（加勢攻撃でも多めにコイン獲得！） ---
   triggerAutoAttackVisuals(totalDmg) {
     if (totalDmg <= 0) return;
 
     const slimeTarget = document.getElementById("slime-target");
     if (!slimeTarget) return;
     const slimeRect = slimeTarget.getBoundingClientRect();
-    const targetX = slimeRect.left + slimeRect.width / 2;
-    const targetY = slimeRect.top + slimeRect.height / 2;
+    // ダメージ表示はスライムの頭上（上部中央）にピョンと出す！
+    const headX = slimeRect.left + slimeRect.width / 2;
+    const headY = slimeRect.top + 15;
 
     this.sound.playAutoHit();
     slimeTarget.classList.remove("hit");
     void slimeTarget.offsetWidth;
     slimeTarget.classList.add("hit");
 
-    this.createDamagePopup(Math.ceil(totalDmg), false, true, targetX, targetY);
+    // スライム頭上に自動ダメージ表示
+    this.createDamagePopup(Math.ceil(totalDmg), false, true, headX, headY);
+
+    // 【加勢ボーナスコイン】仲間が攻撃するたびに多めのゴールドを自動獲得！
+    let autoGold = Math.max(2, Math.floor(totalDmg * 0.8 + this.enemy.level * 1.2));
+    const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
+    if (merchantLvl > 0) {
+      autoGold = Math.floor(autoGold * (1 + merchantLvl * 0.20));
+    }
+    this.addGold(autoGold);
+    // 加勢コインポップアップ (頭上右側へスッと飛ぶ)
+    this.createDamagePopup(`🪙 +${this.formatNumber(autoGold)}`, false, false, headX + 22, headY - 10, true);
 
     const units = [
       { id: "unit-novice", icon: "⚔️" },
@@ -639,7 +651,7 @@ class Game {
       const el = document.getElementById(chosen.id);
       if (el) {
         const uRect = el.getBoundingClientRect();
-        this.spawnAttackProjectile(chosen.icon, uRect.left + uRect.width / 2, uRect.top + uRect.height / 2, targetX, targetY);
+        this.spawnAttackProjectile(chosen.icon, uRect.left + uRect.width / 2, uRect.top + uRect.height / 2, headX, headY + 30);
       }
     }
   }
@@ -695,23 +707,20 @@ class Game {
       this.sound.playHit();
     }
 
-    let clientX, clientY;
-    if (e && e.clientX) {
-      clientX = e.clientX;
-      clientY = e.clientY;
-    } else {
-      const rect = slimeTarget.getBoundingClientRect();
-      clientX = rect.left + rect.width / 2;
-      clientY = rect.top + rect.height / 2;
-    }
+    const rect = slimeTarget.getBoundingClientRect();
+    // ダメージ表示は常にスライムの頭上（上部中央）に出す！
+    const headX = rect.left + rect.width / 2;
+    const headY = rect.top + 15;
 
-    this.createDamagePopup(dmg, isCrit, false, clientX, clientY);
-    this.createDamagePopup(`🪙 +${this.formatNumber(clickGold)}`, false, false, clientX + 12, clientY - 10, true);
+    // ダメージポップアップ (頭上から上へ跳ね上がる)
+    this.createDamagePopup(dmg, isCrit, false, headX, headY);
+    // コインポップアップ (頭上右側へスッと飛ぶ)
+    this.createDamagePopup(`🪙 +${this.formatNumber(clickGold)}`, false, false, headX + 18, headY - 12, true);
 
     if (this.state.skills["golden_touch"] && Math.random() < 0.1) {
       const bonus = Math.max(1, Math.floor(this.enemy.maxHp * 0.2));
       this.addGold(bonus);
-      this.createDamagePopup(`✨ 大金 +${this.formatNumber(bonus)}`, true, false, clientX + 20, clientY - 30, true);
+      this.createDamagePopup(`✨ 大金 +${this.formatNumber(bonus)}`, true, false, headX + 25, headY - 30, true);
     }
 
     this.applyDamage(dmg);
@@ -856,7 +865,7 @@ class Game {
     }
   }
 
-  // --- 水晶を消費して転生を実行（SP +1 pt 獲得！） ---
+  // --- 水晶を消費して転生を実行（SP +2 pt 獲得！） ---
   executeRebirth() {
     if (this.state.crystals < 1) {
       this.showToast("❌ 転生には「転生の水晶 💎」が1個必要です！");
@@ -865,10 +874,10 @@ class Game {
 
     this.sound.playRebirth();
 
-    // 水晶1個を消費して、古代スキルポイント(SP)を 1pt 獲得！
+    // 水晶1個を消費して、古代スキルポイント(SP)を 2pt 獲得！
     this.state.crystals -= 1;
-    this.state.skillPoints += 1;
-    this.state.totalSkillPoints += 1;
+    this.state.skillPoints += 2;
+    this.state.totalSkillPoints += 2;
     this.state.rebirthCount += 1;
 
     // 進行リセット
@@ -890,7 +899,7 @@ class Game {
     this.saveGame();
 
     document.getElementById("rebirth-modal")?.classList.remove("show");
-    this.showToast("🔮 転生完了！ 古代スキルポイント(SP)を 1pt 獲得しました！");
+    this.showToast("🔮 転生完了！ 古代スキルポイント(SP)を 2pt 獲得しました！");
   }
 
   activateSkill(skillId) {
@@ -1059,7 +1068,7 @@ class Game {
       banner.className = "rebirth-banner available";
       btn.disabled = false;
       title.textContent = `✨ 転生可能！ (所持水晶: 💎 ${this.state.crystals} 個)`;
-      sub.textContent = `水晶💎を1個消費して転生し、「古代SP 🔮 +1 pt」を獲得！`;
+      sub.textContent = `水晶💎を1個消費して転生し、「古代SP 🔮 +2 pt」を獲得！`;
     } else {
       banner.className = "rebirth-banner locked";
       btn.disabled = true;
