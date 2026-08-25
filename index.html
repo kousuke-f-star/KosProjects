@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3.8.0">
+  <link rel="stylesheet" href="style.css?v=3.9.0">
 </head>
 <body>
 
@@ -16,7 +16,7 @@
     <div class="logo-area">
       <div class="logo-icon">⚔️</div>
       <h1>スライム放置クエスト</h1>
-      <span class="version-badge" id="app-version">v3.8.0</span>
+      <span class="version-badge" id="app-version">v3.9.0</span>
     </div>
 
     <div class="header-stats">
@@ -62,7 +62,9 @@
           <h2><span id="stage-icon">🌲</span> <span id="stage-title">ステージ 1: 始まりの草原</span></h2>
           <div class="stage-progress-text" id="stage-progress-text">進行度: 1 / 50 (Lv.1)</div>
         </div>
-        <div style="display: flex; gap: 8px; align-items: center;">
+        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+          <button class="stage-boss-btn" id="btn-open-boss-modal" title="倒したことのあるボスと再戦！">⚔️ ボス再戦</button>
+          <button class="stage-exit-boss-btn" id="btn-exit-boss-replay" style="display: none;" title="通常の最高ステージ進行に戻る">⏩ 通常に戻る</button>
           <!-- 隕石ラッシュ（120秒周期 20秒攻撃力2倍フィーバー）タイマー -->
           <div class="meteor-timer-badge" id="meteor-timer-badge" title="120秒ごとに20秒間、隕石が降って全攻撃力が2倍！">
             ☄️ <span id="meteor-timer-text">隕石: 02:00</span>
@@ -228,7 +230,7 @@
               🐾 お供ペット（最大2体まで装備可能！）
             </div>
             <div style="font-size: 0.8rem; color: var(--text-sub); line-height: 1.5;">
-              敵を倒した時に<strong>約2%の確率でモンスターが仲間入り</strong>！所持しているペットは<strong>最大2体まで同時に装備可能</strong>！同じペットを仲間にすると<strong>レベル（親愛度）がUP</strong>してボーナスがさらに強化されます！
+              敵を倒した時に<strong>約1.5%の確率でモンスターが仲間入り</strong>！所持しているペットは<strong>最大2体まで同時に装備可能</strong>！同じペットを仲間にすると<strong>レベル（親愛度）がUP</strong>してボーナスがさらに強化されます！
             </div>
           </div>
           <div id="pet-list" style="display: flex; flex-direction: column; gap: 10px;">
@@ -392,10 +394,28 @@
     </div>
   </div>
 
+  <!-- ⚔️ 撃破済みボス再戦モーダル -->
+  <div class="modal-backdrop" id="boss-modal">
+    <div class="modal-box" style="max-width: 520px;">
+      <div class="modal-icon">⚔️</div>
+      <h3 class="modal-title" style="color: #ef4444;">撃破済みボス再戦</h3>
+      <p class="modal-desc" style="margin-bottom: 14px;">
+        これまでに倒したことのあるボスの種類を選んで再戦できます！<br>
+        ボスを倒すと<strong>「転生の水晶 💎」</strong>や<strong>「その種族のペット（確率1.5%）」</strong>を獲得可能！
+      </p>
+
+      <div id="boss-select-list" style="max-height: 280px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; text-align: left;">
+        <!-- JSで動的に撃破済みボスカテゴリ一覧を生成 -->
+      </div>
+
+      <button class="modal-close-btn" id="btn-close-boss-modal">閉じる</button>
+    </div>
+  </div>
+
   <!-- トースト通知コンテナ -->
   <div class="toast-container" id="toast-container"></div>
 
   <!-- ゲームスクリプト -->
-  <script src="game.js?v=3.8.0"></script>
+  <script src="game.js?v=3.9.0"></script>
 </body>
 </html>

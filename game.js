@@ -1340,6 +1340,9 @@ class Game {
       totalClicks: 0,
       totalKills: 0,
       currentLevel: 1,
+      highestLevel: 1,       // これまで到達した最高レベル
+      isBossReplay: false,   // ボス再戦モード中フラグ
+      replayBossLevel: 0,    // 再戦中のボスレベル
       bossTimer: 40,
       playTime: 0,
       lastSaved: Date.now(),
@@ -2572,8 +2575,8 @@ class Game {
       this.sound.playDefeat();
     }
 
-    // 🐾 2%の確率でモンスターがペットとして仲間入り！
-    if (Math.random() < 0.02) {
+    // 🐾 1.5%の確率でモンスターがペットとして仲間入り！
+    if (Math.random() < 0.015) {
       this.tryDropPet();
     }
 
@@ -2610,18 +2613,26 @@ class Game {
     setTimeout(() => {
       slimeTarget.classList.remove("defeat");
 
-      this.state.currentLevel++;
-      
-      const newStageIndex = this.getStageIndex();
-      const currentInStage = ((this.state.currentLevel - 1) % 50) + 1;
-      
-      if (currentInStage === 1 && this.state.currentLevel > 1) {
-        const stage = STAGES[newStageIndex];
-        this.sound.playLevelUp();
-        this.showToast(`🎉 新ステージ突入！ 「${stage.name}」に到達しました！`);
-        this.updateArenaEnvironment();
+      if (this.state.isBossReplay) {
+        // ボス再戦モード中：撃破成功！同じボスと再戦ループ
+        this.showToast(`👑 撃破完了！ 「Lv.${this.state.replayBossLevel} ${this.enemy.name}」を討伐しました！`);
+        this.state.currentLevel = this.state.replayBossLevel;
       } else {
-        this.showToast(`🆙 LEVEL UP! Lv.${this.state.currentLevel} のモンスターが出現！`);
+        // 通常冒険モード：レベル進行
+        this.state.currentLevel++;
+        this.state.highestLevel = Math.max(this.state.highestLevel || 1, this.state.currentLevel);
+
+        const newStageIndex = this.getStageIndex();
+        const currentInStage = ((this.state.currentLevel - 1) % 50) + 1;
+        
+        if (currentInStage === 1 && this.state.currentLevel > 1) {
+          const stage = STAGES[newStageIndex];
+          this.sound.playLevelUp();
+          this.showToast(`🎉 新ステージ突入！ 「${stage.name}」に到達しました！`);
+          this.updateArenaEnvironment();
+        } else {
+          this.showToast(`🆙 LEVEL UP! Lv.${this.state.currentLevel} のモンスターが出現！`);
+        }
       }
 
       this.spawnEnemy();
@@ -2770,6 +2781,7 @@ class Game {
 
     // 進行リセット
     this.state.currentLevel = 1;
+    this.state.isBossReplay = false;
     this.state.gold = 0;
     this.state.clickLevel = 0; // クリック強化もLv.1から強くてニューゲーム
 
@@ -2959,11 +2971,16 @@ class Game {
     if (this.enemy.isBoss && this.enemy.hp > 0) {
       this.state.bossTimer -= dt;
       if (this.state.bossTimer <= 0) {
-        this.showToast("⏱️ ボス戦タイムオーバー！前Lvに戻って再強化しよう！");
-        this.state.currentLevel = Math.max(1, this.state.currentLevel - 1);
-        this.spawnEnemy();
-        this.renderStageInfo();
-        this.renderRebirthBanner();
+        if (this.state.isBossReplay) {
+          this.showToast("⏱️ ボス再戦タイムオーバー！通常冒険に戻ります。");
+          this.exitBossReplay();
+        } else {
+          this.showToast("⏱️ ボス戦タイムオーバー！前Lvに戻って再強化しよう！");
+          this.state.currentLevel = Math.max(1, this.state.currentLevel - 1);
+          this.spawnEnemy();
+          this.renderStageInfo();
+          this.renderRebirthBanner();
+        }
       }
       this.renderBossTimer();
     }
@@ -3108,10 +3125,25 @@ class Game {
     const progressEl = document.getElementById("stage-progress-text");
     const currentInStage = ((this.state.currentLevel - 1) % 50) + 1;
     
-    if (this.enemy.isBoss) {
-      progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚠️ BOSS戦！ (Lv.${this.state.currentLevel}) 💎水晶ドロップ！</span>`;
+    const openBossBtn = document.getElementById("btn-open-boss-modal");
+    const exitBossBtn = document.getElementById("btn-exit-boss-replay");
+
+    if (this.state.isBossReplay) {
+      if (openBossBtn) openBossBtn.style.display = "none";
+      if (exitBossBtn) exitBossBtn.style.display = "inline-block";
+      if (progressEl) {
+        progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚔️ ボス再戦モード中 (Lv.${this.state.currentLevel}) 💎水晶 & 🐾ペットドロップ！</span>`;
+      }
     } else {
-      progressEl.textContent = `種族: ${this.enemy.raceName} | 進行度: ${currentInStage} / 50 (Lv.${this.state.currentLevel})`;
+      if (openBossBtn) openBossBtn.style.display = "inline-block";
+      if (exitBossBtn) exitBossBtn.style.display = "none";
+      if (progressEl) {
+        if (this.enemy.isBoss) {
+          progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚠️ BOSS戦！ (Lv.${this.state.currentLevel}) 💎水晶ドロップ！</span>`;
+        } else {
+          progressEl.textContent = `種族: ${this.enemy.raceName} | 進行度: ${currentInStage} / 50 (Lv.${this.state.currentLevel})`;
+        }
+      }
     }
 
     const bossBadge = document.getElementById("boss-timer-badge");
@@ -3303,7 +3335,7 @@ class Game {
                 <span>🔒 未発見のペット</span>
               </div>
               <span class="pet-effect" style="color: var(--text-sub);">能力: ？？？</span>
-              <span class="pet-desc">${pet.desc} (対象種族の討伐時 2% で仲間入り！)</span>
+              <span class="pet-desc">${pet.desc} (対象種族の討伐時 1.5% で仲間入り！)</span>
             </div>
             <div>
               <button class="pet-equip-btn" disabled style="opacity: 0.5; background: #334155;">未所持</button>
@@ -3423,6 +3455,113 @@ class Game {
       `;
       arena.appendChild(petEl);
     });
+  }
+
+  // --- ⚔️ 撃破済みボス再戦システム ---
+  openBossModal() {
+    this.renderBossList();
+    const modal = document.getElementById("boss-modal");
+    if (modal) modal.classList.add("show");
+  }
+
+  renderBossList() {
+    const container = document.getElementById("boss-select-list");
+    if (!container) return;
+
+    const highest = this.state.highestLevel || 1;
+
+    // MONSTER_CATEGORIES からボスリストを抽出・分類
+    container.innerHTML = MONSTER_CATEGORIES.map(cat => {
+      const isCategoryUnlocked = highest >= cat.minLevel;
+      
+      // そのカテゴリ内に含まれるボスレベル（10レベルごと）
+      const bossLevels = [];
+      for (let l = cat.minLevel; l <= cat.maxLevel; l++) {
+        if (this.isBossLevel(l)) {
+          bossLevels.push(l);
+        }
+      }
+
+      if (!isCategoryUnlocked) {
+        return `
+          <div class="boss-category-card" style="opacity: 0.5; filter: grayscale(0.8);">
+            <div class="boss-category-header">
+              <span>🔒 ${cat.icon} ${cat.raceName} (Lv.${cat.minLevel}〜)</span>
+              <span style="font-size: 0.75rem; color: var(--text-sub);">未到達</span>
+            </div>
+            <div style="font-size: 0.78rem; color: var(--text-sub);">ステージを進めると解放されます</div>
+          </div>
+        `;
+      }
+
+      // 到達済みのボスレベルのみ有効化
+      const btnsHtml = bossLevels.map(bLvl => {
+        const isBossUnlocked = highest >= bLvl;
+        const typeIdx = (bLvl - 1) % cat.types.length;
+        const type = cat.types[typeIdx];
+        const bossName = `${cat.bossPrefix}${type.name}`;
+
+        if (!isBossUnlocked) {
+          return `
+            <button class="boss-fight-btn" disabled style="opacity: 0.45; cursor: not-allowed;">
+              <span>🔒 Lv.${bLvl}</span>
+              <span style="font-size: 0.7rem; color: var(--text-sub);">未到達</span>
+            </button>
+          `;
+        }
+
+        return `
+          <button class="boss-fight-btn" data-boss-lvl="${bLvl}">
+            <span style="color: #fca5a5;">👑 Lv.${bLvl}</span>
+            <span style="font-size: 0.72rem; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 110px;">${bossName}</span>
+          </button>
+        `;
+      }).join("");
+
+      return `
+        <div class="boss-category-card">
+          <div class="boss-category-header">
+            <span>${cat.icon} ${cat.raceName}</span>
+            <span style="font-size: 0.75rem; color: #86efac;">解放済み</span>
+          </div>
+          <div class="boss-btn-grid">
+            ${btnsHtml}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    container.querySelectorAll("[data-boss-lvl]").forEach(btn => {
+      btn.onclick = () => {
+        const lvl = parseInt(btn.dataset.bossLvl, 10);
+        this.startBossReplay(lvl);
+      };
+    });
+  }
+
+  startBossReplay(bossLevel) {
+    document.getElementById("boss-modal")?.classList.remove("show");
+
+    this.state.isBossReplay = true;
+    this.state.replayBossLevel = bossLevel;
+    this.state.currentLevel = bossLevel;
+
+    this.sound.playSkill();
+    this.spawnEnemy();
+    this.renderStageInfo();
+    this.updateArenaEnvironment();
+    this.showToast(`⚔️ ボス再戦開始！ 「Lv.${bossLevel} ${this.enemy.name}」に挑戦中！`);
+  }
+
+  exitBossReplay() {
+    this.state.isBossReplay = false;
+    this.state.currentLevel = this.state.highestLevel || 1;
+
+    this.sound.playBuy();
+    this.spawnEnemy();
+    this.renderStageInfo();
+    this.updateArenaEnvironment();
+    this.showToast(`⏩ 通常冒険（最高到達ステージ Lv.${this.state.currentLevel}）に戻りました！`);
   }
 
   renderActiveSkillBar() {
@@ -3857,6 +3996,12 @@ class Game {
     document.getElementById("btn-claim-offline")?.addEventListener("click", () => {
       document.getElementById("offline-modal")?.classList.remove("show");
     });
+
+    document.getElementById("btn-open-boss-modal")?.addEventListener("click", () => this.openBossModal());
+    document.getElementById("btn-exit-boss-replay")?.addEventListener("click", () => this.exitBossReplay());
+    document.getElementById("btn-close-boss-modal")?.addEventListener("click", () => {
+      document.getElementById("boss-modal")?.classList.remove("show");
+    });
   }
 
   saveGame() {
@@ -3934,6 +4079,9 @@ class Game {
     this.state.totalSkillPoints = Number(this.state.totalSkillPoints) || 0;
     this.state.rebirthCount = Number(this.state.rebirthCount) || 0;
     this.state.currentLevel = Math.max(1, Number(this.state.currentLevel) || 1);
+    this.state.highestLevel = Math.max(1, Number(this.state.highestLevel) || Number(this.state.currentLevel) || 1);
+    this.state.isBossReplay = Boolean(this.state.isBossReplay);
+    this.state.replayBossLevel = Number(this.state.replayBossLevel) || 0;
     this.state.buyMultiplier = Number(this.state.buyMultiplier) || 1;
     this.state.meteorRushTimer = (typeof this.state.meteorRushTimer === 'number' && !isNaN(this.state.meteorRushTimer) && this.state.meteorRushTimer <= 120) ? this.state.meteorRushTimer : 120;
     this.state.meteorRushActiveTime = Number(this.state.meteorRushActiveTime) || 0;
