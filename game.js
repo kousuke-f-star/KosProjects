@@ -580,10 +580,17 @@ class Game {
     return this.state.crystals >= this.getRequiredCrystals();
   }
 
-  // 常設クリック強化のコスト計算（安価でテンポよく何回でも強化可能！）
-  getClickUpgradeCost() {
+  // 常設クリック強化のコスト計算（購入倍率 x1, x10, x100 に対応！）
+  getClickUpgradeCost(countToAdd = 1) {
     const lvl = this.state.clickLevel || 0;
-    return Math.floor(10 * Math.pow(1.12, lvl) + lvl * 5);
+    if (countToAdd === 1) {
+      return Math.floor(10 * Math.pow(1.12, lvl) + lvl * 5);
+    }
+    let total = 0;
+    for (let i = 0; i < countToAdd; i++) {
+      total += Math.floor(10 * Math.pow(1.12, lvl + i) + (lvl + i) * 5);
+    }
+    return total;
   }
 
   // クリック攻撃力の計算（基礎 + 剣術鍛錬 + パッシブ + DPS連動ボーナス）
@@ -1096,17 +1103,18 @@ class Game {
     this.updateShopButtons();
   }
 
-  // --- 常設: 剣術の鍛錬（クリック攻撃力強化） ---
+  // --- 常設: 剣術の鍛錬（クリック攻撃力強化・まとめ買い対応） ---
   upgradeClickPower() {
-    const cost = this.getClickUpgradeCost();
+    const mult = this.state.buyMultiplier || 1;
+    const cost = this.getClickUpgradeCost(mult);
     if (this.state.gold >= cost) {
       this.state.gold -= cost;
-      this.state.clickLevel = (this.state.clickLevel || 0) + 1;
+      this.state.clickLevel = (this.state.clickLevel || 0) + mult;
       this.sound.playBuy();
       this.renderGold();
       this.renderClickUpgrade();
       this.renderCombatStats();
-      this.showToast(`⚔️ 剣術の鍛錬 Lv.${this.state.clickLevel}！ クリック威力が大幅UP！`);
+      this.showToast(`⚔️ 剣術の鍛錬 を x${mult} 強化しました！ (Lv.${this.state.clickLevel})`);
     }
   }
 
@@ -1359,13 +1367,14 @@ class Game {
     if (spEl) spEl.textContent = this.state.skillPoints.toLocaleString();
   }
 
-  // --- 常設: 剣術の鍛錬カードの描画 ---
+  // --- 常設: 剣術の鍛錬カードの描画（倍率対応） ---
   renderClickUpgrade() {
     const container = document.getElementById("click-upgrade-container");
     if (!container) return;
 
     const lvl = this.state.clickLevel || 0;
-    const cost = this.getClickUpgradeCost();
+    const mult = this.state.buyMultiplier || 1;
+    const cost = this.getClickUpgradeCost(mult);
     const canAfford = this.state.gold >= cost;
     const currentPower = this.getClickPower();
 
@@ -1382,7 +1391,7 @@ class Game {
           </div>
         </div>
         <button class="click-upgrade-btn" id="btn-upgrade-click" ${!canAfford ? 'disabled' : ''}>
-          <span>強化 (+1)</span>
+          <span>強化 (+${mult})</span>
           <span style="font-size: 0.78rem;">🪙 ${this.formatNumber(cost)}</span>
         </button>
       </div>
@@ -1632,10 +1641,11 @@ class Game {
   }
 
   updateShopButtons() {
-    // 剣術鍛錬ボタン
+    // 剣術鍛錬ボタン（倍率対応）
     const clickBtn = document.getElementById("btn-upgrade-click");
     if (clickBtn) {
-      clickBtn.disabled = this.state.gold < this.getClickUpgradeCost();
+      const mult = this.state.buyMultiplier || 1;
+      clickBtn.disabled = this.state.gold < this.getClickUpgradeCost(mult);
     }
 
     document.querySelectorAll(".building-buy-btn").forEach(btn => {
@@ -1882,6 +1892,7 @@ class Game {
         document.querySelectorAll(".mult-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         this.state.buyMultiplier = parseInt(btn.dataset.mult, 10) || 1;
+        this.renderClickUpgrade();
         this.renderBuildings();
       });
     });
