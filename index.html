@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3.6.0">
+  <link rel="stylesheet" href="style.css?v=3.7.0">
 </head>
 <body>
 
@@ -16,7 +16,7 @@
     <div class="logo-area">
       <div class="logo-icon">⚔️</div>
       <h1>スライム放置クエスト</h1>
-      <span class="version-badge" id="app-version">v3.6.0</span>
+      <span class="version-badge" id="app-version">v3.7.0</span>
     </div>
 
     <div class="header-stats">
@@ -185,8 +185,9 @@
       <!-- タブバー -->
       <div class="tab-bar">
         <button class="tab-btn active" data-tab="buildings">🏢 建物・仲間</button>
-        <button class="tab-btn" data-tab="skills">✨ スキル習得</button>
-        <button class="tab-btn" data-tab="rebirth">🔮 古代の秘術</button>
+        <button class="tab-btn" data-tab="skills">✨ スキル</button>
+        <button class="tab-btn" data-tab="pets">🐾 ペット</button>
+        <button class="tab-btn" data-tab="rebirth">🔮 秘術</button>
         <button class="tab-btn" data-tab="stats">📊 実績・設定</button>
       </div>
 
@@ -217,6 +218,21 @@
         <div class="tab-pane" id="pane-skills">
           <div id="skill-list" style="display: flex; flex-direction: column; gap: 10px;">
             <!-- JSで動的にスキルカードを生成 -->
+          </div>
+        </div>
+
+        <!-- タブ: ペット（お供モンスター） -->
+        <div class="tab-pane" id="pane-pets">
+          <div class="pet-intro-card">
+            <div style="font-size: 1.05rem; font-weight: 800; color: #38bdf8; margin-bottom: 4px;">
+              🐾 お供ペット（1体まで装備可能）
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-sub); line-height: 1.5;">
+              敵を倒した時に<strong>約2%の確率でモンスターが仲間入り</strong>！所持しているペットはいつでも自由に切り替え可能。同じペットを仲間にすると<strong>レベル（親愛度）がUP</strong>してボーナスがさらに強化されます！
+            </div>
+          </div>
+          <div id="pet-list" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- JSで動的にペットカードを生成 -->
           </div>
         </div>
 
@@ -380,6 +396,6 @@
   <div class="toast-container" id="toast-container"></div>
 
   <!-- ゲームスクリプト -->
-  <script src="game.js?v=3.6.0"></script>
+  <script src="game.js?v=3.7.0"></script>
 </body>
 </html>

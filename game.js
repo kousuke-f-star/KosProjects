@@ -551,7 +551,91 @@ const REBIRTH_SKILLS_MASTER = [
   }
 ];
 
-// --- 2. サウンド＆BGMエンジン (Web Audio API 本格RPG長尺ポリフォニックシンセサイザー) ---
+// --- 2. ペット（お供モンスター）マスターデータ ---
+const PETS_DATA = [
+  {
+    id: "pet_slime",
+    name: "チビスライム",
+    icon: "💧",
+    raceCategory: 0, // スライム族 (Lv.1〜99)
+    desc: "ぽよぽよ跳ねる可愛いスライムのお供。勇者の剣戟を応援する！",
+    effectDesc: "クリック攻撃力 +{val}%",
+    baseVal: 25,
+    perLevel: 10
+  },
+  {
+    id: "pet_skeleton",
+    name: "ボーンパピー",
+    icon: "💀",
+    raceCategory: 1, // スケルトン族 (Lv.100〜199)
+    desc: "骨をカタカタ鳴らす小さなガイコツ犬。敵の急所を見抜く！",
+    effectDesc: "クリティカル率 +{val}% & クリティカル倍率 +0.5倍",
+    baseVal: 10,
+    perLevel: 2
+  },
+  {
+    id: "pet_goblin",
+    name: "コゴブリン",
+    icon: "👺",
+    raceCategory: 2, // ゴブリン族 (Lv.200〜299)
+    desc: "金貨が大好きな小鬼の子供。モンスターからコインをかき集める！",
+    effectDesc: "獲得ゴールド +{val}% & 自動コイン回収",
+    baseVal: 30,
+    perLevel: 15
+  },
+  {
+    id: "pet_golem",
+    name: "ミニゴーレム",
+    icon: "🗿",
+    raceCategory: 3, // ゴーレム族 (Lv.300〜399)
+    desc: "古代の巨石から生まれたちびゴーレム。仲間の攻撃力を底上げ！",
+    effectDesc: "全自動仲間（DPS）攻撃力 +{val}%",
+    baseVal: 30,
+    perLevel: 15
+  },
+  {
+    id: "pet_demon",
+    name: "プチデーモン",
+    icon: "👿",
+    raceCategory: 4, // デーモン族 (Lv.400〜499)
+    desc: "魔界の小さな小悪魔。強大なボスに対して恐るべき特効を発揮！",
+    effectDesc: "ボスモンスターへのダメージ +{val}%",
+    baseVal: 50,
+    perLevel: 20
+  },
+  {
+    id: "pet_dragon",
+    name: "ベビードラゴン",
+    icon: "🐉",
+    raceCategory: 5, // ドラゴン族 (Lv.500〜599)
+    desc: "天空の覇竜の幼体。小さな火炎ブレスで全攻撃力を強化！",
+    effectDesc: "全攻撃力 +{val}% & 隕石ラッシュ間隔 -15秒",
+    baseVal: 40,
+    perLevel: 15
+  },
+  {
+    id: "pet_cosmic",
+    name: "星辰の幼生",
+    icon: "🌌",
+    raceCategory: 6, // 星辰の邪神 (Lv.600〜699)
+    desc: "宇宙の深淵からやってきた神秘の星の子。奇跡の古代SPを呼ぶ！",
+    effectDesc: "転生時、30%の確率で古代SP +1pt ボーナス (+{val}%)",
+    baseVal: 30,
+    perLevel: 5
+  },
+  {
+    id: "pet_god",
+    name: "光の神使",
+    icon: "👑",
+    raceCategory: 7, // 超越神 (Lv.700〜)
+    desc: "天上界の聖なる使い。神の祝福によって全能力を覚醒させる！",
+    effectDesc: "全攻撃力＆獲得ゴールド +{val}%",
+    baseVal: 50,
+    perLevel: 20
+  }
+];
+
+// --- 3. サウンド＆BGMエンジン (Web Audio API 本格RPG長尺ポリフォニックシンセサイザー) ---
 const BGM_NOTES = {
   REST: 0,
   C1: 32.70, D1: 36.71, E1: 41.20, F1: 43.65, G1: 49.00, A1: 55.00, B1: 61.74,
@@ -1267,6 +1351,8 @@ class Game {
       buildings: {},
       skills: {},
       rebirthSkills: {},     // 習得した古代の秘術 { skillId: level }
+      pets: {},              // 所持ペット { petId: { level: 1 } }
+      equippedPet: null,     // 装備中のペットID (null or "pet_slime" など)
       meteorRushTimer: 120,  // ☄️ 120秒周期 20秒間の隕石ラッシュカウントダウン
       meteorRushActiveTime: 0,// 隕石ラッシュ発動中の残り時間
       meteorRushParticleTimer: 0,
@@ -1362,10 +1448,11 @@ class Game {
     return Math.floor(curLvl / 2) + 1;
   }
 
-  // ☄️ 隕石ラッシュ関連の計算（120秒周期 20秒間持続、天変地異で-5秒/Lv）
+  // ☄️ 隕石ラッシュ関連の計算（120秒周期 20秒間持続、天変地異で-5秒/Lv、ベビードラゴンで-15秒）
   getMeteorInterval() {
     const calamityLvl = this.state.rebirthSkills["cosmic_calamity"] || 0;
-    return Math.max(60, 120 - calamityLvl * 5);
+    const petCdBonus = this.getPetBonus("meteor_cd");
+    return Math.max(45, 120 - calamityLvl * 5 - petCdBonus);
   }
 
   getMeteorDuration() {
@@ -1396,6 +1483,30 @@ class Game {
   }
 
   // クリック攻撃力の計算（基礎 + 剣術鍛錬 + パッシブ + DPS連動ボーナス + 隕石ラッシュ倍率）
+  getPetBonus(type) {
+    if (!this.state.equippedPet || !this.state.pets || !this.state.pets[this.state.equippedPet]) return 0;
+    const petId = this.state.equippedPet;
+    const petLvl = this.state.pets[petId].level || 1;
+    const petDef = PETS_DATA.find(p => p.id === petId);
+    if (!petDef) return 0;
+
+    const val = petDef.baseVal + (petLvl - 1) * petDef.perLevel;
+
+    if (type === "click" && petId === "pet_slime") return val * 0.01; // +25%〜
+    if (type === "crit_chance" && petId === "pet_skeleton") return val * 0.01; // +10%〜
+    if (type === "crit_mult" && petId === "pet_skeleton") return 0.5 + (petLvl - 1) * 0.1;
+    if (type === "gold" && petId === "pet_goblin") return val * 0.01; // +30%〜
+    if (type === "dps" && petId === "pet_golem") return val * 0.01; // +30%〜
+    if (type === "boss_dmg" && petId === "pet_demon") return val * 0.01; // +50%〜
+    if (type === "all_dmg" && petId === "pet_dragon") return val * 0.01; // +40%〜
+    if (type === "all_dmg" && petId === "pet_god") return val * 0.01; // +50%〜
+    if (type === "gold" && petId === "pet_god") return val * 0.01; // +50%〜
+    if (type === "meteor_cd" && petId === "pet_dragon") return 15;
+    if (type === "sp_bonus_chance" && petId === "pet_cosmic") return Math.min(1.0, val * 0.01);
+
+    return 0;
+  }
+
   getClickPower() {
     const lvl = this.state.clickLevel || 0;
     let base = 1 + Math.floor(lvl * 0.6);
@@ -1416,6 +1527,13 @@ class Game {
     if (soulStrikeLvl > 0) {
       base = Math.floor(base * (1 + soulStrikeLvl * 0.10));
     }
+
+    // 🐾 ペット効果: チビスライム (+25%〜) & ベビードラゴン (+40%〜) & 光の神使 (+50%〜)
+    const petClickBonus = this.getPetBonus("click") + this.getPetBonus("all_dmg");
+    if (petClickBonus > 0) {
+      base = Math.floor(base * (1 + petClickBonus));
+    }
+
     if (this.state.activeBuffs.berserk > 0) base *= 3;
     if (this.isMeteorRushActive()) base = Math.floor(base * this.getMeteorMultiplier());
     return Math.max(1, base);
@@ -1434,6 +1552,11 @@ class Game {
       chance += eyeLvl * 0.015;
       multiplier += eyeLvl * 0.10;
     }
+
+    // 🐾 ペット効果: ボーンパピー (+10%率, +0.5倍率〜)
+    chance += this.getPetBonus("crit_chance");
+    multiplier += this.getPetBonus("crit_mult");
+
     return { chance, multiplier };
   }
 
@@ -1453,6 +1576,12 @@ class Game {
     const craftLvl = this.state.rebirthSkills["ancient_craft"] || 0;
     if (craftLvl > 0) {
       totalDPS = Math.floor(totalDPS * (1 + craftLvl * 0.08));
+    }
+
+    // 🐾 ペット効果: ミニゴーレム (+30%〜) & ベビードラゴン (+40%〜) & 光の神使 (+50%〜)
+    const petDpsBonus = this.getPetBonus("dps") + this.getPetBonus("all_dmg");
+    if (petDpsBonus > 0) {
+      totalDPS = Math.floor(totalDPS * (1 + petDpsBonus));
     }
 
     if (withBuffs) {
@@ -2392,7 +2521,16 @@ class Game {
   applyDamage(amount) {
     if (this.isDefeating || this.enemy.hp <= 0) return;
 
-    this.enemy.hp -= amount;
+    let finalAmount = amount;
+    // 🐾 ペット効果: プチデーモン (ボスダメージ +50%〜)
+    if (this.enemy.isBoss) {
+      const bossBonus = this.getPetBonus("boss_dmg");
+      if (bossBonus > 0) {
+        finalAmount = Math.floor(finalAmount * (1 + bossBonus));
+      }
+    }
+
+    this.enemy.hp -= finalAmount;
     if (this.enemy.hp <= 0) {
       this.enemy.hp = 0;
       this.defeatEnemy();
@@ -2415,6 +2553,11 @@ class Game {
       this.renderCrystals();
     } else {
       this.sound.playDefeat();
+    }
+
+    // 🐾 2%の確率でモンスターがペットとして仲間入り！
+    if (Math.random() < 0.02) {
+      this.tryDropPet();
     }
 
     let goldReward = this.enemy.gold;
@@ -2471,10 +2614,45 @@ class Game {
     }, 280);
   }
 
+  tryDropPet() {
+    const lvl = this.state.currentLevel;
+    let catIdx = Math.floor((lvl - 1) / 100);
+    if (catIdx > 7) catIdx = 7;
+    const petDef = PETS_DATA[catIdx] || PETS_DATA[0];
+
+    if (!this.state.pets) this.state.pets = {};
+
+    const isNew = !this.state.pets[petDef.id];
+    if (isNew) {
+      this.state.pets[petDef.id] = { level: 1 };
+      if (!this.state.equippedPet) {
+        this.state.equippedPet = petDef.id;
+      }
+      this.showToast(`✨ なかまになりたそうにこちらを見ている…！\nペット「${petDef.icon} ${petDef.name}」を仲間にした！🎉`);
+      this.sound.playLevelUp();
+    } else {
+      this.state.pets[petDef.id].level = (this.state.pets[petDef.id].level || 1) + 1;
+      this.showToast(`💖 ペット「${petDef.icon} ${petDef.name}」の親愛度UP！ (Lv.${this.state.pets[petDef.id].level}) 🎉`);
+      this.sound.playBuy();
+    }
+
+    this.renderPetsTab();
+    this.renderEquippedPetInArena();
+    this.renderCombatStats();
+    this.saveGame();
+  }
+
   addGold(amount) {
     if (amount <= 0) return;
-    this.state.gold += amount;
-    this.state.totalGold += amount;
+    let finalAmount = amount;
+    // 🐾 ペット効果: コゴブリン (+30%〜) & 光の神使 (+50%〜)
+    const petGoldBonus = this.getPetBonus("gold");
+    if (petGoldBonus > 0) {
+      finalAmount = Math.floor(finalAmount * (1 + petGoldBonus));
+    }
+
+    this.state.gold += finalAmount;
+    this.state.totalGold += finalAmount;
     this.renderGold();
     this.updateShopButtons();
   }
@@ -2560,8 +2738,9 @@ class Game {
 
     this.sound.playRebirth();
 
-    // 基本2pt、30%の確率で奇跡の大成功3pt獲得！
-    const isCriticalSP = Math.random() < 0.30;
+    // 基本2pt、30%の確率で奇跡の大成功3pt獲得！（星辰の幼生装備で確率UP）
+    const bonusChance = 0.30 + this.getPetBonus("sp_bonus_chance");
+    const isCriticalSP = Math.random() < bonusChance;
     const gainedSP = isCriticalSP ? 3 : 2;
 
     this.state.crystals -= req;
@@ -2812,6 +2991,8 @@ class Game {
     this.renderClickUpgrade();
     this.renderBuildings();
     this.renderSkills();
+    this.renderPetsTab();
+    this.renderEquippedPetInArena();
     this.renderRebirthSkills();
     this.renderRebirthBanner();
     this.renderActiveSkillBar();
@@ -3068,6 +3249,120 @@ class Game {
     container.querySelectorAll(".rebirth-skill-btn").forEach(btn => {
       btn.onclick = () => this.upgradeRebirthSkill(btn.dataset.rsUnlock);
     });
+  }
+
+  // --- 🐾 ペット（お供モンスター）レンダリング ---
+  renderPetsTab() {
+    const container = document.getElementById("pet-list");
+    if (!container) return;
+
+    if (!this.state.pets) this.state.pets = {};
+
+    container.innerHTML = PETS_DATA.map(pet => {
+      const owned = this.state.pets[pet.id];
+      const isEquipped = this.state.equippedPet === pet.id;
+      const lvl = owned ? (owned.level || 1) : 0;
+      const currentVal = pet.baseVal + Math.max(0, lvl - 1) * pet.perLevel;
+      const effectText = pet.effectDesc.replace("{val}", currentVal);
+
+      if (!owned) {
+        return `
+          <div class="pet-card locked">
+            <div class="pet-icon-wrap" style="filter: grayscale(1); opacity: 0.6;">❓</div>
+            <div class="pet-info">
+              <div class="pet-name" style="color: var(--text-sub);">
+                <span>🔒 未発見のペット</span>
+              </div>
+              <span class="pet-effect" style="color: var(--text-sub);">能力: ？？？</span>
+              <span class="pet-desc">${pet.desc} (対象種族の討伐時 2% で仲間入り！)</span>
+            </div>
+            <div>
+              <button class="pet-equip-btn" disabled style="opacity: 0.5; background: #334155;">未所持</button>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="pet-card ${isEquipped ? 'equipped' : ''}">
+          <div class="pet-icon-wrap">${pet.icon}</div>
+          <div class="pet-info">
+            <div class="pet-name">
+              <span>${pet.name}</span>
+              <span class="pet-level-badge">親愛度 Lv.${lvl}</span>
+              ${isEquipped ? '<span style="font-size:0.75rem; color:#86efac; font-weight:800;">✨ 装備中</span>' : ''}
+            </div>
+            <span class="pet-effect">🌟 効果: ${effectText}</span>
+            <span class="pet-desc">${pet.desc}</span>
+          </div>
+          <div>
+            ${isEquipped 
+              ? `<button class="pet-equip-btn equipped" data-pet-unequip="${pet.id}">
+                   ✅ 装備中
+                 </button>`
+              : `<button class="pet-equip-btn" data-pet-equip="${pet.id}">
+                   🐾 装備する
+                 </button>`
+            }
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    container.querySelectorAll("[data-pet-equip]").forEach(btn => {
+      btn.onclick = () => this.equipPet(btn.dataset.petEquip);
+    });
+
+    container.querySelectorAll("[data-pet-unequip]").forEach(btn => {
+      btn.onclick = () => this.equipPet(null);
+    });
+  }
+
+  equipPet(petId) {
+    this.state.equippedPet = petId;
+    this.sound.playBuy();
+    if (petId) {
+      const petDef = PETS_DATA.find(p => p.id === petId);
+      this.showToast(`🐾 ペット「${petDef.icon} ${petDef.name}」をお供に設定しました！✨`);
+    } else {
+      this.showToast(`🐾 ペットの装備を解除しました。`);
+    }
+    this.renderPetsTab();
+    this.renderEquippedPetInArena();
+    this.renderCombatStats();
+    this.saveGame();
+  }
+
+  renderEquippedPetInArena() {
+    const arena = document.getElementById("slime-arena");
+    if (!arena) return;
+
+    let petEl = document.getElementById("arena-pet-companion");
+
+    if (!this.state.equippedPet || !this.state.pets || !this.state.pets[this.state.equippedPet]) {
+      if (petEl) petEl.remove();
+      return;
+    }
+
+    const petDef = PETS_DATA.find(p => p.id === this.state.equippedPet);
+    if (!petDef) {
+      if (petEl) petEl.remove();
+      return;
+    }
+
+    const petLvl = this.state.pets[this.state.equippedPet].level || 1;
+
+    if (!petEl) {
+      petEl = document.createElement("div");
+      petEl.id = "arena-pet-companion";
+      petEl.className = "arena-pet-companion";
+      arena.appendChild(petEl);
+    }
+
+    petEl.innerHTML = `
+      <span>${petDef.icon}</span>
+      <span class="pet-name-tag">Lv.${petLvl} ${petDef.name}</span>
+    `;
   }
 
   renderActiveSkillBar() {
@@ -3480,6 +3775,7 @@ class Game {
         if (targetPane) targetPane.classList.add("active");
         if (tabName === "stats") this.renderStats();
         if (tabName === "rebirth") this.renderRebirthSkills();
+        if (tabName === "pets") this.renderPetsTab();
       });
     });
 
@@ -3602,6 +3898,18 @@ class Game {
         this.state.rebirthSkills[rs.id] = 0;
       }
     });
+
+    this.state.pets = this.state.pets || {};
+    for (let pId in this.state.pets) {
+      if (typeof this.state.pets[pId] !== 'object' || !this.state.pets[pId]) {
+        this.state.pets[pId] = { level: 1 };
+      } else {
+        this.state.pets[pId].level = Number(this.state.pets[pId].level) || 1;
+      }
+    }
+    if (this.state.equippedPet && !this.state.pets[this.state.equippedPet]) {
+      this.state.equippedPet = null;
+    }
 
     this.state.activeCooldowns = this.state.activeCooldowns || {};
     ['skill_berserk', 'skill_goldrush', 'skill_meteor', 'skill_cyclone'].forEach(sId => {
