@@ -85,6 +85,17 @@ header {
   letter-spacing: 0.06em;
 }
 
+.version-badge {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+}
+
 .header-stats {
   display: flex;
   gap: 12px;
@@ -538,7 +549,10 @@ header {
   z-index: 5;
   margin: 15px 0 35px 0;
   transition: transform 0.05s ease;
-  touch-action: manipulation;
+  touch-action: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
 }
 
 .slime-wrapper:active { transform: scale(0.92, 0.85); }

@@ -1422,9 +1422,20 @@ class Game {
 
     const slimeTarget = document.getElementById("slime-target");
     if (slimeTarget) {
-      slimeTarget.addEventListener("pointerdown", (e) => {
-        e.preventDefault();
-        this.handleClick(e);
+      const handleSlimeTap = (e) => {
+        if (e.cancelable) e.preventDefault();
+        e.stopPropagation();
+        const touch = e.touches ? e.touches[0] : e;
+        this.handleClick(touch);
+      };
+
+      // タッチデバイス（iPad/スマホ）では touchstart で即時発火＆ブラウザズームを完全防止
+      slimeTarget.addEventListener("touchstart", handleSlimeTap, { passive: false });
+      slimeTarget.addEventListener("mousedown", (e) => {
+        // マウス操作時（タッチイベント発生時はmousedownは無視）
+        if (!('ontouchstart' in window)) {
+          handleSlimeTap(e);
+        }
       });
     }
 
