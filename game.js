@@ -319,20 +319,20 @@ const BUILDINGS_MASTER = [
 ];
 
 const SKILLS_MASTER = [
-  { id: "click_power_1", name: "力任せの打撃", icon: "👊", desc: "クリック攻撃力が +50% 増加する", cost: 50, type: "passive" },
+  { id: "click_power_1", name: "力任せの打撃", icon: "👊", desc: "クリック攻撃力が +25% 増加する", cost: 50, type: "passive" },
   { id: "crit_chance_1", name: "弱点見極め", icon: "🎯", desc: "クリティカル率+10%、クリティカル倍率が2.5倍になる", cost: 300, type: "passive" },
   { id: "trap_mastery", name: "罠の改良術", icon: "⚙️", desc: "「スライム捕獲罠」の生産効率が3倍になる", cost: 800, type: "passive" },
   { id: "click_combo", name: "連撃の心得", icon: "⚡", desc: "クリック時、25%の確率で2回連続ダメージを与える", cost: 1500, type: "passive" },
   { id: "skill_berserk", name: "スキル: バーサーク", icon: "🔥", desc: "【アクティブ】15秒間、クリック攻撃力とDPSが3倍になる (CD: 60秒)", cost: 2000, type: "active", cd: 60, duration: 15 },
-  { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の 5% がクリック攻撃力に加算される", cost: 8000, type: "passive" },
-  { id: "sword_spell", name: "魔剣の一閃", icon: "🗡️", desc: "DPS（秒間自動攻撃力）の 8% がさらにクリック攻撃力に加算される", cost: 20000, type: "passive" },
+  { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の 2% がクリック攻撃力に加算される", cost: 8000, type: "passive" },
+  { id: "sword_spell", name: "魔剣の一閃", icon: "🗡️", desc: "DPS（秒間自動攻撃力）の 4% がさらにクリック攻撃力に加算される", cost: 20000, type: "passive" },
   { id: "bounty_hunter", name: "賞金首ハンター", icon: "💎", desc: "スライム討伐時の獲得ゴールドが +50% 増加する", cost: 40000, type: "passive" },
   { id: "skill_goldrush", name: "スキル: ゴールドラッシュ", icon: "💰", desc: "【アクティブ】即座に秒間DPSの30秒分のゴールドを獲得する (CD: 90秒)", cost: 60000, type: "active", cd: 90 },
   { id: "building_synergy", name: "連携の極意", icon: "🤝", desc: "すべての建物の攻撃力・生産力が 2倍 になる", cost: 150000, type: "passive" },
-  { id: "giant_strength", name: "巨人の腕力", icon: "🦾", desc: "クリック攻撃力が +100% (2倍) に増加する", cost: 350000, type: "passive" },
+  { id: "giant_strength", name: "巨人の腕力", icon: "🦾", desc: "クリック攻撃力が +50% (1.5倍) に増加する", cost: 350000, type: "passive" },
   { id: "skill_meteor", name: "スキル: メテオ落とし", icon: "☄️", desc: "【アクティブ】巨大な隕石を落とし、スライムに現在DPSの50倍ダメージを一撃で与える (CD: 120秒)", cost: 500000, type: "active", cd: 120 },
   { id: "crit_power_2", name: "会心の極意", icon: "⚡", desc: "クリティカル率+15%、クリティカル倍率が 5倍 に跳ね上がる", cost: 1500000, type: "passive" },
-  { id: "overlord_aura", name: "覇王の気迫", icon: "👑", desc: "DPSの 15% がクリック攻撃力に加算！", cost: 5000000, type: "passive" },
+  { id: "overlord_aura", name: "覇王の気迫", icon: "👑", desc: "DPSの 7% がクリック攻撃力に加算！", cost: 5000000, type: "passive" },
   { id: "golden_touch", name: "ミダスタッチ", icon: "✨", desc: "クリック時、10%の確率でスライムの最大HP20%相当のボーナスゴールドを獲得", cost: 15000000, type: "passive" }
 ];
 
@@ -342,10 +342,10 @@ const REBIRTH_SKILLS_MASTER = [
     id: "soul_strike", 
     name: "魂の研鑽", 
     icon: "👊", 
-    desc: "クリック攻撃力が永続で +15% 増加する (現在: +{val}%)", 
+    desc: "クリック攻撃力が永続で +8% 増加する (現在: +{val}%)", 
     maxLevel: 5, 
     costPerLevel: 1, 
-    valuePerLevel: 15 
+    valuePerLevel: 8 
   },
   { 
     id: "ancient_craft", 
@@ -593,29 +593,29 @@ class Game {
     return total;
   }
 
-  // クリック攻撃力の計算（基礎 + 剣術鍛錬 + パッシブ + DPS連動ボーナス）
+  // クリック攻撃力の計算（基礎 + 剣術鍛錬 + パッシブ + DPS連動ボーナス、マイルドな1/2調整）
   getClickPower() {
     const lvl = this.state.clickLevel || 0;
-    let base = 1 + lvl * 1 + Math.floor(lvl * 0.4);
+    let base = 1 + Math.floor(lvl * 0.6);
 
-    if (this.state.skills["click_power_1"]) base = Math.floor(base * 1.5);
-    if (this.state.skills["giant_strength"]) base *= 2;
+    if (this.state.skills["click_power_1"]) base = Math.floor(base * 1.25);
+    if (this.state.skills["giant_strength"]) base = Math.floor(base * 1.5);
 
-    // DPS連動ボーナス（過剰になりすぎないよう適度な割合に調整）
+    // DPS連動ボーナス（過剰になりすぎないようマイルドな割合に調整）
     const dps = this.getDPS(false);
     let dpsBonusRatio = 0;
-    if (this.state.skills["click_power_2"]) dpsBonusRatio += 0.05;
-    if (this.state.skills["sword_spell"]) dpsBonusRatio += 0.08;
-    if (this.state.skills["overlord_aura"]) dpsBonusRatio += 0.15;
+    if (this.state.skills["click_power_2"]) dpsBonusRatio += 0.02;
+    if (this.state.skills["sword_spell"]) dpsBonusRatio += 0.04;
+    if (this.state.skills["overlord_aura"]) dpsBonusRatio += 0.07;
 
     if (dpsBonusRatio > 0) {
       base += Math.floor(dps * dpsBonusRatio);
     }
 
-    // 転生パッシブ: 魂の研鑽 (+15%/Lv)
+    // 転生パッシブ: 魂の研鑽 (+8%/Lv)
     const soulStrikeLvl = this.state.rebirthSkills["soul_strike"] || 0;
     if (soulStrikeLvl > 0) {
-      base = Math.floor(base * (1 + soulStrikeLvl * 0.15));
+      base = Math.floor(base * (1 + soulStrikeLvl * 0.08));
     }
     if (this.state.activeBuffs.berserk > 0) base *= 3;
     return Math.max(1, base);
