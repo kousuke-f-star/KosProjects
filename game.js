@@ -1,8 +1,10 @@
 /**
- * スライムクリッカー放置RPG - ゲームエンジン
+ * スライムクリッカー放置RPG - ゲームエンジン (v1.5.0)
  */
 
 // --- 1. 定数・マスターデータ ---
+
+// 50レベルごとに切り替わる12種類の美麗背景ステージ！
 const STAGES = [
   { 
     id: 1, 
@@ -112,15 +114,197 @@ const STAGES = [
       </div>
     `
   },
+  { 
+    id: 7, 
+    name: "氷結の雪原", 
+    icon: "❄️", 
+    envClass: "env-stage-7", 
+    renderEnv: () => `
+      <div class="celestial-body" style="background: radial-gradient(circle, #e0f2fe 30%, #38bdf8 80%); box-shadow: 0 0 40px #7dd3fc;"></div>
+      <div class="env-cloud cloud-1" style="background: rgba(224, 242, 254, 0.7);"></div>
+      <svg class="env-mountains" viewBox="0 0 500 120" preserveAspectRatio="none">
+        <polygon points="30,120 120,20 220,120" fill="#bae6fd" opacity="0.8"/>
+        <polygon points="180,120 300,10 420,120" fill="#e0f2fe" opacity="0.9"/>
+      </svg>
+      <div style="position: absolute; top: 30%; left: 15%; font-size: 2.2rem; animation: magic-float 3.5s infinite ease-in-out;">❄️</div>
+      <div style="position: absolute; top: 40%; right: 20%; font-size: 2.4rem; animation: magic-float 4s infinite ease-in-out 1s;">🧊</div>
+      <div class="env-foreground-decor">
+        <span>❄️</span><span>⛄</span><span>🧊</span><span>❄️</span>
+      </div>
+    `
+  },
+  { 
+    id: 8, 
+    name: "黄金の砂漠", 
+    icon: "🏜️", 
+    envClass: "env-stage-8", 
+    renderEnv: () => `
+      <div class="celestial-body" style="background: radial-gradient(circle, #fef08a 20%, #eab308 80%); box-shadow: 0 0 50px #ca8a04;"></div>
+      <svg class="env-mountains" viewBox="0 0 500 120" preserveAspectRatio="none">
+        <polygon points="100,120 200,30 300,120" fill="#b45309" opacity="0.85"/>
+        <polygon points="260,120 370,45 470,120" fill="#92400e" opacity="0.9"/>
+      </svg>
+      <div style="position: absolute; top: 35%; left: 20%; font-size: 2.5rem; animation: magic-float 3s infinite ease-in-out;">🏺</div>
+      <div class="env-foreground-decor">
+        <span>🏜️</span><span>🌵</span><span>🐪</span><span>🏜️</span>
+      </div>
+    `
+  },
+  { 
+    id: 9, 
+    name: "深海の海底神殿", 
+    icon: "🌊", 
+    envClass: "env-stage-9", 
+    renderEnv: () => `
+      <div class="celestial-body" style="background: radial-gradient(circle, #2dd4bf 20%, #0f766e 80%); box-shadow: 0 0 45px #14b8a6;"></div>
+      <div style="position: absolute; bottom: 80px; left: 15%; font-size: 1.8rem; animation: float-up-particle 3.5s infinite ease-in-out;">🫧</div>
+      <div style="position: absolute; bottom: 60px; right: 22%; font-size: 2.2rem; animation: float-up-particle 4s infinite ease-in-out 1s;">🫧</div>
+      <div class="env-foreground-decor">
+        <span>🪸</span><span>🐚</span><span>🫧</span><span>🔱</span>
+      </div>
+    `
+  },
+  { 
+    id: 10, 
+    name: "嵐の雷鳴山", 
+    icon: "⚡", 
+    envClass: "env-stage-10", 
+    renderEnv: () => `
+      <div class="celestial-body" style="background: radial-gradient(circle, #c084fc 20%, #4338ca 80%); box-shadow: 0 0 50px #818cf8;"></div>
+      <div class="env-cloud cloud-1" style="background: rgba(30, 27, 75, 0.85);"></div>
+      <div class="env-cloud cloud-2" style="background: rgba(49, 46, 129, 0.8);"></div>
+      <div style="position: absolute; top: 25%; left: 25%; font-size: 2.8rem; animation: pulse-glow 1.5s infinite ease-in-out;">⚡</div>
+      <div class="env-foreground-decor">
+        <span>⚡</span><span>⛈️</span><span>🌩️</span><span>⚡</span>
+      </div>
+    `
+  },
+  { 
+    id: 11, 
+    name: "冥界の黄泉平坂", 
+    icon: "💀", 
+    envClass: "env-stage-11", 
+    renderEnv: () => `
+      <div class="celestial-body" style="background: radial-gradient(circle, #f43f5e 20%, #881337 80%); box-shadow: 0 0 50px #e11d48;"></div>
+      <div style="position: absolute; top: 30%; left: 18%; font-size: 2.5rem; animation: magic-float 3s infinite ease-in-out;">🕯️</div>
+      <div style="position: absolute; top: 35%; right: 20%; font-size: 2.2rem; animation: magic-float 3.5s infinite ease-in-out 1s;">👻</div>
+      <div class="env-foreground-decor">
+        <span>🕯️</span><span>👻</span><span>💀</span><span>🕯️</span>
+      </div>
+    `
+  },
+  { 
+    id: 12, 
+    name: "星辰の宇宙空間", 
+    icon: "🪐", 
+    envClass: "env-stage-12", 
+    renderEnv: () => `
+      <div class="celestial-body" style="background: radial-gradient(circle, #f472b6 20%, #3b0764 80%); box-shadow: 0 0 60px #c084fc; border: 2px solid #f472b6;"></div>
+      <div style="position: absolute; top: 20%; left: 15%; font-size: 3rem; animation: spin-slow 20s linear infinite;">🪐</div>
+      <div style="position: absolute; top: 30%; right: 18%; font-size: 2.6rem; animation: magic-float 3s infinite ease-in-out;">🌠</div>
+      <div class="env-foreground-decor">
+        <span>🪐</span><span>🌌</span><span>🌠</span><span>🌟</span>
+      </div>
+    `
+  }
 ];
 
-const SLIME_TYPES = [
-  { name: "グリーンスライム", color1: "#86efac", color2: "#22c55e", color3: "#15803d" },
-  { name: "ブルースライム", color1: "#7dd3fc", color2: "#0284c7", color3: "#0369a1" },
-  { name: "ポイズンスライム", color1: "#d8b4fe", color2: "#9333ea", color3: "#581c87" },
-  { name: "フレイムスライム", color1: "#fca5a5", color2: "#ef4444", color3: "#991b1b" },
-  { name: "ホーリーライム", color1: "#fef08a", color2: "#eab308", color3: "#854d0e" },
-  { name: "ダークスライム", color1: "#94a3b8", color2: "#334155", color3: "#0f172a" },
+// --- 2. モンスター種族・カテゴリデータ (レベル帯ごとに変化！) ---
+const MONSTER_CATEGORIES = [
+  {
+    minLevel: 1,
+    maxLevel: 149,
+    raceName: "スライム族",
+    icon: "💧",
+    types: [
+      { name: "グリーンスライム", color1: "#86efac", color2: "#22c55e", color3: "#15803d", eyeType: "cute" },
+      { name: "ブルースライム", color1: "#7dd3fc", color2: "#0284c7", color3: "#0369a1", eyeType: "cute" },
+      { name: "ポイズンスライム", color1: "#d8b4fe", color2: "#9333ea", color3: "#581c87", eyeType: "evil" },
+      { name: "フレイムスライム", color1: "#fca5a5", color2: "#ef4444", color3: "#991b1b", eyeType: "fierce" },
+      { name: "ホーリーライム", color1: "#fef08a", color2: "#eab308", color3: "#854d0e", eyeType: "cute" },
+      { name: "ダークスライム", color1: "#94a3b8", color2: "#334155", color3: "#0f172a", eyeType: "evil" }
+    ],
+    bossPrefix: "キング"
+  },
+  {
+    minLevel: 150,
+    maxLevel: 299,
+    raceName: "スケルトン族",
+    icon: "💀",
+    types: [
+      { name: "ガイコツ見張り兵", color1: "#f8fafc", color2: "#cbd5e1", color3: "#64748b", eyeType: "skull" },
+      { name: "ボーンウォリアー", color1: "#e2e8f0", color2: "#94a3b8", color3: "#475569", eyeType: "skull" },
+      { name: "スカルメイジ", color1: "#c084fc", color2: "#9333ea", color3: "#581c87", eyeType: "magic" },
+      { name: "カースドスケルトン", color1: "#fca5a5", color2: "#dc2626", color3: "#7f1d1d", eyeType: "fierce" },
+      { name: "ファントムナイト", color1: "#67e8f9", color2: "#0891b2", color3: "#164e63", eyeType: "magic" }
+    ],
+    bossPrefix: "スケルトンロード"
+  },
+  {
+    minLevel: 300,
+    maxLevel: 499,
+    raceName: "ゴブリン・魔獣族",
+    icon: "👺",
+    types: [
+      { name: "ゴブリンシーフ", color1: "#86efac", color2: "#16a34a", color3: "#14532d", eyeType: "goblin" },
+      { name: "ゴブリンファイター", color1: "#fdba74", color2: "#ea580c", color3: "#9a3412", eyeType: "goblin" },
+      { name: "オークウォーリアー", color1: "#a3e635", color2: "#65a30d", color3: "#365314", eyeType: "fierce" },
+      { name: "トロールバーサーカー", color1: "#fca5a5", color2: "#b91c1c", color3: "#450a0a", eyeType: "fierce" }
+    ],
+    bossPrefix: "大頭領ゴブリン"
+  },
+  {
+    minLevel: 500,
+    maxLevel: 799,
+    raceName: "ゴーレム・魔導巨神族",
+    icon: "🗿",
+    types: [
+      { name: "ロックゴーレム", color1: "#d6d3d1", color2: "#78716c", color3: "#44403c", eyeType: "golem" },
+      { name: "アイアンゴーレム", color1: "#cbd5e1", color2: "#64748b", color3: "#1e293b", eyeType: "golem" },
+      { name: "マグマゴーレム", color1: "#fdba74", color2: "#dc2626", color3: "#7f1d1d", eyeType: "fierce" },
+      { name: "クリスタルゴーレム", color1: "#7dd3fc", color2: "#0284c7", color3: "#1e3a8a", eyeType: "magic" }
+    ],
+    bossPrefix: "古代巨神"
+  },
+  {
+    minLevel: 800,
+    maxLevel: 1199,
+    raceName: "デーモン・魔王軍族",
+    icon: "👿",
+    types: [
+      { name: "シャドウインプ", color1: "#c084fc", color2: "#7e22ce", color3: "#3b0764", eyeType: "demon" },
+      { name: "レッサーデーモン", color1: "#f87171", color2: "#dc2626", color3: "#450a0a", eyeType: "demon" },
+      { name: "死神リーパー", color1: "#94a3b8", color2: "#1e293b", color3: "#020617", eyeType: "skull" },
+      { name: "アークデーモン", color1: "#fb7185", color2: "#e11d48", color3: "#881337", eyeType: "fierce" }
+    ],
+    bossPrefix: "魔王"
+  },
+  {
+    minLevel: 1200,
+    maxLevel: 1999,
+    raceName: "契約飛竜・ドラゴン族",
+    icon: "🐉",
+    types: [
+      { name: "ワイバーン", color1: "#86efac", color2: "#15803d", color3: "#052e16", eyeType: "dragon" },
+      { name: "フレイムドラゴン", color1: "#fca5a5", color2: "#b91c1c", color3: "#450a0a", eyeType: "dragon" },
+      { name: "フロストドラゴン", color1: "#bae6fd", color2: "#0284c7", color3: "#0c4a6e", eyeType: "dragon" },
+      { name: "カオスドラゴン", color1: "#e879f9", color2: "#86198f", color3: "#4a044e", eyeType: "dragon" }
+    ],
+    bossPrefix: "太古の覇竜"
+  },
+  {
+    minLevel: 2000,
+    maxLevel: 999999,
+    raceName: "星辰の邪神・宇宙支配者族",
+    icon: "🌌",
+    types: [
+      { name: "コズミックビースト", color1: "#c084fc", color2: "#3b0764", color3: "#000000", eyeType: "cosmic" },
+      { name: "星喰らいの影", color1: "#f472b6", color2: "#831843", color3: "#0f172a", eyeType: "cosmic" },
+      { name: "虚無の巨神", color1: "#38bdf8", color2: "#1e1b4b", color3: "#020617", eyeType: "cosmic" },
+      { name: "アザトースの化身", color1: "#fbbf24", color2: "#7c2d12", color3: "#000000", eyeType: "cosmic" }
+    ],
+    bossPrefix: "万物の支配神"
+  }
 ];
 
 const BUILDINGS_MASTER = [
@@ -135,17 +319,21 @@ const BUILDINGS_MASTER = [
 ];
 
 const SKILLS_MASTER = [
-  { id: "click_power_1", name: "力任せの打撃", icon: "👊", desc: "クリック攻撃力が +100% 増加する", cost: 50, type: "passive" },
+  { id: "click_power_1", name: "力任せの打撃", icon: "👊", desc: "クリック攻撃力が +100% (2倍) 増加する", cost: 50, type: "passive" },
   { id: "crit_chance_1", name: "弱点見極め", icon: "🎯", desc: "クリティカル率+10%、クリティカル倍率が2.5倍になる", cost: 300, type: "passive" },
   { id: "trap_mastery", name: "罠の改良術", icon: "⚙️", desc: "「スライム捕獲罠」の生産効率が3倍になる", cost: 800, type: "passive" },
+  { id: "click_combo", name: "連撃の心得", icon: "⚡", desc: "クリック時、25%の確率で2回連続ダメージを与える", cost: 1500, type: "passive" },
   { id: "skill_berserk", name: "スキル: バーサーク", icon: "🔥", desc: "【アクティブ】15秒間、クリック攻撃力とDPSが3倍になる (CD: 60秒)", cost: 2000, type: "active", cd: 60, duration: 15 },
-  { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の10%がクリック攻撃力に加算される", cost: 8000, type: "passive" },
-  { id: "bounty_hunter", name: "賞金首ハンター", icon: "💎", desc: "スライム討伐時の獲得ゴールドが +50% 増加する", cost: 25000, type: "passive" },
+  { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の15%がクリック攻撃力に加算される", cost: 8000, type: "passive" },
+  { id: "sword_spell", name: "魔剣の一閃", icon: "🗡️", desc: "DPS（秒間自動攻撃力）の30%がさらにクリック攻撃力に加算される", cost: 20000, type: "passive" },
+  { id: "bounty_hunter", name: "賞金首ハンター", icon: "💎", desc: "スライム討伐時の獲得ゴールドが +50% 増加する", cost: 40000, type: "passive" },
   { id: "skill_goldrush", name: "スキル: ゴールドラッシュ", icon: "💰", desc: "【アクティブ】即座に秒間DPSの30秒分のゴールドを獲得する (CD: 90秒)", cost: 60000, type: "active", cd: 90 },
   { id: "building_synergy", name: "連携の極意", icon: "🤝", desc: "すべての建物の攻撃力・生産力が 2倍 になる", cost: 150000, type: "passive" },
+  { id: "giant_strength", name: "巨人の腕力", icon: "🦾", desc: "クリック攻撃力がさらに 3倍 に跳ね上がる", cost: 350000, type: "passive" },
   { id: "skill_meteor", name: "スキル: メテオ落とし", icon: "☄️", desc: "【アクティブ】巨大な隕石を落とし、スライムに現在DPSの50倍ダメージを一撃で与える (CD: 120秒)", cost: 500000, type: "active", cd: 120 },
   { id: "crit_power_2", name: "会心の極意", icon: "⚡", desc: "クリティカル率+15%、クリティカル倍率が 5倍 に跳ね上がる", cost: 1500000, type: "passive" },
-  { id: "golden_touch", name: "ミダスタッチ", icon: "👑", desc: "クリック時、10%の確率でスライムの最大HP20%相当のボーナスゴールドを獲得", cost: 5000000, type: "passive" }
+  { id: "overlord_aura", name: "覇王の気迫", icon: "👑", desc: "DPSの 70% がクリック攻撃力に加算！クリックが最強の一撃に進化する", cost: 5000000, type: "passive" },
+  { id: "golden_touch", name: "ミダスタッチ", icon: "✨", desc: "クリック時、10%の確率でスライムの最大HP20%相当のボーナスゴールドを獲得", cost: 15000000, type: "passive" }
 ];
 
 // --- 古代の秘術（古代スキルポイント SP を消費して永続強化） ---
@@ -154,10 +342,10 @@ const REBIRTH_SKILLS_MASTER = [
     id: "soul_strike", 
     name: "魂の研鑽", 
     icon: "👊", 
-    desc: "クリック攻撃力が永続で +20% 増加する (現在: +{val}%)", 
+    desc: "クリック攻撃力が永続で +25% 増加する (現在: +{val}%)", 
     maxLevel: 5, 
     costPerLevel: 1, 
-    valuePerLevel: 20 
+    valuePerLevel: 25 
   },
   { 
     id: "ancient_craft", 
@@ -304,6 +492,7 @@ class Game {
     this.state = {
       gold: 0,
       totalGold: 0,
+      clickLevel: 0,         // 常設クリック強化レベル（剣術の鍛錬）
       crystals: 0,           // ボス討伐で手に入る「転生の水晶 💎」（初期値0個）
       totalCrystals: 0,      // 累計獲得した転生の水晶
       skillPoints: 0,        // 転生で手に入る「古代スキルポイント 🔮 (SP)」
@@ -338,9 +527,11 @@ class Game {
       gold: 5,
       isBoss: false,
       isMetal: false,
+      raceName: "スライム族",
       color1: "#86efac",
       color2: "#22c55e",
-      color3: "#15803d"
+      color3: "#15803d",
+      eyeType: "cute"
     };
 
     BUILDINGS_MASTER.forEach(b => this.state.buildings[b.id] = 0);
@@ -351,7 +542,7 @@ class Game {
     this.autoSaveTimer = 0;
     this.autoAttackTimer = 0;
     this.fairyClickTimer = 0;
-    this.isDefeating = false; // 討伐アニメーション中の重複ダメージ防止フラグ
+    this.isDefeating = false;
   }
 
   init() {
@@ -366,9 +557,13 @@ class Game {
     requestAnimationFrame(this.loop.bind(this));
   }
 
-  getStageIndex() {
-    const stageIdx = Math.floor((this.state.currentLevel - 1) / 10);
-    return Math.min(stageIdx, STAGES.length - 1);
+  // 50レベルごとに切り替わるステージインデックス
+  getStageIndex(level = this.state.currentLevel) {
+    return Math.floor((level - 1) / 50) % STAGES.length;
+  }
+
+  getStageNumber(level = this.state.currentLevel) {
+    return Math.floor((level - 1) / 50) + 1;
   }
 
   isBossLevel(level = this.state.currentLevel) {
@@ -385,20 +580,38 @@ class Game {
     return this.state.crystals >= this.getRequiredCrystals();
   }
 
+  // 常設クリック強化のコスト計算（安価でテンポよく何回でも強化可能！）
+  getClickUpgradeCost() {
+    const lvl = this.state.clickLevel || 0;
+    return Math.floor(10 * Math.pow(1.12, lvl) + lvl * 5);
+  }
+
+  // クリック攻撃力の計算（基礎 + 剣術鍛錬 + パッシブ + DPS連動ボーナス）
   getClickPower() {
-    let power = 1;
-    if (this.state.skills["click_power_1"]) power *= 2;
-    if (this.state.skills["click_power_2"]) {
-      const dps = this.getDPS(false);
-      power += Math.floor(dps * 0.1);
+    const lvl = this.state.clickLevel || 0;
+    let base = 1 + lvl * 2 + Math.floor(Math.pow(lvl, 1.35) * 0.8);
+
+    if (this.state.skills["click_power_1"]) base *= 2;
+    if (this.state.skills["giant_strength"]) base *= 3;
+
+    // DPS連動ボーナス（自動攻撃が伸びるほどクリックも爆発的に強くなる！）
+    const dps = this.getDPS(false);
+    let dpsBonusRatio = 0;
+    if (this.state.skills["click_power_2"]) dpsBonusRatio += 0.15;
+    if (this.state.skills["sword_spell"]) dpsBonusRatio += 0.30;
+    if (this.state.skills["overlord_aura"]) dpsBonusRatio += 0.70;
+
+    if (dpsBonusRatio > 0) {
+      base += Math.floor(dps * dpsBonusRatio);
     }
-    // 転生パッシブ: 魂の研鑽 (+20%/Lv)
+
+    // 転生パッシブ: 魂の研鑽 (+25%/Lv)
     const soulStrikeLvl = this.state.rebirthSkills["soul_strike"] || 0;
     if (soulStrikeLvl > 0) {
-      power = Math.floor(power * (1 + soulStrikeLvl * 0.20));
+      base = Math.floor(base * (1 + soulStrikeLvl * 0.25));
     }
-    if (this.state.activeBuffs.berserk > 0) power *= 3;
-    return Math.max(1, power);
+    if (this.state.activeBuffs.berserk > 0) base *= 3;
+    return Math.max(1, base);
   }
 
   getCritInfo() {
@@ -455,32 +668,37 @@ class Game {
     return Math.floor(totalCost);
   }
 
-  // --- スライム生成 ---
+  // --- レベル帯に応じたモンスター生成 ---
   spawnEnemy() {
     const level = this.state.currentLevel;
-    const stageIdx = this.getStageIndex();
     const isBoss = this.isBossLevel(level);
-    
-    const typeIdx = Math.min(stageIdx, SLIME_TYPES.length - 1);
-    const type = SLIME_TYPES[typeIdx];
+
+    // レベルに応じたモンスターカテゴリ（種族）を検索
+    let category = MONSTER_CATEGORIES.find(c => level >= c.minLevel && level <= c.maxLevel);
+    if (!category) category = MONSTER_CATEGORIES[MONSTER_CATEGORIES.length - 1];
+
+    const typeIdx = (level - 1) % category.types.length;
+    const type = category.types[typeIdx];
 
     const isMetal = !isBoss && Math.random() < 0.05;
 
-    let baseHp = Math.floor(25 + (level - 1) * 20 + Math.pow(level, 1.6) * 8);
-    let baseGold = Math.max(3, Math.floor(4 + (level - 1) * 2.5 + Math.pow(level, 1.3) * 1.2));
+    let baseHp = Math.floor(25 + (level - 1) * 22 + Math.pow(level, 1.55) * 8);
+    let baseGold = Math.max(3, Math.floor(4 + (level - 1) * 2.5 + Math.pow(level, 1.25) * 1.2));
 
     if (isMetal) {
       this.enemy = {
-        name: `✨ メタルスライム (Lv.${level})`,
+        name: `✨ メタル${type.name} (Lv.${level})`,
         level: level,
-        hp: Math.max(15, Math.floor(baseHp * 0.4)),
-        maxHp: Math.max(15, Math.floor(baseHp * 0.4)),
+        hp: Math.max(15, Math.floor(baseHp * 0.35)),
+        maxHp: Math.max(15, Math.floor(baseHp * 0.35)),
         gold: baseGold * 12,
         isBoss: false,
         isMetal: true,
+        raceName: category.raceName,
         color1: "#e2e8f0",
         color2: "#94a3b8",
-        color3: "#475569"
+        color3: "#475569",
+        eyeType: type.eyeType
       };
     } else if (isBoss) {
       const bossHp = Math.floor(baseHp * 3.8);
@@ -488,16 +706,18 @@ class Game {
       this.state.bossTimer = 40;
 
       this.enemy = {
-        name: `👑 キング${type.name} (Lv.${level})`,
+        name: `👑 ${category.bossPrefix}${type.name} (Lv.${level})`,
         level: level,
         hp: bossHp,
         maxHp: bossHp,
         gold: bossGold,
         isBoss: true,
         isMetal: false,
+        raceName: category.raceName,
         color1: type.color1,
         color2: type.color2,
-        color3: type.color3
+        color3: type.color3,
+        eyeType: type.eyeType
       };
     } else {
       this.enemy = {
@@ -508,9 +728,11 @@ class Game {
         gold: baseGold,
         isBoss: false,
         isMetal: false,
+        raceName: category.raceName,
         color1: type.color1,
         color2: type.color2,
-        color3: type.color3
+        color3: type.color3,
+        eyeType: type.eyeType
       };
     }
 
@@ -518,6 +740,7 @@ class Game {
     this.renderEnemyUI();
   }
 
+  // --- モンスターの外見・SVG動的描画 ---
   updateSlimeAppearance() {
     const stop1 = document.getElementById("grad-stop-1");
     const stop2 = document.getElementById("grad-stop-2");
@@ -526,6 +749,65 @@ class Game {
       stop1.setAttribute("stop-color", this.enemy.color1);
       stop2.setAttribute("stop-color", this.enemy.color2);
       stop3.setAttribute("stop-color", this.enemy.color3);
+    }
+
+    const eyesGroup = document.getElementById("slime-eyes");
+    if (eyesGroup) {
+      const et = this.enemy.eyeType;
+      if (et === "skull") {
+        eyesGroup.innerHTML = `
+          <ellipse cx="70" cy="110" rx="14" ry="16" fill="#0f172a" />
+          <circle cx="70" cy="110" r="5" fill="#ef4444" />
+          <ellipse cx="130" cy="110" rx="14" ry="16" fill="#0f172a" />
+          <circle cx="130" cy="110" r="5" fill="#ef4444" />
+          <path d="M96,132 L104,132 L100,140 Z" fill="#0f172a" />
+          <path d="M80,150 L120,150 M88,145 L88,155 M100,145 L100,155 M112,145 L112,155" stroke="#0f172a" stroke-width="3" />
+        `;
+      } else if (et === "goblin") {
+        eyesGroup.innerHTML = `
+          <ellipse cx="68" cy="110" rx="10" ry="14" fill="#fbbf24" stroke="#0f172a" stroke-width="2" />
+          <circle cx="68" cy="110" r="4" fill="#7f1d1d" />
+          <ellipse cx="132" cy="110" rx="10" ry="14" fill="#fbbf24" stroke="#0f172a" stroke-width="2" />
+          <circle cx="132" cy="110" r="4" fill="#7f1d1d" />
+          <path d="M85,140 Q100,155 115,140" stroke="#0f172a" stroke-width="4" fill="none" />
+          <polygon points="90,140 94,130 98,140" fill="#ffffff" />
+          <polygon points="102,140 106,130 110,140" fill="#ffffff" />
+        `;
+      } else if (et === "golem") {
+        eyesGroup.innerHTML = `
+          <rect x="55" y="105" width="90" height="14" rx="7" fill="#0f172a" />
+          <circle cx="100" cy="112" r="6" fill="#38bdf8" filter="drop-shadow(0 0 6px #38bdf8)" />
+          <path d="M70,140 L130,140" stroke="#0f172a" stroke-width="6" stroke-linecap="round" />
+        `;
+      } else if (et === "demon" || et === "cosmic") {
+        eyesGroup.innerHTML = `
+          <ellipse cx="65" cy="108" rx="12" ry="7" fill="#fbbf24" transform="rotate(15 65 108)" />
+          <circle cx="65" cy="108" r="4" fill="#7f1d1d" />
+          <ellipse cx="135" cy="108" rx="12" ry="7" fill="#fbbf24" transform="rotate(-15 135 108)" />
+          <circle cx="135" cy="108" r="4" fill="#7f1d1d" />
+          <circle cx="100" cy="85" r="7" fill="#c084fc" filter="drop-shadow(0 0 8px #c084fc)" />
+          <path d="M80,140 Q100,160 120,140" stroke="#0f172a" stroke-width="4" fill="#7f1d1d" />
+        `;
+      } else if (et === "dragon") {
+        eyesGroup.innerHTML = `
+          <polygon points="55,115 75,102 75,118" fill="#fbbf24" />
+          <line x1="68" y1="104" x2="68" y2="116" stroke="#0f172a" stroke-width="2" />
+          <polygon points="145,115 125,102 125,118" fill="#fbbf24" />
+          <line x1="132" y1="104" x2="132" y2="116" stroke="#0f172a" stroke-width="2" />
+          <path d="M80,142 Q100,128 120,142" stroke="#0f172a" stroke-width="4" fill="none" />
+        `;
+      } else {
+        // デフォルトの可愛いスライム目
+        eyesGroup.innerHTML = `
+          <ellipse id="eye-l" cx="70" cy="115" rx="8" ry="12" fill="#0f172a" />
+          <circle cx="68" cy="111" r="4" fill="#ffffff" />
+          <ellipse id="eye-r" cx="130" cy="115" rx="8" ry="12" fill="#0f172a" />
+          <circle cx="128" cy="111" r="4" fill="#ffffff" />
+          <ellipse id="cheek-l" cx="52" cy="130" rx="9" ry="5" fill="#f43f5e" opacity="0.6" />
+          <ellipse id="cheek-r" cx="148" cy="130" rx="9" ry="5" fill="#f43f5e" opacity="0.6" />
+          <path id="slime-mouth" d="M92,128 Q100,136 108,128" stroke="#0f172a" stroke-width="3" fill="none" stroke-linecap="round" />
+        `;
+      }
     }
 
     const acc = document.getElementById("slime-accessory");
@@ -547,7 +829,7 @@ class Game {
     }
   }
 
-  // --- ダイナミック背景環境の更新 ---
+  // --- ダイナミック背景環境の更新（50レベルごとに切り替え！） ---
   updateArenaEnvironment() {
     const stageIdx = this.getStageIndex();
     const stage = STAGES[stageIdx];
@@ -620,7 +902,6 @@ class Game {
     const slimeTarget = document.getElementById("slime-target");
     if (!slimeTarget) return;
     const slimeRect = slimeTarget.getBoundingClientRect();
-    // ダメージ表示はスライムの頭上（上部中央）にピョンと出す！
     const headX = slimeRect.left + slimeRect.width / 2;
     const headY = slimeRect.top + 15;
 
@@ -629,17 +910,14 @@ class Game {
     void slimeTarget.offsetWidth;
     slimeTarget.classList.add("hit");
 
-    // スライム頭上に自動ダメージ表示
     this.createDamagePopup(Math.ceil(totalDmg), false, true, headX, headY);
 
-    // 【加勢ボーナスコイン】仲間が攻撃するたびに多めのゴールドを自動獲得！
     let autoGold = Math.max(2, Math.floor(totalDmg * 0.8 + this.enemy.level * 1.2));
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
       autoGold = Math.floor(autoGold * (1 + merchantLvl * 0.20));
     }
     this.addGold(autoGold);
-    // 加勢コインポップアップ (頭上右側へスッと飛ぶ)
     this.createDamagePopup(`🪙 +${this.formatNumber(autoGold)}`, false, false, headX + 22, headY - 10, true);
 
     const units = [
@@ -692,7 +970,11 @@ class Game {
     const clickPower = this.getClickPower();
     const crit = this.getCritInfo();
     const isCrit = Math.random() < crit.chance;
-    const dmg = isCrit ? Math.floor(clickPower * crit.multiplier) : clickPower;
+    let dmg = isCrit ? Math.floor(clickPower * crit.multiplier) : clickPower;
+
+    // 連撃の心得 (25%で2回連続ダメージ)
+    const isCombo = this.state.skills["click_combo"] && Math.random() < 0.25;
+    if (isCombo) dmg *= 2;
 
     let clickGold = Math.max(1, Math.floor(clickPower * 0.5 + (this.enemy.level * 0.3)));
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
@@ -713,13 +995,13 @@ class Game {
     }
 
     const rect = slimeTarget.getBoundingClientRect();
-    // ダメージ表示は常にスライムの頭上（上部中央）に出す！
     const headX = rect.left + rect.width / 2;
     const headY = rect.top + 15;
 
-    // ダメージポップアップ (頭上から上へ跳ね上がる)
     this.createDamagePopup(dmg, isCrit, false, headX, headY);
-    // コインポップアップ (頭上右側へスッと飛ぶ)
+    if (isCombo) {
+      this.createDamagePopup(`⚡ 2連撃!!`, true, false, headX - 25, headY - 20);
+    }
     this.createDamagePopup(`🪙 +${this.formatNumber(clickGold)}`, false, false, headX + 18, headY - 12, true);
 
     if (this.state.skills["golden_touch"] && Math.random() < 0.1) {
@@ -752,7 +1034,6 @@ class Game {
     const isBoss = this.enemy.isBoss;
     if (isBoss) {
       this.sound.playBossDefeat();
-      // ボス討伐で転生の水晶を獲得！
       this.state.crystals += 1;
       this.state.totalCrystals += 1;
       this.renderCrystals();
@@ -785,18 +1066,19 @@ class Game {
     setTimeout(() => {
       slimeTarget.classList.remove("defeat");
 
-      const oldStageIdx = this.getStageIndex();
+      const oldStageNum = this.getStageNumber();
       this.state.currentLevel++;
       this.sound.playLevelUp();
 
-      const newStageIdx = this.getStageIndex();
+      const newStageNum = this.getStageNumber();
       
-      if (newStageIdx > oldStageIdx) {
-        const stage = STAGES[newStageIdx];
-        this.showToast(`🎉 STAGE CLEAR! 新ステージ「${stage.name}」へ到達！`);
+      if (newStageNum > oldStageNum) {
+        const stageIdx = this.getStageIndex();
+        const stage = STAGES[stageIdx];
+        this.showToast(`🎉 50階層突破！ ステージ ${newStageNum}: 「${stage.name}」へ到達！`);
         this.updateArenaEnvironment();
       } else {
-        this.showToast(`🆙 LEVEL UP! Lv.${this.state.currentLevel} のスライムが出現！`);
+        this.showToast(`🆙 LEVEL UP! Lv.${this.state.currentLevel} のモンスターが出現！`);
       }
 
       this.spawnEnemy();
@@ -812,6 +1094,20 @@ class Game {
     this.state.totalGold += amount;
     this.renderGold();
     this.updateShopButtons();
+  }
+
+  // --- 常設: 剣術の鍛錬（クリック攻撃力強化） ---
+  upgradeClickPower() {
+    const cost = this.getClickUpgradeCost();
+    if (this.state.gold >= cost) {
+      this.state.gold -= cost;
+      this.state.clickLevel = (this.state.clickLevel || 0) + 1;
+      this.sound.playBuy();
+      this.renderGold();
+      this.renderClickUpgrade();
+      this.renderCombatStats();
+      this.showToast(`⚔️ 剣術の鍛錬 Lv.${this.state.clickLevel}！ クリック威力が大幅UP！`);
+    }
   }
 
   buyBuilding(buildingId) {
@@ -889,6 +1185,7 @@ class Game {
     // 進行リセット
     this.state.currentLevel = 1;
     this.state.gold = 0;
+    this.state.clickLevel = 0; // クリック強化もLv.1から強くてニューゲーム
 
     // 建物と通常スキルを初期化（古代SPと秘術は永久保持！）
     BUILDINGS_MASTER.forEach(b => this.state.buildings[b.id] = 0);
@@ -1036,6 +1333,7 @@ class Game {
     this.renderStageInfo();
     this.renderEnemyUI();
     this.renderCombatStats();
+    this.renderClickUpgrade();
     this.renderBuildings();
     this.renderSkills();
     this.renderRebirthSkills();
@@ -1059,6 +1357,38 @@ class Game {
   renderSkillPoints() {
     const spEl = document.getElementById("sp-display");
     if (spEl) spEl.textContent = this.state.skillPoints.toLocaleString();
+  }
+
+  // --- 常設: 剣術の鍛錬カードの描画 ---
+  renderClickUpgrade() {
+    const container = document.getElementById("click-upgrade-container");
+    if (!container) return;
+
+    const lvl = this.state.clickLevel || 0;
+    const cost = this.getClickUpgradeCost();
+    const canAfford = this.state.gold >= cost;
+    const currentPower = this.getClickPower();
+
+    container.innerHTML = `
+      <div class="click-upgrade-card">
+        <div class="building-icon-wrap" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4);">⚔️</div>
+        <div class="building-details">
+          <div class="building-name-row">
+            <span class="building-name" style="color: #f87171;">剣術の鍛錬 (クリック強化)</span>
+            <span class="building-level" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5; border-color: rgba(239, 68, 68, 0.4);">Lv.${lvl}</span>
+          </div>
+          <div class="building-production" style="color: #fca5a5;">
+            現在の威力: <strong>${this.formatNumber(currentPower)}</strong> / クリック
+          </div>
+        </div>
+        <button class="click-upgrade-btn" id="btn-upgrade-click" ${!canAfford ? 'disabled' : ''}>
+          <span>強化 (+1)</span>
+          <span style="font-size: 0.78rem;">🪙 ${this.formatNumber(cost)}</span>
+        </button>
+      </div>
+    `;
+
+    document.getElementById("btn-upgrade-click")?.addEventListener("click", () => this.upgradeClickPower());
   }
 
   // --- 超見やすい目立つ転生バナーの更新 ---
@@ -1091,16 +1421,18 @@ class Game {
   renderStageInfo() {
     const stageIdx = this.getStageIndex();
     const stage = STAGES[stageIdx];
+    const stageNum = this.getStageNumber();
+
     document.getElementById("stage-icon").textContent = stage.icon;
-    document.getElementById("stage-title").textContent = `ステージ ${stage.id}: ${stage.name}`;
+    document.getElementById("stage-title").textContent = `ステージ ${stageNum}: ${stage.name}`;
     
     const progressEl = document.getElementById("stage-progress-text");
-    const currentInStage = ((this.state.currentLevel - 1) % 10) + 1;
+    const currentInStage = ((this.state.currentLevel - 1) % 50) + 1;
     
     if (this.enemy.isBoss) {
-      progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚠️ ステージ${stage.id} BOSS戦！ (Lv.${this.state.currentLevel}) 💎水晶ドロップ！</span>`;
+      progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚠️ BOSS戦！ (Lv.${this.state.currentLevel}) 💎水晶ドロップ！</span>`;
     } else {
-      progressEl.textContent = `進行度: ${currentInStage} / 10 (スライム Lv.${this.state.currentLevel})`;
+      progressEl.textContent = `種族: ${this.enemy.raceName} | 進行度: ${currentInStage} / 50 (Lv.${this.state.currentLevel})`;
     }
 
     const bossBadge = document.getElementById("boss-timer-badge");
@@ -1300,6 +1632,12 @@ class Game {
   }
 
   updateShopButtons() {
+    // 剣術鍛錬ボタン
+    const clickBtn = document.getElementById("btn-upgrade-click");
+    if (clickBtn) {
+      clickBtn.disabled = this.state.gold < this.getClickUpgradeCost();
+    }
+
     document.querySelectorAll(".building-buy-btn").forEach(btn => {
       const bId = btn.dataset.buy;
       const b = BUILDINGS_MASTER.find(x => x.id === bId);
@@ -1338,13 +1676,14 @@ class Game {
 
     const stageIdx = this.getStageIndex();
     const stageData = STAGES[stageIdx];
+    const stageNum = this.getStageNumber();
 
     if (kills) kills.textContent = `${this.state.totalKills.toLocaleString()} 体`;
     if (gold) gold.textContent = `${this.formatNumber(this.state.totalGold)} G`;
     if (crystals) crystals.textContent = `${this.state.totalCrystals.toLocaleString()} 個`;
     if (rebirths) rebirths.textContent = `${this.state.rebirthCount.toLocaleString()} 回 (累計SP: ${this.state.totalSkillPoints}pt)`;
     if (clicks) clicks.textContent = `${this.state.totalClicks.toLocaleString()} 回`;
-    if (stage) stage.textContent = `Lv.${this.state.currentLevel} (ステージ ${stageData.id}: ${stageData.name})`;
+    if (stage) stage.textContent = `Lv.${this.state.currentLevel} (ステージ ${stageNum}: ${stageData.name})`;
     if (time) {
       const minutes = Math.floor(this.state.playTime / 60);
       time.textContent = `${minutes} 分 (${Math.floor(this.state.playTime)} 秒)`;
@@ -1435,7 +1774,6 @@ class Game {
       lastTouchTime = now;
     }, { passive: false });
 
-    // 2本指ピンチズームの誤作動防止
     document.addEventListener("gesturestart", (e) => {
       e.preventDefault();
     });
@@ -1449,10 +1787,8 @@ class Game {
         this.handleClick(touch);
       };
 
-      // タッチデバイス（iPad/スマホ）では touchstart で即時発火＆ブラウザズームを完全防止
       slimeTarget.addEventListener("touchstart", handleSlimeTap, { passive: false });
       slimeTarget.addEventListener("mousedown", (e) => {
-        // マウス操作時（タッチイベント発生時はmousedownは無視）
         if (!('ontouchstart' in window)) {
           handleSlimeTap(e);
         }

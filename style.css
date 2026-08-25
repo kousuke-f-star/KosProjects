@@ -305,29 +305,69 @@ header {
   z-index: 8;
 }
 
-/* 各ステージのダイナミックグラフィック背景 */
-.slime-arena.env-stage-1 {
-  background: linear-gradient(180deg, #38bdf8 0%, #7dd3fc 40%, #86efac 48%, #16a34a 75%, #14532d 100%);
+/* 各ステージのダイナミックグラフィック背景（50レベルごとに切り替わる12種類の美麗背景！） */
+.slime-arena.env-stage-1 { background: linear-gradient(180deg, #38bdf8 0%, #7dd3fc 40%, #86efac 48%, #16a34a 75%, #14532d 100%); }
+.slime-arena.env-stage-2 { background: linear-gradient(180deg, #090d16 0%, #1e1b4b 45%, #2e1065 70%, #0f172a 100%); }
+.slime-arena.env-stage-3 { background: linear-gradient(180deg, #2e1065 0%, #581c87 40%, #3b0764 75%, #170728 100%); }
+.slime-arena.env-stage-4 { background: linear-gradient(180deg, #450a0a 0%, #7f1d1d 40%, #b91c1c 70%, #1c0505 100%); }
+.slime-arena.env-stage-5 { background: linear-gradient(180deg, #0284c7 0%, #38bdf8 35%, #fef08a 65%, #ca8a04 100%); }
+.slime-arena.env-stage-6 { background: linear-gradient(180deg, #020617 0%, #1e1b4b 35%, #4c0519 75%, #050505 100%); }
+.slime-arena.env-stage-7 { background: linear-gradient(180deg, #0284c7 0%, #06b6d4 30%, #e0f2fe 65%, #93c5fd 100%); } /* 氷結雪原 */
+.slime-arena.env-stage-8 { background: linear-gradient(180deg, #ca8a04 0%, #eab308 30%, #fef08a 60%, #b45309 100%); } /* 黄金砂漠 */
+.slime-arena.env-stage-9 { background: linear-gradient(180deg, #042f2e 0%, #0f766e 35%, #14b8a6 65%, #022c22 100%); } /* 深海神殿 */
+.slime-arena.env-stage-10 { background: linear-gradient(180deg, #1e1b4b 0%, #312e81 35%, #4338ca 65%, #0f172a 100%); } /* 嵐の雷山 */
+.slime-arena.env-stage-11 { background: linear-gradient(180deg, #3b0764 0%, #701a75 35%, #831843 65%, #18020c 100%); } /* 冥界の黄泉 */
+.slime-arena.env-stage-12 { background: linear-gradient(180deg, #000000 0%, #0f172a 30%, #3b0764 65%, #020617 100%); } /* 宇宙空間 */
+
+/* 常設クリック強化カード */
+.click-upgrade-card {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(245, 158, 11, 0.15));
+  border: 2px solid rgba(245, 158, 11, 0.5);
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);
+  transition: all 0.2s ease;
 }
 
-.slime-arena.env-stage-2 {
-  background: linear-gradient(180deg, #090d16 0%, #1e1b4b 45%, #2e1065 70%, #0f172a 100%);
+.click-upgrade-card:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
 }
 
-.slime-arena.env-stage-3 {
-  background: linear-gradient(180deg, #2e1065 0%, #581c87 40%, #3b0764 75%, #170728 100%);
+.click-upgrade-btn {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.88rem;
+  cursor: pointer;
+  min-width: 105px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
-.slime-arena.env-stage-4 {
-  background: linear-gradient(180deg, #450a0a 0%, #7f1d1d 40%, #b91c1c 70%, #1c0505 100%);
+.click-upgrade-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
 }
 
-.slime-arena.env-stage-5 {
-  background: linear-gradient(180deg, #0284c7 0%, #38bdf8 35%, #fef08a 65%, #ca8a04 100%);
-}
-
-.slime-arena.env-stage-6 {
-  background: linear-gradient(180deg, #020617 0%, #1e1b4b 35%, #4c0519 75%, #050505 100%);
+.click-upgrade-btn:disabled {
+  background: #334155;
+  color: #64748b;
+  cursor: not-allowed;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .arena-environment {

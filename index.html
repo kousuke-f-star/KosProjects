@@ -16,7 +16,7 @@
     <div class="logo-area">
       <div class="logo-icon">⚔️</div>
       <h1>スライム放置クエスト</h1>
-      <span class="version-badge" id="app-version">v1.4.0</span>
+      <span class="version-badge" id="app-version">v1.5.0</span>
     </div>
 
     <div class="header-stats">
@@ -201,8 +201,12 @@
         
         <!-- タブ1: 建物・施設 -->
         <div class="tab-pane active" id="pane-buildings">
+          
+          <!-- 常設: 剣術の鍛錬（クリック攻撃力強化カード） -->
+          <div id="click-upgrade-container" style="margin-bottom: 12px;"></div>
+
           <div class="building-controls">
-            <span style="font-size: 0.85rem; color: var(--text-sub); font-weight: 700;">購入倍率:</span>
+            <span style="font-size: 0.85rem; color: var(--text-sub); font-weight: 700;">仲間・建物 購入倍率:</span>
             <div class="buy-multiplier-group">
               <button class="mult-btn active" data-mult="1">x1</button>
               <button class="mult-btn" data-mult="10">x10</button>
