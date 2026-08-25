@@ -324,7 +324,7 @@ const SKILLS_MASTER = [
   { id: "trap_mastery", name: "罠の改良術", icon: "⚙️", desc: "「スライム捕獲罠」の生産効率が3倍になる", cost: 800, type: "passive" },
   { id: "click_combo", name: "連撃の心得", icon: "⚡", desc: "クリック時、25%の確率で2回連続ダメージを与える", cost: 1500, type: "passive" },
   { id: "skill_berserk", name: "スキル: バーサーク", icon: "🔥", desc: "【アクティブ】15秒間、クリック攻撃力とDPSが3倍になる (CD: 60秒)", cost: 2000, type: "active", cd: 60, duration: 15 },
-  { id: "meteor_resonance", name: "流星の共鳴", icon: "💫", desc: "隕石ラッシュの持続時間が +4秒(計16秒) 延長され、攻撃倍率が 2.5倍 になる", cost: 5000, type: "passive" },
+  { id: "meteor_resonance", name: "流星の共鳴", icon: "💫", desc: "隕石ラッシュの持続時間が +6秒(計26秒) 延長され、攻撃倍率が 2.5倍 になる", cost: 5000, type: "passive" },
   { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の 2% がクリック攻撃力に加算される", cost: 8000, type: "passive" },
   { id: "guardian_aegis", name: "守護者の加護", icon: "🛡️", desc: "ボス戦の制限時間が 40秒 ➔ 55秒 に延長される", cost: 15000, type: "passive" },
   { id: "sword_spell", name: "魔剣の一閃", icon: "🗡️", desc: "DPS（秒間自動攻撃力）の 4% がさらにクリック攻撃力に加算される", cost: 20000, type: "passive" },
@@ -521,7 +521,7 @@ class Game {
       buildings: {},
       skills: {},
       rebirthSkills: {},     // 習得した古代の秘術 { skillId: level }
-      meteorRushTimer: 180,  // ☄️ 180秒周期 12秒間の隕石ラッシュカウントダウン
+      meteorRushTimer: 120,  // ☄️ 120秒周期 20秒間の隕石ラッシュカウントダウン
       meteorRushActiveTime: 0,// 隕石ラッシュ発動中の残り時間
       meteorRushParticleTimer: 0,
       activeCooldowns: {
@@ -606,14 +606,14 @@ class Game {
     return curLvl + 1;
   }
 
-  // ☄️ 隕石ラッシュ関連の計算
+  // ☄️ 隕石ラッシュ関連の計算（120秒周期 20秒間持続）
   getMeteorInterval() {
     const calamityLvl = this.state.rebirthSkills["cosmic_calamity"] || 0;
-    return Math.max(120, 180 - calamityLvl * 10);
+    return Math.max(60, 120 - calamityLvl * 10);
   }
 
   getMeteorDuration() {
-    return this.state.skills["meteor_resonance"] ? 16 : 12;
+    return this.state.skills["meteor_resonance"] ? 26 : 20;
   }
 
   getMeteorMultiplier() {
@@ -2171,7 +2171,7 @@ class Game {
     this.state.rebirthCount = Number(this.state.rebirthCount) || 0;
     this.state.currentLevel = Math.max(1, Number(this.state.currentLevel) || 1);
     this.state.buyMultiplier = Number(this.state.buyMultiplier) || 1;
-    this.state.meteorRushTimer = (typeof this.state.meteorRushTimer === 'number' && !isNaN(this.state.meteorRushTimer)) ? this.state.meteorRushTimer : 180;
+    this.state.meteorRushTimer = (typeof this.state.meteorRushTimer === 'number' && !isNaN(this.state.meteorRushTimer) && this.state.meteorRushTimer <= 120) ? this.state.meteorRushTimer : 120;
     this.state.meteorRushActiveTime = Number(this.state.meteorRushActiveTime) || 0;
 
     this.state.buildings = this.state.buildings || {};
