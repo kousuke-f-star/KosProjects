@@ -4059,7 +4059,15 @@ class Game {
           const dps = this.getDPS(false);
 
           if (dps > 0) {
-            const offlineGold = Math.floor(dps * effectiveSec * 0.7);
+            const level = this.state.currentLevel || 1;
+            const baseHp = Math.floor(25 + (level - 1) * 22 + Math.pow(level, 1.55) * 8);
+            const baseGold = Math.max(2, Math.floor(3 + (level - 1) * 1.8 + Math.pow(level, 1.15) * 0.9));
+
+            // オンライン時の想定秒間ゴールド (DPS ÷ 敵HP × 敵討伐ゴールド)
+            const onlineGoldPerSec = (dps / Math.max(1, baseHp)) * baseGold;
+            // 🪙 オフライン時はオンライン時の 10分の1 (10%) のペースで獲得
+            const offlineGold = Math.max(1, Math.floor(onlineGoldPerSec * 0.10 * effectiveSec));
+
             if (offlineGold > 0) {
               this.state.gold = (Number(this.state.gold) || 0) + offlineGold;
               this.state.totalGold = (Number(this.state.totalGold) || 0) + offlineGold;
@@ -4071,7 +4079,7 @@ class Game {
                 if (modal && goldVal && desc) {
                   const hours = Math.floor(effectiveSec / 3600);
                   const mins = Math.floor((effectiveSec % 3600) / 60);
-                  desc.textContent = `留守にしていた ${hours > 0 ? hours + '時間' : ''}${mins}分の間に、仲間たちが自動でスライムを討伐しました！`;
+                  desc.textContent = `留守にしていた ${hours > 0 ? hours + '時間' : ''}${mins}分の間に、仲間たちが自動でスライムを討伐しました！（※オフライン時はオンライン時の1/10の効率で獲得）`;
                   goldVal.textContent = `+${this.formatNumber(offlineGold)} G`;
                   modal.classList.add("show");
                 }
