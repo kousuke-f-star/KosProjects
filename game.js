@@ -375,9 +375,14 @@ class Game {
     return level % 10 === 0;
   }
 
-  // 転生可能判定：転生の水晶 💎 を1個以上持っていれば転生可能！
+  // 転生に必要な水晶数：1回目は1個、2回目は2個、3回目は3個...と1個ずつ増加！
+  getRequiredCrystals() {
+    return (this.state.rebirthCount || 0) + 1;
+  }
+
+  // 転生可能判定：必要水晶数を満たしているか
   canRebirth() {
-    return this.state.crystals >= 1;
+    return this.state.crystals >= this.getRequiredCrystals();
   }
 
   getClickPower() {
@@ -867,15 +872,16 @@ class Game {
 
   // --- 水晶を消費して転生を実行（SP +2 pt 獲得！） ---
   executeRebirth() {
-    if (this.state.crystals < 1) {
-      this.showToast("❌ 転生には「転生の水晶 💎」が1個必要です！");
+    const req = this.getRequiredCrystals();
+    if (this.state.crystals < req) {
+      this.showToast(`❌ 転生には「転生の水晶 💎」が ${req}個 必要です！`);
       return;
     }
 
     this.sound.playRebirth();
 
-    // 水晶1個を消費して、古代スキルポイント(SP)を 2pt 獲得！
-    this.state.crystals -= 1;
+    // 必要個数の水晶を消費して、古代スキルポイント(SP)を 2pt 獲得！
+    this.state.crystals -= req;
     this.state.skillPoints += 2;
     this.state.totalSkillPoints += 2;
     this.state.rebirthCount += 1;
@@ -899,7 +905,7 @@ class Game {
     this.saveGame();
 
     document.getElementById("rebirth-modal")?.classList.remove("show");
-    this.showToast("🔮 転生完了！ 古代スキルポイント(SP)を 2pt 獲得しました！");
+    this.showToast(`🔮 転生完了 (${this.state.rebirthCount}回目)！ 古代スキルポイント(SP)を 2pt 獲得しました！`);
   }
 
   activateSkill(skillId) {
@@ -1063,17 +1069,22 @@ class Game {
     const sub = document.getElementById("rebirth-banner-sub");
     if (!banner || !btn) return;
 
+    const req = this.getRequiredCrystals();
     const available = this.canRebirth();
+    const nextRebirthNum = (this.state.rebirthCount || 0) + 1;
+
     if (available) {
       banner.className = "rebirth-banner available";
       btn.disabled = false;
-      title.textContent = `✨ 転生可能！ (所持水晶: 💎 ${this.state.crystals} 個)`;
-      sub.textContent = `水晶💎を1個消費して転生し、「古代SP 🔮 +2 pt」を獲得！`;
+      btn.innerHTML = `<span>💎 転生する (${req}個消費 / SP+2)</span>`;
+      title.textContent = `✨ 転生可能！ (${nextRebirthNum}回目の転生)`;
+      sub.textContent = `所持水晶: 💎 ${this.state.crystals} / 必要: ${req}個 を消費して「古代SP 🔮 +2 pt」を獲得！`;
     } else {
       banner.className = "rebirth-banner locked";
       btn.disabled = true;
-      title.textContent = `転生システム (転生の水晶 💎 が必要)`;
-      sub.textContent = `ステージボス(Lv.10, 20...)を倒して水晶💎を手に入れよう！ (現在: 0個)`;
+      btn.innerHTML = `<span>🔒 水晶不足 (${this.state.crystals}/${req}個)</span>`;
+      title.textContent = `転生システム (${nextRebirthNum}回目の転生には水晶💎が ${req}個 必要)`;
+      sub.textContent = `ステージボスを倒して水晶を集めよう！ (現在: 💎 ${this.state.crystals} / ${req}個)`;
     }
   }
 
@@ -1484,10 +1495,26 @@ class Game {
 
     // 転生バナーボタン & モーダル処理
     document.getElementById("btn-rebirth-trigger")?.addEventListener("click", () => {
+      const req = this.getRequiredCrystals();
       if (!this.canRebirth()) {
-        this.showToast("❌ 転生にはボスを倒して手に入る「転生の水晶 💎」が必要です！");
+        this.showToast(`❌ 転生には「転生の水晶 💎」が ${req}個 必要です！ (現在: ${this.state.crystals}個)`);
         return;
       }
+
+      const desc = document.getElementById("modal-rebirth-desc");
+      if (desc) {
+        desc.innerHTML = `
+          「転生の水晶 💎 ×${req}個」を消費して転生します。<br>
+          ゴールドと建物はリセットされ Lv.1 からの再スタートとなりますが、<br>
+          <strong style="color: #d8b4fe;">「古代スキルポイント 🔮 +2 SP」を獲得し、習得した古代の秘術はすべて永久に引き継がれます！</strong>
+        `;
+      }
+
+      const confirmBtn = document.getElementById("btn-confirm-rebirth");
+      if (confirmBtn) {
+        confirmBtn.textContent = `💎 ${req}個消費して転生！`;
+      }
+
       const modal = document.getElementById("rebirth-modal");
       if (modal) modal.classList.add("show");
     });
