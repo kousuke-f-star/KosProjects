@@ -337,88 +337,88 @@ const SKILLS_MASTER = [
   { id: "golden_touch", name: "ミダスタッチ", icon: "✨", desc: "クリック時、10%の確率でスライムの最大HP20%相当のボーナスゴールドを獲得", cost: 2000000, type: "passive" }
 ];
 
-// --- 古代の秘術（古代スキルポイント SP を消費して永続強化・必要SPインクリメント制・12種類） ---
+// --- 古代の秘術（古代スキルポイント SP を消費して永続強化・必要SPコスト「1,2Lv:1pt / 3,4Lv:2pt...」制・12種類） ---
 const REBIRTH_SKILLS_MASTER = [
   { 
     id: "soul_strike", 
     name: "魂の研鑽", 
     icon: "👊", 
-    desc: "クリック攻撃力が永続で +5% 増加する (現在: +{val}%)", 
+    desc: "クリック攻撃力が永続で +15% 増加する (現在: +{val}%)", 
     maxLevel: 10, 
-    valuePerLevel: 5 
+    valuePerLevel: 15 
   },
   { 
     id: "ancient_craft", 
     name: "古代の建築術", 
     icon: "🏛️", 
-    desc: "すべての建物の生産力が永続で +4% 増加する (現在: +{val}%)", 
+    desc: "すべての建物の生産力が永続で +12% 増加する (現在: +{val}%)", 
     maxLevel: 10, 
-    valuePerLevel: 4 
+    valuePerLevel: 12 
   },
   { 
     id: "merchant_wit", 
     name: "商人の知恵", 
     icon: "💰", 
-    desc: "モンスター討伐時のゴールドが永続で +5% 増加する (現在: +{val}%)", 
+    desc: "モンスター討伐時のゴールドが永続で +15% 増加する (現在: +{val}%)", 
     maxLevel: 10, 
-    valuePerLevel: 5 
+    valuePerLevel: 15 
   },
   { 
     id: "true_eye", 
     name: "真理の瞳", 
     icon: "🎯", 
-    desc: "クリティカル率+1%、クリティカル倍率+5% (現在: 率+{val1}%, 倍率+{val2}%)", 
+    desc: "クリティカル率+2%、クリティカル倍率+15% (現在: 率+{val1}%, 倍率+{val2}%)", 
     maxLevel: 10, 
-    val1: 1, 
-    val2: 5 
+    val1: 2, 
+    val2: 15 
   },
   { 
     id: "battle_flow", 
     name: "精神統一", 
     icon: "⚡", 
-    desc: "全アクティブスキルのクールダウンが 4% 短縮される (現在: -{val}%)", 
+    desc: "全アクティブスキルのクールダウンが 8% 短縮される (現在: -{val}%)", 
     maxLevel: 5, 
-    valuePerLevel: 4 
+    valuePerLevel: 8 
   },
   { 
     id: "cosmic_calamity", 
     name: "天変地異の秘術", 
     icon: "☄️", 
-    desc: "隕石ラッシュの発生間隔が 10秒 短縮される (現在: -{val}秒)", 
+    desc: "隕石ラッシュの発生間隔が 12秒 短縮される (現在: -{val}秒)", 
     maxLevel: 5, 
-    valuePerLevel: 10 
+    valuePerLevel: 12 
   },
   { 
     id: "boss_bounty", 
     name: "王者の風格", 
     icon: "👑", 
-    desc: "ボスモンスター討伐時の獲得ゴールドが永続で +20% 増加する (現在: +{val}%)", 
+    desc: "ボスモンスター討伐時の獲得ゴールドが永続で +40% 増加する (現在: +{val}%)", 
     maxLevel: 10, 
-    valuePerLevel: 20 
+    valuePerLevel: 40 
   },
   { 
     id: "life_leech", 
     name: "生命の浸蝕", 
     icon: "🩸", 
-    desc: "クリック時、敵の最大HPの 0.2% 分の追加ダメージを与える (現在: +{val}%)", 
+    desc: "クリック時、敵の最大HPの 0.5% 分の追加ダメージを与える (現在: +{val}%)", 
     maxLevel: 10, 
-    valuePerLevel: 0.2 
+    valuePerLevel: 0.5 
   },
   { 
     id: "inferno_surge", 
     name: "業火の覇気", 
     icon: "🌋", 
-    desc: "隕石ラッシュ中の全攻撃力倍率が +0.2倍 上昇する (現在: +{val}倍)", 
+    desc: "隕石ラッシュ中の全攻撃力倍率が +0.5倍 上昇する (現在: +{val}倍)", 
     maxLevel: 5, 
-    valuePerLevel: 0.2 
+    valuePerLevel: 0.5 
   },
   { 
     id: "time_lord", 
     name: "刻の支配者", 
     icon: "⌛", 
-    desc: "ボス戦の制限時間が永続で +3秒 延長される (現在: +{val}秒)", 
+    desc: "ボス戦の制限時間が永続で +6秒 延長される (現在: +{val}秒)", 
     maxLevel: 5, 
-    valuePerLevel: 3 
+    valuePerLevel: 6 
   },
   { 
     id: "crystal_blessing", 
@@ -636,27 +636,27 @@ class Game {
     return this.state.crystals >= this.getRequiredCrystals();
   }
 
-  // ボス戦制限時間（守護者の加護 + 刻の支配者）
+  // ボス戦制限時間（守護者の加護 + 刻の支配者 +6秒/Lv）
   getBossTimerDuration() {
     let t = 40;
     if (this.state.skills["guardian_aegis"]) t = 55;
     const timeLord = this.state.rebirthSkills["time_lord"] || 0;
-    return t + (timeLord * 3);
+    return t + (timeLord * 6);
   }
 
-  // 古代の秘術（SPスキル）の必要SP計算：Lv0->1SP, Lv1->2SP, Lv2->3SP...と1つずつ増加！
+  // 古代の秘術（SPスキル）の必要SP計算：1,2Lv->1pt / 3,4Lv->2pt / 5,6Lv->3pt / 7,8Lv->4pt / 9,10Lv->5pt
   getRebirthSkillCost(skillId) {
     const rs = REBIRTH_SKILLS_MASTER.find(x => x.id === skillId);
     if (!rs) return 1;
     if (rs.id === "auto_fairy") return 1;
     const curLvl = this.state.rebirthSkills[skillId] || 0;
-    return curLvl + 1;
+    return Math.floor(curLvl / 2) + 1;
   }
 
   // ☄️ 隕石ラッシュ関連の計算（120秒周期 20秒間持続）
   getMeteorInterval() {
     const calamityLvl = this.state.rebirthSkills["cosmic_calamity"] || 0;
-    return Math.max(60, 120 - calamityLvl * 10);
+    return Math.max(60, 120 - calamityLvl * 12);
   }
 
   getMeteorDuration() {
@@ -665,7 +665,7 @@ class Game {
 
   getMeteorMultiplier() {
     const base = this.state.skills["meteor_resonance"] ? 2.5 : 2.0;
-    const surge = (this.state.rebirthSkills["inferno_surge"] || 0) * 0.2;
+    const surge = (this.state.rebirthSkills["inferno_surge"] || 0) * 0.5;
     return base + surge;
   }
 
@@ -702,10 +702,10 @@ class Game {
       base += Math.floor(dps * dpsBonusRatio);
     }
 
-    // 転生パッシブ: 魂の研鑽 (+5%/Lv)
+    // 転生パッシブ: 魂の研鑽 (+15%/Lv)
     const soulStrikeLvl = this.state.rebirthSkills["soul_strike"] || 0;
     if (soulStrikeLvl > 0) {
-      base = Math.floor(base * (1 + soulStrikeLvl * 0.05));
+      base = Math.floor(base * (1 + soulStrikeLvl * 0.15));
     }
     if (this.state.activeBuffs.berserk > 0) base *= 3;
     if (this.isMeteorRushActive()) base = Math.floor(base * this.getMeteorMultiplier());
@@ -719,11 +719,11 @@ class Game {
       chance += 0.10;
       multiplier = 2.5;
     }
-    // 転生パッシブ: 真理の瞳 (+1%率, +5%倍率/Lv)
+    // 転生パッシブ: 真理の瞳 (+2%率, +15%倍率/Lv)
     const eyeLvl = this.state.rebirthSkills["true_eye"] || 0;
     if (eyeLvl > 0) {
-      chance += eyeLvl * 0.01;
-      multiplier += eyeLvl * 0.05;
+      chance += eyeLvl * 0.02;
+      multiplier += eyeLvl * 0.15;
     }
     return { chance, multiplier };
   }
@@ -740,10 +740,10 @@ class Game {
       }
     });
 
-    // 転生パッシブ: 古代の建築術 (+4%/Lv)
+    // 転生パッシブ: 古代の建築術 (+12%/Lv)
     const craftLvl = this.state.rebirthSkills["ancient_craft"] || 0;
     if (craftLvl > 0) {
-      totalDPS = Math.floor(totalDPS * (1 + craftLvl * 0.04));
+      totalDPS = Math.floor(totalDPS * (1 + craftLvl * 0.12));
     }
 
     if (withBuffs) {
@@ -1014,7 +1014,7 @@ class Game {
     let autoGold = Math.max(2, Math.floor(totalDmg * 0.8 + this.enemy.level * 1.2));
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
-      autoGold = Math.floor(autoGold * (1 + merchantLvl * 0.20));
+      autoGold = Math.floor(autoGold * (1 + merchantLvl * 0.15));
     }
     this.addGold(autoGold);
     this.createDamagePopup(`🪙 +${this.formatNumber(autoGold)}`, false, false, headX + 22, headY - 10, true);
@@ -1078,7 +1078,7 @@ class Game {
     let clickGold = Math.max(1, Math.floor(clickPower * 0.5 + (this.enemy.level * 0.3)));
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
-      clickGold = Math.floor(clickGold * (1 + merchantLvl * 0.05));
+      clickGold = Math.floor(clickGold * (1 + merchantLvl * 0.15));
     }
     this.addGold(clickGold);
 
@@ -1119,10 +1119,10 @@ class Game {
       }
     }
 
-    // 転生パッシブ: 生命の浸蝕 (敵最大HPの 0.2%/Lv 追加ダメージ)
+    // 転生パッシブ: 生命の浸蝕 (敵最大HPの 0.5%/Lv 追加ダメージ)
     const leechLvl = this.state.rebirthSkills["life_leech"] || 0;
     if (leechLvl > 0) {
-      const leechDmg = Math.max(1, Math.floor(this.enemy.maxHp * (leechLvl * 0.002)));
+      const leechDmg = Math.max(1, Math.floor(this.enemy.maxHp * (leechLvl * 0.005)));
       dmg += leechDmg;
       this.createDamagePopup(`🩸浸蝕 +${this.formatNumber(leechDmg)}`, false, false, headX + 30, headY - 25);
     }
@@ -1170,12 +1170,12 @@ class Game {
     }
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
-      goldReward = Math.floor(goldReward * (1 + merchantLvl * 0.05));
+      goldReward = Math.floor(goldReward * (1 + merchantLvl * 0.15));
     }
-    // 転生パッシブ: 王者の風格 (ボス討伐ゴールド +20%/Lv)
+    // 転生パッシブ: 王者の風格 (ボス討伐ゴールド +40%/Lv)
     const bossBountyLvl = this.state.rebirthSkills["boss_bounty"] || 0;
     if (isBoss && bossBountyLvl > 0) {
-      goldReward = Math.floor(goldReward * (1 + bossBountyLvl * 0.20));
+      goldReward = Math.floor(goldReward * (1 + bossBountyLvl * 0.40));
     }
     this.addGold(goldReward);
 
