@@ -1733,7 +1733,6 @@ class Game {
       }
     });
   }
-  }
 
   renderStats() {
     const kills = document.getElementById("stat-total-kills");
