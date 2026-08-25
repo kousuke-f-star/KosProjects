@@ -324,11 +324,15 @@ const SKILLS_MASTER = [
   { id: "trap_mastery", name: "罠の改良術", icon: "⚙️", desc: "「スライム捕獲罠」の生産効率が3倍になる", cost: 800, type: "passive" },
   { id: "click_combo", name: "連撃の心得", icon: "⚡", desc: "クリック時、25%の確率で2回連続ダメージを与える", cost: 1500, type: "passive" },
   { id: "skill_berserk", name: "スキル: バーサーク", icon: "🔥", desc: "【アクティブ】15秒間、クリック攻撃力とDPSが3倍になる (CD: 60秒)", cost: 2000, type: "active", cd: 60, duration: 15 },
+  { id: "meteor_resonance", name: "流星の共鳴", icon: "💫", desc: "隕石ラッシュの持続時間が +4秒(計16秒) 延長され、攻撃倍率が 2.5倍 になる", cost: 5000, type: "passive" },
   { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の 2% がクリック攻撃力に加算される", cost: 8000, type: "passive" },
+  { id: "guardian_aegis", name: "守護者の加護", icon: "🛡️", desc: "ボス戦の制限時間が 40秒 ➔ 55秒 に延長される", cost: 15000, type: "passive" },
   { id: "sword_spell", name: "魔剣の一閃", icon: "🗡️", desc: "DPS（秒間自動攻撃力）の 4% がさらにクリック攻撃力に加算される", cost: 20000, type: "passive" },
   { id: "bounty_hunter", name: "賞金首ハンター", icon: "💎", desc: "スライム討伐時の獲得ゴールドが +50% 増加する", cost: 40000, type: "passive" },
   { id: "skill_goldrush", name: "スキル: ゴールドラッシュ", icon: "💰", desc: "【アクティブ】即座に秒間DPSの30秒分のゴールドを獲得する (CD: 90秒)", cost: 60000, type: "active", cd: 90 },
+  { id: "thunder_strike", name: "雷光の閃き", icon: "⚡", desc: "クリティカル時、追加でDPS 3秒分の電撃ダメージを与える", cost: 80000, type: "passive" },
   { id: "building_synergy", name: "連携の極意", icon: "🤝", desc: "すべての建物の攻撃力・生産力が 2倍 になる", cost: 150000, type: "passive" },
+  { id: "skill_cyclone", name: "スキル: サイクロン", icon: "🌪️", desc: "【アクティブ】10秒間、仲間たちの自動攻撃スピードが3倍になり超連打する (CD: 75秒)", cost: 200000, type: "active", cd: 75, duration: 10 },
   { id: "giant_strength", name: "巨人の腕力", icon: "🦾", desc: "クリック攻撃力が +50% (1.5倍) に増加する", cost: 350000, type: "passive" },
   { id: "skill_meteor", name: "スキル: メテオ落とし", icon: "☄️", desc: "【アクティブ】巨大な隕石を落とし、スライムに現在DPSの50倍ダメージを一撃で与える (CD: 120秒)", cost: 500000, type: "active", cd: 120 },
   { id: "crit_power_2", name: "会心の極意", icon: "⚡", desc: "クリティカル率+15%、クリティカル倍率が 5倍 に跳ね上がる", cost: 1500000, type: "passive" },
@@ -336,52 +340,55 @@ const SKILLS_MASTER = [
   { id: "golden_touch", name: "ミダスタッチ", icon: "✨", desc: "クリック時、10%の確率でスライムの最大HP20%相当のボーナスゴールドを獲得", cost: 15000000, type: "passive" }
 ];
 
-// --- 古代の秘術（古代スキルポイント SP を消費して永続強化） ---
+// --- 古代の秘術（古代スキルポイント SP を消費して永続強化・必要SPインクリメント制） ---
 const REBIRTH_SKILLS_MASTER = [
   { 
     id: "soul_strike", 
     name: "魂の研鑽", 
     icon: "👊", 
-    desc: "クリック攻撃力が永続で +8% 増加する (現在: +{val}%)", 
-    maxLevel: 5, 
-    costPerLevel: 1, 
-    valuePerLevel: 8 
+    desc: "クリック攻撃力が永続で +5% 増加する (現在: +{val}%)", 
+    maxLevel: 10, 
+    valuePerLevel: 5 
   },
   { 
     id: "ancient_craft", 
     name: "古代の建築術", 
     icon: "🏛️", 
-    desc: "すべての建物の生産力が永続で +15% 増加する (現在: +{val}%)", 
-    maxLevel: 5, 
-    costPerLevel: 1, 
-    valuePerLevel: 15 
+    desc: "すべての建物の生産力が永続で +4% 増加する (現在: +{val}%)", 
+    maxLevel: 10, 
+    valuePerLevel: 4 
   },
   { 
     id: "merchant_wit", 
     name: "商人の知恵", 
     icon: "💰", 
-    desc: "スライム討伐時のゴールドが永続で +20% 増加する (現在: +{val}%)", 
-    maxLevel: 5, 
-    costPerLevel: 1, 
-    valuePerLevel: 20 
+    desc: "モンスター討伐時のゴールドが永続で +5% 増加する (現在: +{val}%)", 
+    maxLevel: 10, 
+    valuePerLevel: 5 
   },
   { 
     id: "true_eye", 
     name: "真理の瞳", 
     icon: "🎯", 
-    desc: "クリティカル率+3%、クリティカル倍率+20% (現在: 率+{val1}%, 倍率+{val2}%)", 
-    maxLevel: 3, 
-    costPerLevel: 1, 
-    val1: 3, 
-    val2: 20 
+    desc: "クリティカル率+1%、クリティカル倍率+5% (現在: 率+{val1}%, 倍率+{val2}%)", 
+    maxLevel: 10, 
+    val1: 1, 
+    val2: 5 
   },
   { 
     id: "battle_flow", 
     name: "精神統一", 
     icon: "⚡", 
-    desc: "全スキルのクールダウンが永続で 10% 短縮される (現在: -{val}%)", 
-    maxLevel: 3, 
-    costPerLevel: 1, 
+    desc: "全アクティブスキルのクールダウンが 4% 短縮される (現在: -{val}%)", 
+    maxLevel: 5, 
+    valuePerLevel: 4 
+  },
+  { 
+    id: "cosmic_calamity", 
+    name: "天変地異の秘術", 
+    icon: "☄️", 
+    desc: "隕石ラッシュ（攻撃力2倍）の発生間隔が 10秒 短縮される (現在: -{val}秒)", 
+    maxLevel: 5, 
     valuePerLevel: 10 
   },
   { 
@@ -390,7 +397,6 @@ const REBIRTH_SKILLS_MASTER = [
     icon: "🧚", 
     desc: "1秒に1回、自動でスライムをクリックしてくれるお助け妖精を召喚！", 
     maxLevel: 1, 
-    costPerLevel: 1, 
     valuePerLevel: 1 
   }
 ];
@@ -509,13 +515,18 @@ class Game {
       buildings: {},
       skills: {},
       rebirthSkills: {},     // 習得した古代の秘術 { skillId: level }
+      meteorRushTimer: 180,  // ☄️ 180秒周期 12秒間の隕石ラッシュカウントダウン
+      meteorRushActiveTime: 0,// 隕石ラッシュ発動中の残り時間
+      meteorRushParticleTimer: 0,
       activeCooldowns: {
         skill_berserk: 0,
         skill_goldrush: 0,
-        skill_meteor: 0
+        skill_meteor: 0,
+        skill_cyclone: 0
       },
       activeBuffs: {
-        berserk: 0
+        berserk: 0,
+        cyclone: 0
       }
     };
 
@@ -580,6 +591,33 @@ class Game {
     return this.state.crystals >= this.getRequiredCrystals();
   }
 
+  // 古代の秘術（SPスキル）の必要SP計算：Lv0->1SP, Lv1->2SP, Lv2->3SP...と1つずつ増加！
+  getRebirthSkillCost(skillId) {
+    const rs = REBIRTH_SKILLS_MASTER.find(x => x.id === skillId);
+    if (!rs) return 1;
+    if (rs.id === "auto_fairy") return 1;
+    const curLvl = this.state.rebirthSkills[skillId] || 0;
+    return curLvl + 1;
+  }
+
+  // ☄️ 隕石ラッシュ関連の計算
+  getMeteorInterval() {
+    const calamityLvl = this.state.rebirthSkills["cosmic_calamity"] || 0;
+    return Math.max(120, 180 - calamityLvl * 10);
+  }
+
+  getMeteorDuration() {
+    return this.state.skills["meteor_resonance"] ? 16 : 12;
+  }
+
+  getMeteorMultiplier() {
+    return this.state.skills["meteor_resonance"] ? 2.5 : 2.0;
+  }
+
+  isMeteorRushActive() {
+    return (this.state.meteorRushActiveTime || 0) > 0;
+  }
+
   // 常設クリック強化のコスト計算（購入倍率 x1, x10, x100 に対応！）
   getClickUpgradeCost(countToAdd = 1) {
     const lvl = this.state.clickLevel || 0;
@@ -593,7 +631,7 @@ class Game {
     return total;
   }
 
-  // クリック攻撃力の計算（基礎 + 剣術鍛錬 + パッシブ + DPS連動ボーナス、マイルドな1/2調整）
+  // クリック攻撃力の計算（基礎 + 剣術鍛錬 + パッシブ + DPS連動ボーナス + 隕石ラッシュ倍率）
   getClickPower() {
     const lvl = this.state.clickLevel || 0;
     let base = 1 + Math.floor(lvl * 0.6);
@@ -612,12 +650,13 @@ class Game {
       base += Math.floor(dps * dpsBonusRatio);
     }
 
-    // 転生パッシブ: 魂の研鑽 (+8%/Lv)
+    // 転生パッシブ: 魂の研鑽 (+5%/Lv)
     const soulStrikeLvl = this.state.rebirthSkills["soul_strike"] || 0;
     if (soulStrikeLvl > 0) {
-      base = Math.floor(base * (1 + soulStrikeLvl * 0.08));
+      base = Math.floor(base * (1 + soulStrikeLvl * 0.05));
     }
     if (this.state.activeBuffs.berserk > 0) base *= 3;
+    if (this.isMeteorRushActive()) base = Math.floor(base * this.getMeteorMultiplier());
     return Math.max(1, base);
   }
 
@@ -632,11 +671,11 @@ class Game {
       chance += 0.15;
       multiplier = 5.0;
     }
-    // 転生パッシブ: 真理の瞳 (+3%率, +20%倍率/Lv)
+    // 転生パッシブ: 真理の瞳 (+1%率, +5%倍率/Lv)
     const eyeLvl = this.state.rebirthSkills["true_eye"] || 0;
     if (eyeLvl > 0) {
-      chance += eyeLvl * 0.03;
-      multiplier += eyeLvl * 0.20;
+      chance += eyeLvl * 0.01;
+      multiplier += eyeLvl * 0.05;
     }
     return { chance, multiplier };
   }
@@ -653,14 +692,19 @@ class Game {
       }
     });
 
-    // 転生パッシブ: 古代の建築術 (+15%/Lv)
+    // 転生パッシブ: 古代の建築術 (+4%/Lv)
     const craftLvl = this.state.rebirthSkills["ancient_craft"] || 0;
     if (craftLvl > 0) {
-      totalDPS = Math.floor(totalDPS * (1 + craftLvl * 0.15));
+      totalDPS = Math.floor(totalDPS * (1 + craftLvl * 0.04));
     }
 
-    if (withBuffs && this.state.activeBuffs.berserk > 0) {
-      totalDPS *= 3;
+    if (withBuffs) {
+      if (this.state.activeBuffs.berserk > 0) {
+        totalDPS *= 3;
+      }
+      if (this.isMeteorRushActive()) {
+        totalDPS = Math.floor(totalDPS * this.getMeteorMultiplier());
+      }
     }
     return totalDPS;
   }
@@ -986,7 +1030,7 @@ class Game {
     let clickGold = Math.max(1, Math.floor(clickPower * 0.5 + (this.enemy.level * 0.3)));
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
-      clickGold = Math.floor(clickGold * (1 + merchantLvl * 0.20));
+      clickGold = Math.floor(clickGold * (1 + merchantLvl * 0.05));
     }
     this.addGold(clickGold);
 
@@ -1010,6 +1054,16 @@ class Game {
       this.createDamagePopup(`⚡ 2連撃!!`, true, false, headX - 25, headY - 20);
     }
     this.createDamagePopup(`🪙 +${this.formatNumber(clickGold)}`, false, false, headX + 18, headY - 12, true);
+
+    // 雷光の閃き (クリティカル時、追加でDPS 3秒分の電撃ダメージ)
+    if (isCrit && this.state.skills["thunder_strike"]) {
+      const dps = this.getDPS(false);
+      if (dps > 0) {
+        const shockDmg = Math.max(1, Math.floor(dps * 3));
+        dmg += shockDmg;
+        this.createDamagePopup(`⚡雷光 +${this.formatNumber(shockDmg)}`, true, false, headX - 30, headY - 35);
+      }
+    }
 
     if (this.state.skills["golden_touch"] && Math.random() < 0.1) {
       const bonus = Math.max(1, Math.floor(this.enemy.maxHp * 0.2));
@@ -1054,7 +1108,7 @@ class Game {
     }
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
-      goldReward = Math.floor(goldReward * (1 + merchantLvl * 0.20));
+      goldReward = Math.floor(goldReward * (1 + merchantLvl * 0.05));
     }
     this.addGold(goldReward);
 
@@ -1064,8 +1118,11 @@ class Game {
     if (isBoss) {
       this.createDamagePopup(`👑 BOSS撃破！ 💎 転生の水晶 +1個！`, true, false, rect.left + rect.width / 2, rect.top + 10, false, false, false, true);
       this.showToast(`👑 ステージボス撃破！ 「転生の水晶 💎 +1個」を獲得！`);
+    } else if (this.enemy.isMetal) {
+      this.createDamagePopup(`✨ METAL撃破！ 🪙 +${this.formatNumber(goldReward)} G`, true, false, rect.left + rect.width / 2, rect.top + 10, true, true);
+      this.showToast(`✨ レアモンスター討伐！ 大量のゴールドを獲得！`);
     } else {
-      this.createDamagePopup(`討伐ボーナス +${this.formatNumber(goldReward)} G`, true, false, rect.left + rect.width / 2, rect.top + 25, true, true);
+      this.createDamagePopup(`🪙 +${this.formatNumber(goldReward)}`, false, false, rect.left + rect.width / 2, rect.top + 20, true);
     }
 
     slimeTarget.classList.add("defeat");
@@ -1073,16 +1130,15 @@ class Game {
     setTimeout(() => {
       slimeTarget.classList.remove("defeat");
 
-      const oldStageNum = this.getStageNumber();
       this.state.currentLevel++;
-      this.sound.playLevelUp();
-
-      const newStageNum = this.getStageNumber();
       
-      if (newStageNum > oldStageNum) {
-        const stageIdx = this.getStageIndex();
-        const stage = STAGES[stageIdx];
-        this.showToast(`🎉 50階層突破！ ステージ ${newStageNum}: 「${stage.name}」へ到達！`);
+      const newStageIndex = this.getStageIndex();
+      const currentInStage = ((this.state.currentLevel - 1) % 50) + 1;
+      
+      if (currentInStage === 1 && this.state.currentLevel > 1) {
+        const stage = STAGES[newStageIndex];
+        this.sound.playLevelUp();
+        this.showToast(`🎉 新ステージ突入！ 「${stage.name}」に到達しました！`);
         this.updateArenaEnvironment();
       } else {
         this.showToast(`🆙 LEVEL UP! Lv.${this.state.currentLevel} のモンスターが出現！`);
@@ -1149,11 +1205,11 @@ class Game {
       this.renderSkills();
       this.renderCombatStats();
       this.renderActiveSkillBar();
-      this.showToast(`✨ スキル「${s.name}」を習得！`);
+      this.showToast(`✨ スキル「${s.name}」を習得しました！`);
     }
   }
 
-  // --- 古代の秘術（SPを消費して永続強化） ---
+  // --- 古代の秘術（SPを消費して永続強化・必要SPインクリメント制） ---
   upgradeRebirthSkill(skillId) {
     const rs = REBIRTH_SKILLS_MASTER.find(x => x.id === skillId);
     if (!rs) return;
@@ -1161,7 +1217,7 @@ class Game {
     const currentLvl = this.state.rebirthSkills[skillId] || 0;
     if (currentLvl >= rs.maxLevel) return;
 
-    const cost = rs.costPerLevel;
+    const cost = this.getRebirthSkillCost(skillId);
     if (this.state.skillPoints >= cost) {
       this.state.skillPoints -= cost;
       this.state.rebirthSkills[skillId] = currentLvl + 1;
@@ -1174,7 +1230,7 @@ class Game {
     }
   }
 
-  // --- 水晶を消費して転生を実行（SP +2 pt 獲得！） ---
+  // --- 水晶を消費して転生を実行（SP +1 pt 獲得！） ---
   executeRebirth() {
     const req = this.getRequiredCrystals();
     if (this.state.crystals < req) {
@@ -1552,7 +1608,7 @@ class Game {
     });
   }
 
-  // --- 転生スキル（古代の秘術）レンダリング ---
+  // --- 転生スキル（古代の秘術・必要SPインクリメント制）レンダリング ---
   renderRebirthSkills() {
     const container = document.getElementById("rebirth-skill-list");
     if (!container) return;
@@ -1560,7 +1616,7 @@ class Game {
     container.innerHTML = REBIRTH_SKILLS_MASTER.map(rs => {
       const currentLvl = this.state.rebirthSkills[rs.id] || 0;
       const isMax = currentLvl >= rs.maxLevel;
-      const cost = rs.costPerLevel;
+      const cost = this.getRebirthSkillCost(rs.id);
       const canAfford = !isMax && this.state.skillPoints >= cost;
 
       let descText = rs.desc;
@@ -1603,6 +1659,7 @@ class Game {
       { id: "skill_berserk", btnId: "skill-btn-berserk", cdId: "cd-berserk", sMaster: SKILLS_MASTER.find(x => x.id === "skill_berserk") },
       { id: "skill_goldrush", btnId: "skill-btn-goldrush", cdId: "cd-goldrush", sMaster: SKILLS_MASTER.find(x => x.id === "skill_goldrush") },
       { id: "skill_meteor", btnId: "skill-btn-meteor", cdId: "cd-meteor", sMaster: SKILLS_MASTER.find(x => x.id === "skill_meteor") },
+      { id: "skill_cyclone", btnId: "skill-btn-cyclone", cdId: "cd-cyclone", sMaster: SKILLS_MASTER.find(x => x.id === "skill_cyclone") }
     ];
 
     map.forEach(item => {
@@ -1633,6 +1690,8 @@ class Game {
       }
 
       if (item.id === "skill_berserk" && this.state.activeBuffs.berserk > 0) {
+        btn.classList.add("active");
+      } else if (item.id === "skill_cyclone" && this.state.activeBuffs.cyclone > 0) {
         btn.classList.add("active");
       } else {
         btn.classList.remove("active");
@@ -1669,10 +1728,11 @@ class Game {
       const rsId = btn.dataset.rsUnlock;
       const rs = REBIRTH_SKILLS_MASTER.find(x => x.id === rsId);
       if (rs) {
-        const cost = rs.costPerLevel;
+        const cost = this.getRebirthSkillCost(rsId);
         btn.disabled = this.state.skillPoints < cost;
       }
     });
+  }
   }
 
   renderStats() {
@@ -1900,6 +1960,7 @@ class Game {
     document.getElementById("skill-btn-berserk")?.addEventListener("click", () => this.activateSkill("skill_berserk"));
     document.getElementById("skill-btn-goldrush")?.addEventListener("click", () => this.activateSkill("skill_goldrush"));
     document.getElementById("skill-btn-meteor")?.addEventListener("click", () => this.activateSkill("skill_meteor"));
+    document.getElementById("skill-btn-cyclone")?.addEventListener("click", () => this.activateSkill("skill_cyclone"));
 
     document.getElementById("btn-claim-offline")?.addEventListener("click", () => {
       document.getElementById("offline-modal")?.classList.remove("show");

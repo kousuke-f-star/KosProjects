@@ -16,7 +16,7 @@
     <div class="logo-area">
       <div class="logo-icon">⚔️</div>
       <h1>スライム放置クエスト</h1>
-      <span class="version-badge" id="app-version">v1.7.1</span>
+      <span class="version-badge" id="app-version">v1.8.0</span>
     </div>
 
     <div class="header-stats">
@@ -43,8 +43,8 @@
 
     <div class="header-controls">
       <button class="icon-btn" id="btn-sound" title="サウンド切替">🔊 <span id="sound-text">ON</span></button>
-      <button class="icon-btn" id="btn-save" title="手動セーブ">💾 セーブ</button>
-      <button class="icon-btn" id="btn-header-reset" title="最初からやり直す" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); color: #fca5a5;">🔄 リセット</button>
+      <button class="icon-btn" id="btn-save" title="手動セーブ">💾 保存</button>
+      <button class="icon-btn" id="btn-header-reset" style="border-color: rgba(239,68,68,0.5); color: #fca5a5;" title="データを完全初期化">🔄 リセット</button>
     </div>
   </header>
 
@@ -58,10 +58,16 @@
       <div class="stage-card">
         <div class="stage-info">
           <h2><span id="stage-icon">🌲</span> <span id="stage-title">ステージ 1: 始まりの草原</span></h2>
-          <div class="stage-progress-text" id="stage-progress-text">進行度: 1 / 10 (スライム Lv.1)</div>
+          <div class="stage-progress-text" id="stage-progress-text">進行度: 1 / 50 (Lv.1)</div>
         </div>
-        <div class="boss-timer-badge" id="boss-timer-badge">
-          BOSS: <span id="boss-timer-val">40</span>s
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <!-- 隕石ラッシュ（180秒周期 12秒攻撃力2倍フィーバー）タイマー -->
+          <div class="meteor-timer-badge" id="meteor-timer-badge" title="180秒ごとに12秒間、隕石が降って全攻撃力が2倍！">
+            ☄️ <span id="meteor-timer-text">隕石: 03:00</span>
+          </div>
+          <div class="boss-timer-badge" id="boss-timer-badge">
+            BOSS: <span id="boss-timer-val">40</span>s
+          </div>
         </div>
       </div>
 
@@ -164,6 +170,11 @@
             <span class="skill-name">メテオ落とし</span>
             <div class="skill-cooldown-overlay" id="cd-meteor"></div>
           </button>
+          <button class="active-skill-btn" id="skill-btn-cyclone" disabled>
+            <span class="skill-icon">🌪️</span>
+            <span class="skill-name">サイクロン</span>
+            <div class="skill-cooldown-overlay" id="cd-cyclone"></div>
+          </button>
         </div>
       </div>
 
@@ -180,10 +191,10 @@
               <span class="rebirth-banner-icon">💎</span>
               <span id="rebirth-banner-text">転生システム (ボス討伐で水晶💎を獲得！)</span>
             </div>
-            <div class="rebirth-banner-sub" id="rebirth-banner-sub">水晶💎を1個消費して転生し、古代スキルポイント(SP +2pt)をGET！</div>
+            <div class="rebirth-banner-sub" id="rebirth-banner-sub">水晶💎を消費して転生し、古代スキルポイント(SP +1pt)をGET！</div>
           </div>
           <button class="rebirth-banner-btn" id="btn-rebirth-trigger" disabled>
-            <span>💎 転生する (SP+2)</span>
+            <span>💎 転生する (SP+1)</span>
           </button>
         </div>
       </div>
@@ -233,7 +244,7 @@
               🔮 古代の秘術（永続スキル）
             </div>
             <div style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.5;">
-              ボスを倒して手に入れた「転生の水晶 💎」を使って転生すると、<strong>古代スキルポイント(SP)が 2pt 貯まります</strong>！SPを使って秘術を習得しよう！
+              ボスを倒して手に入れた「転生の水晶 💎」を使って転生すると、<strong>古代スキルポイント(SP)が 1pt 貯まります</strong>！SPを使って秘術を習得しよう！（Lvアップごとに必要SPが+1pt増加）
             </div>
           </div>
 
@@ -247,7 +258,7 @@
           <h3 style="font-size: 1rem; margin-bottom: 10px; color: var(--accent-gold); font-weight: 800;">📈 プレイ統計</h3>
           <div class="stats-list">
             <div class="stats-row">
-              <span>総討伐スライム数</span>
+              <span>総討伐モンスター数</span>
               <strong id="stat-total-kills">0 体</strong>
             </div>
             <div class="stats-row">
@@ -296,11 +307,11 @@
       <p class="modal-desc" id="modal-rebirth-desc" style="margin-bottom: 16px;">
         「転生の水晶 💎 ×1個」を消費して転生します。<br>
         ゴールドと建物はリセットされ Lv.1 からの再スタートとなりますが、<br>
-        <strong style="color: #d8b4fe;">「古代スキルポイント 🔮 +2 SP」を獲得し、習得した古代の秘術はすべて永久に引き継がれます！</strong>
+        <strong style="color: #d8b4fe;">「古代スキルポイント 🔮 +1 SP」を獲得し、習得した古代の秘術はすべて永久に引き継がれます！</strong>
       </p>
       <div class="modal-reward-box" style="border-color: #38bdf8; background: rgba(2, 132, 199, 0.15);">
         <span style="font-size: 1.6rem;">🔮</span>
-        <span class="modal-reward-val" style="color: #d8b4fe;">獲得: 古代SP +2 pt</span>
+        <span class="modal-reward-val" style="color: #d8b4fe;">獲得: 古代SP +1 pt</span>
       </div>
       <div style="display: flex; gap: 10px;">
         <button class="icon-btn" id="btn-cancel-rebirth" style="flex: 1; justify-content: center; background: #334155;">やめる</button>
