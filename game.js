@@ -409,19 +409,25 @@ class SoundController {
   }
 
   init() {
-    if (!this.ctx) {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (AudioCtx) this.ctx = new AudioCtx();
+    try {
+      if (!this.ctx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (AudioCtx) this.ctx = new AudioCtx();
+      }
+    } catch (e) {
+      this.ctx = null;
     }
   }
 
   playTone(freq, type = 'sine', duration = 0.1, gainVal = 0.1, freqSlide = null) {
     if (!this.enabled) return;
-    this.init();
-    if (!this.ctx) return;
-    if (this.ctx.state === 'suspended') this.ctx.resume();
-
     try {
+      this.init();
+      if (!this.ctx) return;
+      if (this.ctx.state === 'suspended') {
+        this.ctx.resume().catch(() => {});
+      }
+
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
@@ -440,7 +446,7 @@ class SoundController {
       osc.start();
       osc.stop(this.ctx.currentTime + duration);
     } catch (e) {
-      // AudioContext fails gracefully
+      // AudioContext fails gracefully without stopping the game
     }
   }
 
@@ -1983,15 +1989,19 @@ class Game {
       localStorage.removeItem("slime_idle_quest_save");
 
       const dataStr = localStorage.getItem("slime_idle_quest_save_v7");
-      if (!dataStr) return;
+      if (!dataStr) {
+        this.sanitizeState();
+        return;
+      }
 
       const data = JSON.parse(dataStr);
       if (data && typeof data === "object") {
         this.state = Object.assign(this.state, data);
+        this.sanitizeState();
 
         const now = Date.now();
-        const last = this.state.lastSaved || now;
-        const elapsedSec = Math.floor((now - last) / 1000);
+        const last = Number(this.state.lastSaved) || now;
+        const elapsedSec = Math.max(0, Math.floor((now - last) / 1000));
 
         if (elapsedSec > 10) {
           const maxSec = 86400;
@@ -2001,8 +2011,8 @@ class Game {
           if (dps > 0) {
             const offlineGold = Math.floor(dps * effectiveSec * 0.7);
             if (offlineGold > 0) {
-              this.state.gold += offlineGold;
-              this.state.totalGold += offlineGold;
+              this.state.gold = (Number(this.state.gold) || 0) + offlineGold;
+              this.state.totalGold = (Number(this.state.totalGold) || 0) + offlineGold;
 
               setTimeout(() => {
                 const modal = document.getElementById("offline-modal");
@@ -2021,12 +2031,71 @@ class Game {
         }
       }
     } catch (e) {
-      console.warn("Load failed:", e);
+      console.warn("Load failed, falling back to default:", e);
+      this.sanitizeState();
     }
+  }
+
+  // どんな端末や古いセーブデータでも100%安全に稼働させるサニタイズ処理
+  sanitizeState() {
+    this.state.gold = Number(this.state.gold) || 0;
+    this.state.totalGold = Number(this.state.totalGold) || 0;
+    this.state.clickLevel = Number(this.state.clickLevel) || 0;
+    this.state.crystals = Number(this.state.crystals) || 0;
+    this.state.totalCrystals = Number(this.state.totalCrystals) || 0;
+    this.state.skillPoints = Number(this.state.skillPoints) || 0;
+    this.state.totalSkillPoints = Number(this.state.totalSkillPoints) || 0;
+    this.state.rebirthCount = Number(this.state.rebirthCount) || 0;
+    this.state.currentLevel = Math.max(1, Number(this.state.currentLevel) || 1);
+    this.state.buyMultiplier = Number(this.state.buyMultiplier) || 1;
+    this.state.meteorRushTimer = (typeof this.state.meteorRushTimer === 'number' && !isNaN(this.state.meteorRushTimer)) ? this.state.meteorRushTimer : 180;
+    this.state.meteorRushActiveTime = Number(this.state.meteorRushActiveTime) || 0;
+
+    this.state.buildings = this.state.buildings || {};
+    BUILDINGS_MASTER.forEach(b => {
+      if (typeof this.state.buildings[b.id] !== 'number' || isNaN(this.state.buildings[b.id])) {
+        this.state.buildings[b.id] = 0;
+      }
+    });
+
+    this.state.skills = this.state.skills || {};
+    SKILLS_MASTER.forEach(s => {
+      if (typeof this.state.skills[s.id] !== 'boolean') {
+        this.state.skills[s.id] = false;
+      }
+    });
+
+    this.state.rebirthSkills = this.state.rebirthSkills || {};
+    REBIRTH_SKILLS_MASTER.forEach(rs => {
+      if (typeof this.state.rebirthSkills[rs.id] !== 'number' || isNaN(this.state.rebirthSkills[rs.id])) {
+        this.state.rebirthSkills[rs.id] = 0;
+      }
+    });
+
+    this.state.activeCooldowns = this.state.activeCooldowns || {};
+    ['skill_berserk', 'skill_goldrush', 'skill_meteor', 'skill_cyclone'].forEach(sId => {
+      this.state.activeCooldowns[sId] = Number(this.state.activeCooldowns[sId]) || 0;
+    });
+
+    this.state.activeBuffs = this.state.activeBuffs || {};
+    this.state.activeBuffs.berserk = Number(this.state.activeBuffs.berserk) || 0;
+    this.state.activeBuffs.cyclone = Number(this.state.activeBuffs.cyclone) || 0;
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  const game = new Game();
-  game.init();
-});
+// どんな端末や読み込み順序でも100%確実に初期化起動
+const initGameApp = () => {
+  try {
+    const game = new Game();
+    game.init();
+    window.__SLIME_QUEST_GAME__ = game;
+  } catch (err) {
+    console.error("Game launch error:", err);
+  }
+};
+
+if (document.readyState === "loading") {
+  window.addEventListener("DOMContentLoaded", initGameApp);
+} else {
+  initGameApp();
+}
