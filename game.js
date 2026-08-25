@@ -209,11 +209,11 @@ const STAGES = [
   }
 ];
 
-// --- 2. モンスター種族・カテゴリデータ (レベル帯ごとに変化！) ---
+// --- 2. モンスター種族・カテゴリデータ (100レベルごとに新たな種族へ進化！) ---
 const MONSTER_CATEGORIES = [
   {
     minLevel: 1,
-    maxLevel: 149,
+    maxLevel: 99,
     raceName: "スライム族",
     icon: "💧",
     types: [
@@ -227,8 +227,8 @@ const MONSTER_CATEGORIES = [
     bossPrefix: "キング"
   },
   {
-    minLevel: 150,
-    maxLevel: 299,
+    minLevel: 100,
+    maxLevel: 199,
     raceName: "スケルトン族",
     icon: "💀",
     types: [
@@ -241,8 +241,8 @@ const MONSTER_CATEGORIES = [
     bossPrefix: "スケルトンロード"
   },
   {
-    minLevel: 300,
-    maxLevel: 499,
+    minLevel: 200,
+    maxLevel: 299,
     raceName: "ゴブリン・魔獣族",
     icon: "👺",
     types: [
@@ -254,8 +254,8 @@ const MONSTER_CATEGORIES = [
     bossPrefix: "大頭領ゴブリン"
   },
   {
-    minLevel: 500,
-    maxLevel: 799,
+    minLevel: 300,
+    maxLevel: 399,
     raceName: "ゴーレム・魔導巨神族",
     icon: "🗿",
     types: [
@@ -267,8 +267,8 @@ const MONSTER_CATEGORIES = [
     bossPrefix: "古代巨神"
   },
   {
-    minLevel: 800,
-    maxLevel: 1199,
+    minLevel: 400,
+    maxLevel: 499,
     raceName: "デーモン・魔王軍族",
     icon: "👿",
     types: [
@@ -280,8 +280,8 @@ const MONSTER_CATEGORIES = [
     bossPrefix: "魔王"
   },
   {
-    minLevel: 1200,
-    maxLevel: 1999,
+    minLevel: 500,
+    maxLevel: 599,
     raceName: "契約飛竜・ドラゴン族",
     icon: "🐉",
     types: [
@@ -293,8 +293,8 @@ const MONSTER_CATEGORIES = [
     bossPrefix: "太古の覇竜"
   },
   {
-    minLevel: 2000,
-    maxLevel: 999999,
+    minLevel: 600,
+    maxLevel: 699,
     raceName: "星辰の邪神・宇宙支配者族",
     icon: "🌌",
     types: [
@@ -304,17 +304,29 @@ const MONSTER_CATEGORIES = [
       { name: "アザトースの化身", color1: "#fbbf24", color2: "#7c2d12", color3: "#000000", eyeType: "cosmic" }
     ],
     bossPrefix: "万物の支配神"
+  },
+  {
+    minLevel: 700,
+    maxLevel: 999999,
+    raceName: "超越神・アルティメット族",
+    icon: "👑",
+    types: [
+      { name: "光輪の至高神", color1: "#fef08a", color2: "#f59e0b", color3: "#78350f", eyeType: "cosmic" },
+      { name: "時空の覇帝", color1: "#c084fc", color2: "#7c3aed", color3: "#2e1065", eyeType: "demon" },
+      { name: "終焉の創世龍", color1: "#f43f5e", color2: "#991b1b", color3: "#000000", eyeType: "dragon" }
+    ],
+    bossPrefix: "全知全能の"
   }
 ];
 
 const BUILDINGS_MASTER = [
-  { id: "trap", name: "スライム捕獲罠", icon: "🪤", attackIcon: "🪤", desc: "自動でスライムを捕獲して少しずつコインを稼ぐ", baseCost: 15, baseDPS: 1 },
-  { id: "novice", name: "見習い剣士", icon: "🗡️", attackIcon: "⚔️", desc: "駆け出しの冒険者が定期的にスライムを斬りつける", baseCost: 100, baseDPS: 8 },
-  { id: "archer", name: "弓兵の物見櫓", icon: "🏹", attackIcon: "🏹", desc: "遠距離から矢を雨のように降らせて討伐支援", baseCost: 1100, baseDPS: 45 },
-  { id: "mage_tower", name: "魔導オートタワー", icon: "🔮", attackIcon: "🔮", desc: "魔力で自動追尾の魔法弾を連射する古代兵器", baseCost: 12000, baseDPS: 120 },
-  { id: "ranch", name: "スライム自動牧場", icon: "🏡", attackIcon: "🍖", desc: "スライムを繁殖・出荷して大量の素材と富を得る", baseCost: 130000, baseDPS: 450 },
-  { id: "cannon", name: "錬金術カノン砲", icon: "💥", attackIcon: "💥", desc: "超高圧の錬金エネルギー弾でまとめて粉砕する", baseCost: 1400000, baseDPS: 2000 },
-  { id: "guild", name: "冒険者ギルド本部", icon: "🏰", attackIcon: "🛡️", desc: "精鋭の冒険者部隊を一斉派遣して掃討作戦を展開", baseCost: 20000000, baseDPS: 10000 },
+  { id: "trap", name: "スライム捕獲罠", icon: "🪤", attackIcon: "🪤", desc: "自動でスライムを捕獲する罠を仕掛ける", baseCost: 15, baseDPS: 0.8 },
+  { id: "novice", name: "見習い冒険者", icon: "🗡️", attackIcon: "⚔️", desc: "剣を振るって加勢してくれる仲間", baseCost: 100, baseDPS: 4 },
+  { id: "archer", name: "弓兵の塔", icon: "🏹", attackIcon: "🏹", desc: "遠距離から矢を雨あられと射掛ける", baseCost: 1100, baseDPS: 25 },
+  { id: "mage_tower", name: "魔導オートタワー", icon: "🔮", attackIcon: "🔮", desc: "古代魔術で自動迎撃する防衛塔", baseCost: 12000, baseDPS: 120 },
+  { id: "ranch", name: "スライム自動牧場", icon: "🏡", attackIcon: "⚡", desc: "スライムを飼育して継続ゴールド化", baseCost: 130000, baseDPS: 450 },
+  { id: "cannon", name: "魔導カノン砲", icon: "💥", attackIcon: "💥", desc: "広範囲を吹き飛ばす重火器砲台", baseCost: 1400000, baseDPS: 2000 },
+  { id: "guild", name: "冒険者ギルド支部", icon: "🏰", attackIcon: "🛡️", desc: "大勢の熟練冒険者を雇い入れ総攻撃", baseCost: 20000000, baseDPS: 10000 },
   { id: "dragon", name: "契約ドラゴン", icon: "🐉", attackIcon: "🔥", desc: "伝説の竜を召喚し圧倒的ブレスで殲滅する", baseCost: 330000000, baseDPS: 60000 }
 ];
 
@@ -343,82 +355,82 @@ const REBIRTH_SKILLS_MASTER = [
     id: "soul_strike", 
     name: "魂の研鑽", 
     icon: "👊", 
-    desc: "クリック攻撃力が永続で +15% 増加する (現在: +{val}%)", 
+    desc: "クリック攻撃力が永続で +10% 増加する (現在: +{val}%)", 
     maxLevel: 10, 
-    valuePerLevel: 15 
+    valuePerLevel: 10 
   },
   { 
     id: "ancient_craft", 
     name: "古代の建築術", 
     icon: "🏛️", 
-    desc: "すべての建物の生産力が永続で +12% 増加する (現在: +{val}%)", 
+    desc: "すべての建物の生産力が永続で +8% 増加する (現在: +{val}%)", 
     maxLevel: 10, 
-    valuePerLevel: 12 
+    valuePerLevel: 8 
   },
   { 
     id: "merchant_wit", 
     name: "商人の知恵", 
     icon: "💰", 
-    desc: "モンスター討伐時のゴールドが永続で +15% 増加する (現在: +{val}%)", 
+    desc: "モンスター討伐時のゴールドが永続で +10% 増加する (現在: +{val}%)", 
     maxLevel: 10, 
-    valuePerLevel: 15 
+    valuePerLevel: 10 
   },
   { 
     id: "true_eye", 
     name: "真理の瞳", 
     icon: "🎯", 
-    desc: "クリティカル率+2%、クリティカル倍率+15% (現在: 率+{val1}%, 倍率+{val2}%)", 
+    desc: "クリティカル率+1.5%、クリティカル倍率+10% (現在: 率+{val1}%, 倍率+{val2}%)", 
     maxLevel: 10, 
-    val1: 2, 
-    val2: 15 
+    val1: 1.5, 
+    val2: 10 
   },
   { 
     id: "battle_flow", 
     name: "精神統一", 
     icon: "⚡", 
-    desc: "全アクティブスキルのクールダウンが 8% 短縮される (現在: -{val}%)", 
+    desc: "全アクティブスキルのクールダウンが 5% 短縮される (現在: -{val}%)", 
     maxLevel: 5, 
-    valuePerLevel: 8 
+    valuePerLevel: 5 
   },
   { 
     id: "cosmic_calamity", 
     name: "天変地異の秘術", 
     icon: "☄️", 
-    desc: "隕石ラッシュの発生間隔が 12秒 短縮される (現在: -{val}秒)", 
+    desc: "隕石ラッシュの発生間隔が 5秒 短縮される (現在: -{val}秒)", 
     maxLevel: 5, 
-    valuePerLevel: 12 
+    valuePerLevel: 5 
   },
   { 
     id: "boss_bounty", 
     name: "王者の風格", 
     icon: "👑", 
-    desc: "ボスモンスター討伐時の獲得ゴールドが永続で +40% 増加する (現在: +{val}%)", 
+    desc: "ボスモンスター討伐時の獲得ゴールドが永続で +25% 増加する (現在: +{val}%)", 
     maxLevel: 10, 
-    valuePerLevel: 40 
+    valuePerLevel: 25 
   },
   { 
     id: "life_leech", 
     name: "生命の浸蝕", 
     icon: "🩸", 
-    desc: "クリック時、敵の最大HPの 0.5% 分の追加ダメージを与える (現在: +{val}%)", 
+    desc: "クリック時、敵の最大HPの 0.3% 分の追加ダメージを与える (現在: +{val}%)", 
     maxLevel: 10, 
-    valuePerLevel: 0.5 
+    valuePerLevel: 0.3 
   },
   { 
     id: "inferno_surge", 
     name: "業火の覇気", 
     icon: "🌋", 
-    desc: "隕石ラッシュ中の全攻撃力倍率が +0.5倍 上昇する (現在: +{val}倍)", 
+    desc: "隕石ラッシュ中の全攻撃力倍率が +0.3倍 上昇する (現在: +{val}倍)", 
     maxLevel: 5, 
-    valuePerLevel: 0.5 
+    valuePerLevel: 0.3 
   },
   { 
     id: "time_lord", 
     name: "刻の支配者", 
     icon: "⌛", 
-    desc: "ボス戦の制限時間が永続で +6秒 延長される (現在: +{val}秒)", 
+    desc: "ボス戦の制限時間が永続で +4秒 延長される (現在: +{val}秒)", 
     maxLevel: 5, 
-    valuePerLevel: 6 
+    valuePerLevel: 4 
   },
   { 
     id: "crystal_blessing", 
@@ -636,12 +648,12 @@ class Game {
     return this.state.crystals >= this.getRequiredCrystals();
   }
 
-  // ボス戦制限時間（守護者の加護 + 刻の支配者 +6秒/Lv）
+  // ボス戦制限時間（守護者の加護 + 刻の支配者 +4秒/Lv）
   getBossTimerDuration() {
     let t = 40;
     if (this.state.skills["guardian_aegis"]) t = 55;
     const timeLord = this.state.rebirthSkills["time_lord"] || 0;
-    return t + (timeLord * 6);
+    return t + (timeLord * 4);
   }
 
   // 古代の秘術（SPスキル）の必要SP計算：1,2Lv->1pt / 3,4Lv->2pt / 5,6Lv->3pt / 7,8Lv->4pt / 9,10Lv->5pt
@@ -653,10 +665,10 @@ class Game {
     return Math.floor(curLvl / 2) + 1;
   }
 
-  // ☄️ 隕石ラッシュ関連の計算（120秒周期 20秒間持続）
+  // ☄️ 隕石ラッシュ関連の計算（120秒周期 20秒間持続、天変地異で-5秒/Lv）
   getMeteorInterval() {
     const calamityLvl = this.state.rebirthSkills["cosmic_calamity"] || 0;
-    return Math.max(60, 120 - calamityLvl * 12);
+    return Math.max(60, 120 - calamityLvl * 5);
   }
 
   getMeteorDuration() {
@@ -665,7 +677,7 @@ class Game {
 
   getMeteorMultiplier() {
     const base = this.state.skills["meteor_resonance"] ? 2.5 : 2.0;
-    const surge = (this.state.rebirthSkills["inferno_surge"] || 0) * 0.5;
+    const surge = (this.state.rebirthSkills["inferno_surge"] || 0) * 0.3;
     return base + surge;
   }
 
@@ -702,10 +714,10 @@ class Game {
       base += Math.floor(dps * dpsBonusRatio);
     }
 
-    // 転生パッシブ: 魂の研鑽 (+15%/Lv)
+    // 転生パッシブ: 魂の研鑽 (+10%/Lv)
     const soulStrikeLvl = this.state.rebirthSkills["soul_strike"] || 0;
     if (soulStrikeLvl > 0) {
-      base = Math.floor(base * (1 + soulStrikeLvl * 0.15));
+      base = Math.floor(base * (1 + soulStrikeLvl * 0.10));
     }
     if (this.state.activeBuffs.berserk > 0) base *= 3;
     if (this.isMeteorRushActive()) base = Math.floor(base * this.getMeteorMultiplier());
@@ -719,11 +731,11 @@ class Game {
       chance += 0.10;
       multiplier = 2.5;
     }
-    // 転生パッシブ: 真理の瞳 (+2%率, +15%倍率/Lv)
+    // 転生パッシブ: 真理の瞳 (+1.5%率, +10%倍率/Lv)
     const eyeLvl = this.state.rebirthSkills["true_eye"] || 0;
     if (eyeLvl > 0) {
-      chance += eyeLvl * 0.02;
-      multiplier += eyeLvl * 0.15;
+      chance += eyeLvl * 0.015;
+      multiplier += eyeLvl * 0.10;
     }
     return { chance, multiplier };
   }
@@ -740,10 +752,10 @@ class Game {
       }
     });
 
-    // 転生パッシブ: 古代の建築術 (+12%/Lv)
+    // 転生パッシブ: 古代の建築術 (+8%/Lv)
     const craftLvl = this.state.rebirthSkills["ancient_craft"] || 0;
     if (craftLvl > 0) {
-      totalDPS = Math.floor(totalDPS * (1 + craftLvl * 0.12));
+      totalDPS = Math.floor(totalDPS * (1 + craftLvl * 0.08));
     }
 
     if (withBuffs) {
@@ -1014,7 +1026,7 @@ class Game {
     let autoGold = Math.max(2, Math.floor(totalDmg * 0.8 + this.enemy.level * 1.2));
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
-      autoGold = Math.floor(autoGold * (1 + merchantLvl * 0.15));
+      autoGold = Math.floor(autoGold * (1 + merchantLvl * 0.10));
     }
     this.addGold(autoGold);
     this.createDamagePopup(`🪙 +${this.formatNumber(autoGold)}`, false, false, headX + 22, headY - 10, true);
@@ -1078,7 +1090,7 @@ class Game {
     let clickGold = Math.max(1, Math.floor(clickPower * 0.5 + (this.enemy.level * 0.3)));
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
-      clickGold = Math.floor(clickGold * (1 + merchantLvl * 0.15));
+      clickGold = Math.floor(clickGold * (1 + merchantLvl * 0.10));
     }
     this.addGold(clickGold);
 
@@ -1119,10 +1131,10 @@ class Game {
       }
     }
 
-    // 転生パッシブ: 生命の浸蝕 (敵最大HPの 0.5%/Lv 追加ダメージ)
+    // 転生パッシブ: 生命の浸蝕 (敵最大HPの 0.3%/Lv 追加ダメージ)
     const leechLvl = this.state.rebirthSkills["life_leech"] || 0;
     if (leechLvl > 0) {
-      const leechDmg = Math.max(1, Math.floor(this.enemy.maxHp * (leechLvl * 0.005)));
+      const leechDmg = Math.max(1, Math.floor(this.enemy.maxHp * (leechLvl * 0.003)));
       dmg += leechDmg;
       this.createDamagePopup(`🩸浸蝕 +${this.formatNumber(leechDmg)}`, false, false, headX + 30, headY - 25);
     }
@@ -1170,12 +1182,12 @@ class Game {
     }
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
-      goldReward = Math.floor(goldReward * (1 + merchantLvl * 0.15));
+      goldReward = Math.floor(goldReward * (1 + merchantLvl * 0.10));
     }
-    // 転生パッシブ: 王者の風格 (ボス討伐ゴールド +40%/Lv)
+    // 転生パッシブ: 王者の風格 (ボス討伐ゴールド +25%/Lv)
     const bossBountyLvl = this.state.rebirthSkills["boss_bounty"] || 0;
     if (isBoss && bossBountyLvl > 0) {
-      goldReward = Math.floor(goldReward * (1 + bossBountyLvl * 0.40));
+      goldReward = Math.floor(goldReward * (1 + bossBountyLvl * 0.25));
     }
     this.addGold(goldReward);
 
