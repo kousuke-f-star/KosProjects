@@ -551,7 +551,7 @@ const REBIRTH_SKILLS_MASTER = [
   }
 ];
 
-// --- 2. ペット（お供モンスター）マスターデータ ---
+// --- 2. ペット（お供モンスター）マスターデータ（ほんのり嬉しい控えめなバランス！） ---
 const PETS_DATA = [
   {
     id: "pet_slime",
@@ -560,8 +560,8 @@ const PETS_DATA = [
     raceCategory: 0, // スライム族 (Lv.1〜99)
     desc: "ぽよぽよ跳ねる可愛いスライムのお供。勇者の剣戟を応援する！",
     effectDesc: "クリック攻撃力 +{val}%",
-    baseVal: 25,
-    perLevel: 10
+    baseVal: 5,
+    perLevel: 2
   },
   {
     id: "pet_skeleton",
@@ -569,19 +569,19 @@ const PETS_DATA = [
     icon: "💀",
     raceCategory: 1, // スケルトン族 (Lv.100〜199)
     desc: "骨をカタカタ鳴らす小さなガイコツ犬。敵の急所を見抜く！",
-    effectDesc: "クリティカル率 +{val}% & クリティカル倍率 +0.5倍",
-    baseVal: 10,
-    perLevel: 2
+    effectDesc: "クリティカル率 +{val}% & クリティカル倍率 +{mult}倍",
+    baseVal: 3,
+    perLevel: 1
   },
   {
     id: "pet_goblin",
     name: "コゴブリン",
     icon: "👺",
     raceCategory: 2, // ゴブリン族 (Lv.200〜299)
-    desc: "金貨が大好きな小鬼の子供。モンスターからコインをかき集める！",
-    effectDesc: "獲得ゴールド +{val}% & 自動コイン回収",
-    baseVal: 30,
-    perLevel: 15
+    desc: "金貨が大好きな小鬼の子供。モンスターからコインを拾い集める！",
+    effectDesc: "獲得ゴールド +{val}%",
+    baseVal: 6,
+    perLevel: 2
   },
   {
     id: "pet_golem",
@@ -590,18 +590,18 @@ const PETS_DATA = [
     raceCategory: 3, // ゴーレム族 (Lv.300〜399)
     desc: "古代の巨石から生まれたちびゴーレム。仲間の攻撃力を底上げ！",
     effectDesc: "全自動仲間（DPS）攻撃力 +{val}%",
-    baseVal: 30,
-    perLevel: 15
+    baseVal: 5,
+    perLevel: 2
   },
   {
     id: "pet_demon",
     name: "プチデーモン",
     icon: "👿",
     raceCategory: 4, // デーモン族 (Lv.400〜499)
-    desc: "魔界の小さな小悪魔。強大なボスに対して恐るべき特効を発揮！",
+    desc: "魔界の小さな小悪魔。強大なボスに対して力を発揮！",
     effectDesc: "ボスモンスターへのダメージ +{val}%",
-    baseVal: 50,
-    perLevel: 20
+    baseVal: 8,
+    perLevel: 3
   },
   {
     id: "pet_dragon",
@@ -609,9 +609,9 @@ const PETS_DATA = [
     icon: "🐉",
     raceCategory: 5, // ドラゴン族 (Lv.500〜599)
     desc: "天空の覇竜の幼体。小さな火炎ブレスで全攻撃力を強化！",
-    effectDesc: "全攻撃力 +{val}% & 隕石ラッシュ間隔 -15秒",
-    baseVal: 40,
-    perLevel: 15
+    effectDesc: "全攻撃力 +{val}% & 隕石ラッシュ間隔 -{cd}秒",
+    baseVal: 6,
+    perLevel: 2
   },
   {
     id: "pet_cosmic",
@@ -619,19 +619,19 @@ const PETS_DATA = [
     icon: "🌌",
     raceCategory: 6, // 星辰の邪神 (Lv.600〜699)
     desc: "宇宙の深淵からやってきた神秘の星の子。奇跡の古代SPを呼ぶ！",
-    effectDesc: "転生時、30%の確率で古代SP +1pt ボーナス (+{val}%)",
-    baseVal: 30,
-    perLevel: 5
+    effectDesc: "転生時、奇跡の大成功（SP+3pt）確率 +{val}%",
+    baseVal: 5,
+    perLevel: 2
   },
   {
     id: "pet_god",
     name: "光の神使",
     icon: "👑",
     raceCategory: 7, // 超越神 (Lv.700〜)
-    desc: "天上界の聖なる使い。神の祝福によって全能力を覚醒させる！",
+    desc: "天上界の聖なる使い。神の祝福によって全能力をサポート！",
     effectDesc: "全攻撃力＆獲得ゴールド +{val}%",
-    baseVal: 50,
-    perLevel: 20
+    baseVal: 8,
+    perLevel: 3
   }
 ];
 
@@ -1492,17 +1492,17 @@ class Game {
 
     const val = petDef.baseVal + (petLvl - 1) * petDef.perLevel;
 
-    if (type === "click" && petId === "pet_slime") return val * 0.01; // +25%〜
-    if (type === "crit_chance" && petId === "pet_skeleton") return val * 0.01; // +10%〜
-    if (type === "crit_mult" && petId === "pet_skeleton") return 0.5 + (petLvl - 1) * 0.1;
-    if (type === "gold" && petId === "pet_goblin") return val * 0.01; // +30%〜
-    if (type === "dps" && petId === "pet_golem") return val * 0.01; // +30%〜
-    if (type === "boss_dmg" && petId === "pet_demon") return val * 0.01; // +50%〜
-    if (type === "all_dmg" && petId === "pet_dragon") return val * 0.01; // +40%〜
-    if (type === "all_dmg" && petId === "pet_god") return val * 0.01; // +50%〜
-    if (type === "gold" && petId === "pet_god") return val * 0.01; // +50%〜
-    if (type === "meteor_cd" && petId === "pet_dragon") return 15;
-    if (type === "sp_bonus_chance" && petId === "pet_cosmic") return Math.min(1.0, val * 0.01);
+    if (type === "click" && petId === "pet_slime") return val * 0.01; // +5% (+2%/Lv)
+    if (type === "crit_chance" && petId === "pet_skeleton") return val * 0.01; // +3% (+1%/Lv)
+    if (type === "crit_mult" && petId === "pet_skeleton") return 0.15 + (petLvl - 1) * 0.05; // +0.15倍 (+0.05倍/Lv)
+    if (type === "gold" && petId === "pet_goblin") return val * 0.01; // +6% (+2%/Lv)
+    if (type === "dps" && petId === "pet_golem") return val * 0.01; // +5% (+2%/Lv)
+    if (type === "boss_dmg" && petId === "pet_demon") return val * 0.01; // +8% (+3%/Lv)
+    if (type === "all_dmg" && petId === "pet_dragon") return val * 0.01; // +6% (+2%/Lv)
+    if (type === "meteor_cd" && petId === "pet_dragon") return 4 + (petLvl - 1) * 1; // -4秒 (-1秒/Lv)
+    if (type === "sp_bonus_chance" && petId === "pet_cosmic") return val * 0.01; // +5% (+2%/Lv)
+    if (type === "all_dmg" && petId === "pet_god") return val * 0.01; // +8% (+3%/Lv)
+    if (type === "gold" && petId === "pet_god") return val * 0.01; // +8% (+3%/Lv)
 
     return 0;
   }
@@ -3263,7 +3263,15 @@ class Game {
       const isEquipped = this.state.equippedPet === pet.id;
       const lvl = owned ? (owned.level || 1) : 0;
       const currentVal = pet.baseVal + Math.max(0, lvl - 1) * pet.perLevel;
-      const effectText = pet.effectDesc.replace("{val}", currentVal);
+      let effectText = pet.effectDesc.replace("{val}", currentVal);
+      if (pet.id === "pet_skeleton") {
+        const mult = (0.15 + Math.max(0, lvl - 1) * 0.05).toFixed(2);
+        effectText = effectText.replace("{mult}", mult);
+      }
+      if (pet.id === "pet_dragon") {
+        const cd = 4 + Math.max(0, lvl - 1) * 1;
+        effectText = effectText.replace("{cd}", cd);
+      }
 
       if (!owned) {
         return `
