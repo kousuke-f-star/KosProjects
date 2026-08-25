@@ -243,7 +243,7 @@ const MONSTER_CATEGORIES = [
   {
     minLevel: 200,
     maxLevel: 249,
-    raceName: "グリーングブリン族",
+    raceName: "グリーンゴブリン族",
     icon: "👺",
     types: [
       { name: "ゴブリンシーフ", color1: "#86efac", color2: "#22c55e", color3: "#14532d", eyeType: "goblin" },
@@ -251,7 +251,7 @@ const MONSTER_CATEGORIES = [
       { name: "オークウォーリアー", color1: "#a3e635", color2: "#65a30d", color3: "#365314", eyeType: "goblin" },
       { name: "ゴブリンファイター", color1: "#86efac", color2: "#15803d", color3: "#052e16", eyeType: "goblin" }
     ],
-    bossPrefix: "頭領グリーングブリン"
+    bossPrefix: "頭領グリーンゴブリン"
   },
   {
     minLevel: 250,
@@ -873,12 +873,14 @@ class Game {
     const color2 = this.enemy.color2 || "#22c55e";
     const color3 = this.enemy.color3 || "#15803d";
     const race = this.enemy.raceName || "";
+    const et = this.enemy.eyeType || "";
+    const name = this.enemy.name || "";
     const isBoss = this.enemy.isBoss;
     const isMetal = this.enemy.isMetal;
 
     let bodySvg = "";
 
-    if (race.includes("スケルトン")) {
+    if (race.includes("スケルトン") || race.includes("ガイコツ") || race.includes("ボーン") || et === "skull" || name.includes("スケルトン") || name.includes("ボーン") || name.includes("ガイコツ")) {
       // 💀 スケルトン族（頭蓋骨 ＆ 後ろの交差する大腿骨）
       bodySvg = `
         <!-- 後ろの交差する大腿骨（クロスボーン） -->
@@ -912,7 +914,7 @@ class Game {
         <path d="M80,156 L80,178 M90,156 L90,178 M100,156 L100,178 M110,156 L110,178 M120,156 L120,178 M75,167 L125,167" 
               stroke="#f8fafc" stroke-width="3" stroke-linecap="square" />
       `;
-    } else if (race.includes("ゴブリン") || race.includes("魔獣")) {
+    } else if (race.includes("ゴブリン") || race.includes("グブリン") || race.includes("魔獣") || race.includes("オーク") || race.includes("トロール") || et === "goblin" || name.includes("ゴブリン") || name.includes("オーク") || name.includes("トロール")) {
       // 👺 ゴブリン族（Lv.200-249: 緑ゴブリン / Lv.250-299: 赤ゴブリン）
       bodySvg = `
         <!-- 尖った大耳（左右） -->
@@ -944,7 +946,7 @@ class Game {
         <polygon points="78,158 84,136 90,158" fill="#ffffff" stroke="#0f172a" stroke-width="1.5" />
         <polygon points="110,158 116,136 122,158" fill="#ffffff" stroke="#0f172a" stroke-width="1.5" />
       `;
-    } else if (race.includes("ゴーレム") || race.includes("巨神")) {
+    } else if (race.includes("ゴーレム") || race.includes("巨神") || et === "golem" || name.includes("ゴーレム") || name.includes("巨神")) {
       // 🗿 ゴーレム・魔導巨神族（角ばった岩石ブロック + 発光する古代の単眼コア）
       bodySvg = `
         <!-- 巨岩ブロックボディ -->
@@ -963,7 +965,7 @@ class Game {
         <!-- 無骨な口スリット -->
         <path d="M68,155 L132,155" stroke="#0f172a" stroke-width="8" stroke-linecap="round" />
       `;
-    } else if (race.includes("デーモン") || race.includes("魔王")) {
+    } else if (race.includes("デーモン") || race.includes("魔王") || et === "demon" || name.includes("デーモン") || name.includes("魔王") || name.includes("インプ") || name.includes("リーパー")) {
       // 👿 デーモン・魔王軍族（湾曲した悪魔の角 + 翼 + 邪悪な吊り目）
       bodySvg = `
         <!-- 悪魔の角（左右） -->
@@ -992,7 +994,7 @@ class Game {
         <polygon points="80,145 85,156 90,145" fill="#ffffff" />
         <polygon points="110,145 115,156 120,145" fill="#ffffff" />
       `;
-    } else if (race.includes("ドラゴン") || race.includes("飛竜")) {
+    } else if (race.includes("ドラゴン") || race.includes("飛竜") || race.includes("竜") || et === "dragon" || name.includes("ドラゴン") || name.includes("ワイバーン") || name.includes("竜")) {
       // 🐉 契約飛竜・ドラゴン族（竜の角 + 爬虫類の縦瞳 + 鋭い牙）
       bodySvg = `
         <!-- 竜の角（4本） -->
@@ -1021,7 +1023,7 @@ class Game {
         <polygon points="95,150 100,165 105,150" fill="#ffffff" />
         <polygon points="115,148 120,162 125,148" fill="#ffffff" />
       `;
-    } else if (race.includes("宇宙") || race.includes("星辰")) {
+    } else if (race.includes("宇宙") || race.includes("星辰") || race.includes("邪神") || race.includes("コズミック") || et === "cosmic" || name.includes("コズミック") || name.includes("アザトース") || name.includes("星")) {
       // 🌌 星辰の邪神・宇宙支配者族（蠢く触手 + 巨大な第三の目 + 無数の瞳）
       bodySvg = `
         <!-- 蠢く触手 -->
@@ -1046,7 +1048,7 @@ class Game {
         <circle cx="82" cy="148" r="8" fill="#fef08a" /><circle cx="82" cy="148" r="3" fill="#7f1d1d" />
         <circle cx="118" cy="148" r="8" fill="#fef08a" /><circle cx="118" cy="148" r="3" fill="#7f1d1d" />
       `;
-    } else if (race.includes("超越") || race.includes("アルティメット")) {
+    } else if (race.includes("超越") || race.includes("アルティメット") || race.includes("神") || name.includes("至高神") || name.includes("覇帝") || name.includes("創世龍")) {
       // 👑 超越神・アルティメット族（幾何学光輪 + 至高の王冠 + 黄金の神眼）
       bodySvg = `
         <!-- 背後の幾何学光輪 -->
