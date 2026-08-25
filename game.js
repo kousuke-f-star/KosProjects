@@ -318,6 +318,7 @@ const BUILDINGS_MASTER = [
   { id: "dragon", name: "契約ドラゴン", icon: "🐉", attackIcon: "🔥", desc: "伝説の竜を召喚し圧倒的ブレスで殲滅する", baseCost: 330000000, baseDPS: 60000 }
 ];
 
+// --- 通常スキルマスター（ゴールドで購入・スッキリ厳選） ---
 const SKILLS_MASTER = [
   { id: "click_power_1", name: "力任せの打撃", icon: "👊", desc: "クリック攻撃力が +25% 増加する", cost: 50, type: "passive" },
   { id: "crit_chance_1", name: "弱点見極め", icon: "🎯", desc: "クリティカル率+10%、クリティカル倍率が2.5倍になる", cost: 300, type: "passive" },
@@ -325,22 +326,18 @@ const SKILLS_MASTER = [
   { id: "click_combo", name: "連撃の心得", icon: "⚡", desc: "クリック時、25%の確率で2回連続ダメージを与える", cost: 1500, type: "passive" },
   { id: "skill_berserk", name: "スキル: バーサーク", icon: "🔥", desc: "【アクティブ】15秒間、クリック攻撃力とDPSが3倍になる (CD: 60秒)", cost: 2000, type: "active", cd: 60, duration: 15 },
   { id: "meteor_resonance", name: "流星の共鳴", icon: "💫", desc: "隕石ラッシュの持続時間が +6秒(計26秒) 延長され、攻撃倍率が 2.5倍 になる", cost: 5000, type: "passive" },
-  { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の 2% がクリック攻撃力に加算される", cost: 8000, type: "passive" },
+  { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の 3% がクリック攻撃力に加算される", cost: 8000, type: "passive" },
   { id: "guardian_aegis", name: "守護者の加護", icon: "🛡️", desc: "ボス戦の制限時間が 40秒 ➔ 55秒 に延長される", cost: 15000, type: "passive" },
-  { id: "sword_spell", name: "魔剣の一閃", icon: "🗡️", desc: "DPS（秒間自動攻撃力）の 4% がさらにクリック攻撃力に加算される", cost: 20000, type: "passive" },
   { id: "bounty_hunter", name: "賞金首ハンター", icon: "💎", desc: "スライム討伐時の獲得ゴールドが +50% 増加する", cost: 40000, type: "passive" },
   { id: "skill_goldrush", name: "スキル: ゴールドラッシュ", icon: "💰", desc: "【アクティブ】即座に秒間DPSの30秒分のゴールドを獲得する (CD: 90秒)", cost: 60000, type: "active", cd: 90 },
   { id: "thunder_strike", name: "雷光の閃き", icon: "⚡", desc: "クリティカル時、追加でDPS 3秒分の電撃ダメージを与える", cost: 80000, type: "passive" },
   { id: "building_synergy", name: "連携の極意", icon: "🤝", desc: "すべての建物の攻撃力・生産力が 2倍 になる", cost: 150000, type: "passive" },
   { id: "skill_cyclone", name: "スキル: サイクロン", icon: "🌪️", desc: "【アクティブ】10秒間、仲間たちの自動攻撃スピードが3倍になり超連打する (CD: 75秒)", cost: 200000, type: "active", cd: 75, duration: 10 },
-  { id: "giant_strength", name: "巨人の腕力", icon: "🦾", desc: "クリック攻撃力が +50% (1.5倍) に増加する", cost: 350000, type: "passive" },
   { id: "skill_meteor", name: "スキル: メテオ落とし", icon: "☄️", desc: "【アクティブ】巨大な隕石を落とし、スライムに現在DPSの50倍ダメージを一撃で与える (CD: 120秒)", cost: 500000, type: "active", cd: 120 },
-  { id: "crit_power_2", name: "会心の極意", icon: "⚡", desc: "クリティカル率+15%、クリティカル倍率が 5倍 に跳ね上がる", cost: 1500000, type: "passive" },
-  { id: "overlord_aura", name: "覇王の気迫", icon: "👑", desc: "DPSの 7% がクリック攻撃力に加算！", cost: 5000000, type: "passive" },
-  { id: "golden_touch", name: "ミダスタッチ", icon: "✨", desc: "クリック時、10%の確率でスライムの最大HP20%相当のボーナスゴールドを獲得", cost: 15000000, type: "passive" }
+  { id: "golden_touch", name: "ミダスタッチ", icon: "✨", desc: "クリック時、10%の確率でスライムの最大HP20%相当のボーナスゴールドを獲得", cost: 2000000, type: "passive" }
 ];
 
-// --- 古代の秘術（古代スキルポイント SP を消費して永続強化・必要SPインクリメント制） ---
+// --- 古代の秘術（古代スキルポイント SP を消費して永続強化・必要SPインクリメント制・12種類） ---
 const REBIRTH_SKILLS_MASTER = [
   { 
     id: "soul_strike", 
@@ -387,9 +384,49 @@ const REBIRTH_SKILLS_MASTER = [
     id: "cosmic_calamity", 
     name: "天変地異の秘術", 
     icon: "☄️", 
-    desc: "隕石ラッシュ（攻撃力2倍）の発生間隔が 10秒 短縮される (現在: -{val}秒)", 
+    desc: "隕石ラッシュの発生間隔が 10秒 短縮される (現在: -{val}秒)", 
     maxLevel: 5, 
     valuePerLevel: 10 
+  },
+  { 
+    id: "boss_bounty", 
+    name: "王者の風格", 
+    icon: "👑", 
+    desc: "ボスモンスター討伐時の獲得ゴールドが永続で +20% 増加する (現在: +{val}%)", 
+    maxLevel: 10, 
+    valuePerLevel: 20 
+  },
+  { 
+    id: "life_leech", 
+    name: "生命の浸蝕", 
+    icon: "🩸", 
+    desc: "クリック時、敵の最大HPの 0.2% 分の追加ダメージを与える (現在: +{val}%)", 
+    maxLevel: 10, 
+    valuePerLevel: 0.2 
+  },
+  { 
+    id: "inferno_surge", 
+    name: "業火の覇気", 
+    icon: "🌋", 
+    desc: "隕石ラッシュ中の全攻撃力倍率が +0.2倍 上昇する (現在: +{val}倍)", 
+    maxLevel: 5, 
+    valuePerLevel: 0.2 
+  },
+  { 
+    id: "time_lord", 
+    name: "刻の支配者", 
+    icon: "⌛", 
+    desc: "ボス戦の制限時間が永続で +3秒 延長される (現在: +{val}秒)", 
+    maxLevel: 5, 
+    valuePerLevel: 3 
+  },
+  { 
+    id: "crystal_blessing", 
+    name: "水晶の導き", 
+    icon: "💎", 
+    desc: "転生に必要な水晶💎の数が -1個 軽減される（最低1個）(現在: -{val}個)", 
+    maxLevel: 3, 
+    valuePerLevel: 1 
   },
   { 
     id: "auto_fairy", 
@@ -587,14 +624,24 @@ class Game {
     return level % 10 === 0;
   }
 
-  // 転生に必要な水晶数：1回目は1個、2回目は2個、3回目は3個...と1個ずつ増加！
+  // 転生に必要な水晶数：1回目は1個、2回目は2個、3回目は3個...と1個ずつ増加！（水晶の導きで軽減）
   getRequiredCrystals() {
-    return (this.state.rebirthCount || 0) + 1;
+    const blessing = this.state.rebirthSkills["crystal_blessing"] || 0;
+    const baseReq = (this.state.rebirthCount || 0) + 1;
+    return Math.max(1, baseReq - blessing);
   }
 
   // 転生可能判定：必要水晶数を満たしているか
   canRebirth() {
     return this.state.crystals >= this.getRequiredCrystals();
+  }
+
+  // ボス戦制限時間（守護者の加護 + 刻の支配者）
+  getBossTimerDuration() {
+    let t = 40;
+    if (this.state.skills["guardian_aegis"]) t = 55;
+    const timeLord = this.state.rebirthSkills["time_lord"] || 0;
+    return t + (timeLord * 3);
   }
 
   // 古代の秘術（SPスキル）の必要SP計算：Lv0->1SP, Lv1->2SP, Lv2->3SP...と1つずつ増加！
@@ -617,7 +664,9 @@ class Game {
   }
 
   getMeteorMultiplier() {
-    return this.state.skills["meteor_resonance"] ? 2.5 : 2.0;
+    const base = this.state.skills["meteor_resonance"] ? 2.5 : 2.0;
+    const surge = (this.state.rebirthSkills["inferno_surge"] || 0) * 0.2;
+    return base + surge;
   }
 
   isMeteorRushActive() {
@@ -643,14 +692,11 @@ class Game {
     let base = 1 + Math.floor(lvl * 0.6);
 
     if (this.state.skills["click_power_1"]) base = Math.floor(base * 1.25);
-    if (this.state.skills["giant_strength"]) base = Math.floor(base * 1.5);
 
-    // DPS連動ボーナス（過剰になりすぎないようマイルドな割合に調整）
+    // DPS連動ボーナス
     const dps = this.getDPS(false);
     let dpsBonusRatio = 0;
-    if (this.state.skills["click_power_2"]) dpsBonusRatio += 0.02;
-    if (this.state.skills["sword_spell"]) dpsBonusRatio += 0.04;
-    if (this.state.skills["overlord_aura"]) dpsBonusRatio += 0.07;
+    if (this.state.skills["click_power_2"]) dpsBonusRatio += 0.03;
 
     if (dpsBonusRatio > 0) {
       base += Math.floor(dps * dpsBonusRatio);
@@ -672,10 +718,6 @@ class Game {
     if (this.state.skills["crit_chance_1"]) {
       chance += 0.10;
       multiplier = 2.5;
-    }
-    if (this.state.skills["crit_power_2"]) {
-      chance += 0.15;
-      multiplier = 5.0;
     }
     // 転生パッシブ: 真理の瞳 (+1%率, +5%倍率/Lv)
     const eyeLvl = this.state.rebirthSkills["true_eye"] || 0;
@@ -760,7 +802,7 @@ class Game {
     } else if (isBoss) {
       const bossHp = Math.floor(baseHp * 3.8);
       const bossGold = Math.floor(baseGold * 5.0);
-      this.state.bossTimer = 40;
+      this.state.bossTimer = this.getBossTimerDuration();
 
       this.enemy = {
         name: `👑 ${category.bossPrefix}${type.name} (Lv.${level})`,
@@ -1077,6 +1119,14 @@ class Game {
       }
     }
 
+    // 転生パッシブ: 生命の浸蝕 (敵最大HPの 0.2%/Lv 追加ダメージ)
+    const leechLvl = this.state.rebirthSkills["life_leech"] || 0;
+    if (leechLvl > 0) {
+      const leechDmg = Math.max(1, Math.floor(this.enemy.maxHp * (leechLvl * 0.002)));
+      dmg += leechDmg;
+      this.createDamagePopup(`🩸浸蝕 +${this.formatNumber(leechDmg)}`, false, false, headX + 30, headY - 25);
+    }
+
     if (this.state.skills["golden_touch"] && Math.random() < 0.1) {
       const bonus = Math.max(1, Math.floor(this.enemy.maxHp * 0.2));
       this.addGold(bonus);
@@ -1121,6 +1171,11 @@ class Game {
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
       goldReward = Math.floor(goldReward * (1 + merchantLvl * 0.05));
+    }
+    // 転生パッシブ: 王者の風格 (ボス討伐ゴールド +20%/Lv)
+    const bossBountyLvl = this.state.rebirthSkills["boss_bounty"] || 0;
+    if (isBoss && bossBountyLvl > 0) {
+      goldReward = Math.floor(goldReward * (1 + bossBountyLvl * 0.20));
     }
     this.addGold(goldReward);
 
@@ -1252,10 +1307,10 @@ class Game {
 
     this.sound.playRebirth();
 
-    // 必要個数の水晶を消費して、古代スキルポイント(SP)を 2pt 獲得！
+    // 必要個数の水晶を消費して、古代スキルポイント(SP)を 1pt 獲得！
     this.state.crystals -= req;
-    this.state.skillPoints += 2;
-    this.state.totalSkillPoints += 2;
+    this.state.skillPoints += 1;
+    this.state.totalSkillPoints += 1;
     this.state.rebirthCount += 1;
 
     // 進行リセット
@@ -1569,9 +1624,9 @@ class Game {
     if (available) {
       banner.className = "rebirth-banner available";
       btn.disabled = false;
-      btn.innerHTML = `<span>💎 転生する (${req}個消費 / SP+2)</span>`;
+      btn.innerHTML = `<span>💎 転生する (${req}個消費 / SP+1)</span>`;
       title.textContent = `✨ 転生可能！ (${nextRebirthNum}回目の転生)`;
-      sub.textContent = `所持水晶: 💎 ${this.state.crystals} / 必要: ${req}個 を消費して「古代SP 🔮 +2 pt」を獲得！`;
+      sub.textContent = `所持水晶: 💎 ${this.state.crystals} / 必要: ${req}個 を消費して「古代SP 🔮 +1 pt」を獲得！`;
     } else {
       banner.className = "rebirth-banner locked";
       btn.disabled = true;
@@ -1718,11 +1773,14 @@ class Game {
       const canAfford = !isMax && this.state.skillPoints >= cost;
 
       let descText = rs.desc;
-      if (rs.valuePerLevel) {
-        descText = descText.replace("{val}", currentLvl * rs.valuePerLevel);
+      if (rs.valuePerLevel !== undefined) {
+        const val = Number((currentLvl * rs.valuePerLevel).toFixed(1));
+        descText = descText.replace("{val}", val);
       }
-      if (rs.val1 && rs.val2) {
-        descText = descText.replace("{val1}", currentLvl * rs.val1).replace("{val2}", currentLvl * rs.val2);
+      if (rs.val1 !== undefined && rs.val2 !== undefined) {
+        const v1 = Number((currentLvl * rs.val1).toFixed(1));
+        const v2 = Number((currentLvl * rs.val2).toFixed(1));
+        descText = descText.replace("{val1}", v1).replace("{val2}", v2);
       }
 
       return `
