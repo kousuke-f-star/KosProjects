@@ -1875,7 +1875,7 @@ class Game {
     }
   }
 
-  // --- 水晶を消費して転生を実行（SP +1 pt 獲得！） ---
+  // --- 水晶を消費して転生を実行（基本SP +2 pt、30%確率で +3 pt 獲得！） ---
   executeRebirth() {
     const req = this.getRequiredCrystals();
     if (this.state.crystals < req) {
@@ -1885,10 +1885,13 @@ class Game {
 
     this.sound.playRebirth();
 
-    // 必要個数の水晶を消費して、古代スキルポイント(SP)を 1pt 獲得！
+    // 基本2pt、30%の確率で奇跡の大成功3pt獲得！
+    const isCriticalSP = Math.random() < 0.30;
+    const gainedSP = isCriticalSP ? 3 : 2;
+
     this.state.crystals -= req;
-    this.state.skillPoints += 1;
-    this.state.totalSkillPoints += 1;
+    this.state.skillPoints += gainedSP;
+    this.state.totalSkillPoints += gainedSP;
     this.state.rebirthCount += 1;
 
     // 進行リセット
@@ -1911,7 +1914,11 @@ class Game {
     this.saveGame();
 
     document.getElementById("rebirth-modal")?.classList.remove("show");
-    this.showToast(`🔮 転生完了 (${this.state.rebirthCount}回目)！ 古代スキルポイント(SP)を 2pt 獲得しました！`);
+    if (isCriticalSP) {
+      this.showToast(`🌟✨【奇跡の大成功！】古代スキルポイント(SP)を【超ボーナス +3 pt】獲得しました！！ (${this.state.rebirthCount}回目の転生)`);
+    } else {
+      this.showToast(`🔮 転生完了 (${this.state.rebirthCount}回目)！ 古代スキルポイント(SP)を +2 pt 獲得しました！`);
+    }
   }
 
   activateSkill(skillId) {
@@ -2202,9 +2209,9 @@ class Game {
     if (available) {
       banner.className = "rebirth-banner available";
       btn.disabled = false;
-      btn.innerHTML = `<span>💎 転生する (${req}個消費 / SP+1)</span>`;
+      btn.innerHTML = `<span>💎 転生する (${req}個消費 / SP+2〜3)</span>`;
       title.textContent = `✨ 転生可能！ (${nextRebirthNum}回目の転生)`;
-      sub.textContent = `所持水晶: 💎 ${this.state.crystals} / 必要: ${req}個 を消費して「古代SP 🔮 +1 pt」を獲得！`;
+      sub.textContent = `所持水晶: 💎 ${this.state.crystals} / 必要: ${req}個 を消費して「古代SP 🔮 +2pt (確率で+3pt)」を獲得！`;
     } else {
       banner.className = "rebirth-banner locked";
       btn.disabled = true;
@@ -2676,7 +2683,7 @@ class Game {
         desc.innerHTML = `
           「転生の水晶 💎 ×${req}個」を消費して転生します。<br>
           ゴールドと建物はリセットされ Lv.1 からの再スタートとなりますが、<br>
-          <strong style="color: #d8b4fe;">「古代スキルポイント 🔮 +2 SP」を獲得し、習得した古代の秘術はすべて永久に引き継がれます！</strong>
+          <strong style="color: #d8b4fe;">「古代スキルポイント 🔮 +2 SP（確率で +3 SP！）」を獲得し、習得した古代の秘術はすべて永久に引き継がれます！</strong>
         `;
       }
 

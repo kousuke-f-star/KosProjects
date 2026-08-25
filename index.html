@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2.9.0">
+  <link rel="stylesheet" href="style.css?v=3.0.0">
 </head>
 <body>
 
@@ -16,7 +16,7 @@
     <div class="logo-area">
       <div class="logo-icon">⚔️</div>
       <h1>スライム放置クエスト</h1>
-      <span class="version-badge" id="app-version">v2.9.0</span>
+      <span class="version-badge" id="app-version">v3.0.0</span>
     </div>
 
     <div class="header-stats">
@@ -286,17 +286,17 @@
       <div class="modal-icon">💎</div>
       <h3 class="modal-title" style="color: #38bdf8;">水晶を使った魂の転生</h3>
       <p class="modal-desc" id="modal-rebirth-desc" style="margin-bottom: 16px;">
-        「転生の水晶 💎 ×1個」を消費して転生します。<br>
+        「転生の水晶 💎」を消費して転生します。<br>
         ゴールドと建物はリセットされ Lv.1 からの再スタートとなりますが、<br>
-        <strong style="color: #d8b4fe;">「古代スキルポイント 🔮 +1 SP」を獲得し、習得した古代の秘術はすべて永久に引き継がれます！</strong>
+        <strong style="color: #d8b4fe;">「古代スキルポイント 🔮 +2 SP（確率で +3 SP！）」を獲得し、習得した古代の秘術はすべて永久に引き継がれます！</strong>
       </p>
       <div class="modal-reward-box" style="border-color: #38bdf8; background: rgba(2, 132, 199, 0.15);">
         <span style="font-size: 1.6rem;">🔮</span>
-        <span class="modal-reward-val" style="color: #d8b4fe;">獲得: 古代SP +1 pt</span>
+        <span class="modal-reward-val" style="color: #d8b4fe;">獲得: 古代SP +2 pt (確率で +3 pt！)</span>
       </div>
       <div style="display: flex; gap: 10px;">
         <button class="icon-btn" id="btn-cancel-rebirth" style="flex: 1; justify-content: center; background: #334155;">やめる</button>
-        <button class="modal-close-btn" id="btn-confirm-rebirth" style="flex: 1.5; background: linear-gradient(135deg, #0284c7, #7c3aed); color: #fff;">💎 1個消費して転生！</button>
+        <button class="modal-close-btn" id="btn-confirm-rebirth" style="flex: 1.5; background: linear-gradient(135deg, #0284c7, #7c3aed); color: #fff;">💎 消費して転生！</button>
       </div>
     </div>
   </div>
@@ -321,6 +321,6 @@
   <div class="toast-container" id="toast-container"></div>
 
   <!-- ゲームスクリプト -->
-  <script src="game.js?v=2.9.0"></script>
+  <script src="game.js?v=3.0.0"></script>
 </body>
 </html>
