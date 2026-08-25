@@ -1314,9 +1314,55 @@ class Game {
       const rect = slimeTarget.getBoundingClientRect();
       this.createDamagePopup(`☄️ ${this.formatNumber(meteorDmg)}!`, true, false, rect.left + rect.width / 2, rect.top);
       this.applyDamage(meteorDmg);
+    } else if (skillId === "skill_cyclone") {
+      this.state.activeCooldowns[skillId] = cdTime;
+      this.state.activeBuffs.cyclone = s.duration;
+      this.showToast("🌪️ サイクロン発動！ 仲間たちの攻撃速度が3倍！！");
     }
 
     this.renderActiveSkillBar();
+  }
+
+  // 落下する巨大隕石パーティクル
+  spawnMeteorParticle() {
+    const arena = document.getElementById("slime-arena");
+    if (!arena) return;
+    const p = document.createElement("div");
+    p.className = "meteor-drop-particle";
+    p.textContent = "☄️";
+    const startX = 40 + Math.random() * (arena.clientWidth - 100);
+    p.style.left = `${startX}px`;
+    p.style.top = "10px";
+    arena.appendChild(p);
+
+    setTimeout(() => {
+      p.remove();
+      this.sound.playTone(180 + Math.random() * 60, 'sawtooth', 0.12, 0.18, 500);
+      const slimeTarget = document.getElementById("slime-target");
+      if (slimeTarget) {
+        slimeTarget.classList.remove("hit");
+        void slimeTarget.offsetWidth;
+        slimeTarget.classList.add("hit");
+      }
+    }, 600);
+  }
+
+  renderMeteorTimer() {
+    const textEl = document.getElementById("meteor-timer-text");
+    const badge = document.getElementById("meteor-timer-badge");
+    if (!textEl) return;
+
+    if (this.isMeteorRushActive()) {
+      const sec = Math.ceil(this.state.meteorRushActiveTime);
+      textEl.textContent = `ラッシュ中: ${sec}s`;
+      if (badge) badge.classList.add("rushing");
+    } else {
+      const totalSec = Math.max(0, Math.ceil(this.state.meteorRushTimer));
+      const m = Math.floor(totalSec / 60);
+      const s = totalSec % 60;
+      textEl.textContent = `隕石: ${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      if (badge) badge.classList.remove("rushing");
+    }
   }
 
   loop(currentTime) {
@@ -1333,13 +1379,47 @@ class Game {
   update(dt) {
     this.state.playTime += dt;
 
-    // 1. DPSによる自動攻撃
+    // ☄️ 180秒周期 12秒間の隕石ラッシュ（メテオフィーバー）の更新
+    if (this.isMeteorRushActive()) {
+      this.state.meteorRushActiveTime = Math.max(0, this.state.meteorRushActiveTime - dt);
+      this.state.meteorRushParticleTimer = (this.state.meteorRushParticleTimer || 0) + dt;
+
+      if (this.state.meteorRushParticleTimer >= 0.7) {
+        this.state.meteorRushParticleTimer = 0;
+        this.spawnMeteorParticle();
+      }
+
+      if (this.state.meteorRushActiveTime === 0) {
+        // 隕石ラッシュ終了
+        this.state.meteorRushTimer = this.getMeteorInterval();
+        const arena = document.getElementById("slime-arena");
+        if (arena) arena.classList.remove("meteor-rush-active");
+        this.renderCombatStats();
+        this.showToast("☄️ 隕石ラッシュが終了しました。");
+      }
+    } else {
+      this.state.meteorRushTimer = (this.state.meteorRushTimer || this.getMeteorInterval()) - dt;
+      if (this.state.meteorRushTimer <= 0) {
+        // 隕石ラッシュ発動！
+        this.state.meteorRushActiveTime = this.getMeteorDuration();
+        this.state.meteorRushParticleTimer = 0;
+        const arena = document.getElementById("slime-arena");
+        if (arena) arena.classList.add("meteor-rush-active");
+        this.sound.playSkill();
+        this.renderCombatStats();
+        this.showToast("🔥☄️ 業火の刻！ 隕石ラッシュ発動！ 全攻撃力 2倍！！ 🔥");
+      }
+    }
+    this.renderMeteorTimer();
+
+    // 1. DPSによる自動攻撃（サイクロン発動時はスピード3倍！）
     const dps = this.getDPS();
     if (dps > 0) {
       const dmgThisFrame = dps * dt;
       this.applyDamage(dmgThisFrame);
 
-      this.autoAttackTimer += dt;
+      const attackSpeedMult = (this.state.activeBuffs.cyclone > 0) ? 3 : 1;
+      this.autoAttackTimer += dt * attackSpeedMult;
       if (this.autoAttackTimer >= 0.8) {
         this.autoAttackTimer = 0;
         this.triggerAutoAttackVisuals(dps * 0.8);
@@ -1368,7 +1448,7 @@ class Game {
       this.renderBossTimer();
     }
 
-    // 4. クールダウン更新
+    // 4. クールダウン・バフ更新
     let cdChanged = false;
     for (let sId in this.state.activeCooldowns) {
       if (this.state.activeCooldowns[sId] > 0) {
@@ -1382,6 +1462,11 @@ class Game {
       if (this.state.activeBuffs.berserk === 0) {
         this.renderCombatStats();
       }
+      cdChanged = true;
+    }
+
+    if (this.state.activeBuffs.cyclone > 0) {
+      this.state.activeBuffs.cyclone = Math.max(0, this.state.activeBuffs.cyclone - dt);
       cdChanged = true;
     }
 
@@ -1409,6 +1494,7 @@ class Game {
     this.renderRebirthSkills();
     this.renderRebirthBanner();
     this.renderActiveSkillBar();
+    this.renderMeteorTimer();
     this.renderStats();
   }
 
