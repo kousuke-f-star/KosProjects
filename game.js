@@ -551,11 +551,108 @@ const REBIRTH_SKILLS_MASTER = [
   }
 ];
 
-// --- 2. サウンドエンジン (Web Audio API) ---
+// --- 2. サウンド＆BGMエンジン (Web Audio API プロシージャルシンセサイザー) ---
+const BGM_NOTES = {
+  REST: 0,
+  C2: 65.41, Db2: 69.30, D2: 73.42, Eb2: 77.78, E2: 82.41, F2: 87.31, Fs2: 92.50, G2: 98.00, Ab2: 103.83, A2: 110.00, Bb2: 116.54, B2: 123.47,
+  C3: 130.81, Db3: 138.59, D3: 146.83, Eb3: 155.56, E3: 164.81, F3: 174.61, Fs3: 184.99, G3: 196.00, Ab3: 207.65, A3: 220.00, Bb3: 233.08, B3: 246.94,
+  C4: 261.63, Db4: 277.18, D4: 293.66, Eb4: 311.13, E4: 329.63, F4: 349.23, Fs4: 369.99, G4: 392.00, Ab4: 415.30, A4: 440.00, Bb4: 466.16, B4: 493.88,
+  C5: 523.25, Db5: 554.37, D5: 587.33, Eb5: 622.25, E5: 659.25, F5: 698.46, Fs5: 739.99, G5: 783.99, Ab5: 830.61, A5: 880.00, Bb5: 932.33, B5: 987.77,
+  C6: 1046.50
+};
+
+const BGM_TRACKS = {
+  // ⚠️ ボス戦専用トラック（恐怖・緊迫感のあるダークBGM）
+  boss: {
+    tempo: 220,
+    melodyType: 'sawtooth',
+    bassType: 'triangle',
+    volume: 0.022,
+    melody: ['Eb4', 'D4', 'REST', 'C4', 'B3', 'REST', 'C4', 'Db4', 'Eb4', 'REST', 'D4', 'Db4', 'C4', 'REST', 'B3', 'REST'],
+    bass:   ['C2', 'C2', 'REST', 'C2', 'Eb2', 'REST', 'D2', 'Db2', 'C2', 'C2', 'REST', 'C2', 'Fs2', 'REST', 'F2', 'E2']
+  },
+  // 💧 スライム族（草原・のどかで明るい）
+  slime: {
+    tempo: 280,
+    melodyType: 'sine',
+    bassType: 'triangle',
+    volume: 0.024,
+    melody: ['C4', 'E4', 'G4', 'C5', 'B4', 'G4', 'A4', 'G4', 'E4', 'F4', 'G4', 'E4', 'D4', 'E4', 'C4', 'REST'],
+    bass:   ['C3', 'REST', 'G2', 'REST', 'A2', 'REST', 'E2', 'REST', 'F2', 'REST', 'C3', 'REST', 'G2', 'REST', 'C3', 'REST']
+  },
+  // 💀 スケルトン族（墓場・不気味な骨の響き）
+  skeleton: {
+    tempo: 250,
+    melodyType: 'triangle',
+    bassType: 'sine',
+    volume: 0.022,
+    melody: ['D4', 'F4', 'A4', 'D5', 'Db5', 'A4', 'Bb4', 'A4', 'F4', 'G4', 'Ab4', 'F4', 'E4', 'F4', 'D4', 'REST'],
+    bass:   ['D2', 'REST', 'A2', 'REST', 'D2', 'F2', 'G2', 'A2', 'Bb2', 'REST', 'F2', 'REST', 'A2', 'REST', 'D2', 'REST']
+  },
+  // 👺 ゴブリン族（荒野・リズミカルな小鬼マーチ）
+  goblin: {
+    tempo: 230,
+    melodyType: 'triangle',
+    bassType: 'triangle',
+    volume: 0.023,
+    melody: ['E4', 'G4', 'E4', 'B4', 'A4', 'G4', 'E4', 'REST', 'G4', 'A4', 'B4', 'G4', 'E4', 'D4', 'E4', 'REST'],
+    bass:   ['E2', 'E2', 'B2', 'E2', 'A2', 'REST', 'E2', 'B2', 'E2', 'E2', 'B2', 'E2', 'D2', 'REST', 'E2', 'REST']
+  },
+  // 🗿 ゴーレム族（古代遺跡・重厚な石響き）
+  golem: {
+    tempo: 320,
+    melodyType: 'sine',
+    bassType: 'sine',
+    volume: 0.024,
+    melody: ['A3', 'E4', 'A4', 'C5', 'B4', 'E4', 'G4', 'REST', 'F4', 'C4', 'E4', 'B3', 'D4', 'A3', 'C4', 'B3'],
+    bass:   ['A2', 'REST', 'A2', 'REST', 'E2', 'REST', 'E2', 'REST', 'F2', 'REST', 'C2', 'REST', 'D2', 'REST', 'E2', 'REST']
+  },
+  // 👿 デーモン族（魔王城・緊迫のダークシンセ）
+  demon: {
+    tempo: 240,
+    melodyType: 'sawtooth',
+    bassType: 'triangle',
+    volume: 0.020,
+    melody: ['Fs4', 'A4', 'C5', 'Fs5', 'F5', 'C5', 'D5', 'C5', 'A4', 'B4', 'C5', 'A4', 'G4', 'A4', 'Fs4', 'REST'],
+    bass:   ['Fs2', 'Fs2', 'C3', 'Fs2', 'D3', 'REST', 'C3', 'B2', 'Fs2', 'Fs2', 'C3', 'Fs2', 'G2', 'REST', 'Fs2', 'REST']
+  },
+  // 🐉 ドラゴン族（天空・壮大なファンファーレ）
+  dragon: {
+    tempo: 250,
+    melodyType: 'triangle',
+    bassType: 'sawtooth',
+    volume: 0.022,
+    melody: ['G4', 'B4', 'D5', 'G5', 'Fs5', 'D5', 'E5', 'D5', 'B4', 'C5', 'D5', 'B4', 'A4', 'B4', 'G4', 'REST'],
+    bass:   ['G2', 'G2', 'D3', 'G2', 'C3', 'REST', 'G2', 'D3', 'G2', 'G2', 'D3', 'G2', 'F2', 'REST', 'G2', 'REST']
+  },
+  // 🌌 星辰の邪神（宇宙・未知のアンビエント空間）
+  cosmic: {
+    tempo: 360,
+    melodyType: 'sine',
+    bassType: 'sine',
+    volume: 0.024,
+    melody: ['C4', 'E4', 'Ab4', 'C5', 'E5', 'Ab4', 'E4', 'REST', 'Db4', 'F4', 'A4', 'Db5', 'F5', 'A4', 'F4', 'REST'],
+    bass:   ['C2', 'REST', 'REST', 'REST', 'Ab2', 'REST', 'REST', 'REST', 'Db2', 'REST', 'REST', 'REST', 'A2', 'REST', 'REST', 'REST']
+  },
+  // 👑 超越神（神界・荘厳な天上のハープ）
+  god: {
+    tempo: 290,
+    melodyType: 'sine',
+    bassType: 'triangle',
+    volume: 0.023,
+    melody: ['E4', 'G4', 'B4', 'E5', 'D5', 'B4', 'C5', 'B4', 'G4', 'A4', 'B4', 'G4', 'Fs4', 'G4', 'E4', 'REST'],
+    bass:   ['E2', 'REST', 'B2', 'REST', 'C3', 'REST', 'G2', 'REST', 'A2', 'REST', 'E2', 'REST', 'B2', 'REST', 'E2', 'REST']
+  }
+};
+
 class SoundController {
   constructor() {
     this.ctx = null;
-    this.enabled = true;
+    this.enabled = true;      // SE(効果音)の有効/無効
+    this.bgmEnabled = true;   // BGM(音楽)の有効/無効
+    this.currentTrack = 'slime';
+    this.bgmStep = 0;
+    this.bgmTimer = null;
   }
 
   init() {
@@ -567,6 +664,104 @@ class SoundController {
     } catch (e) {
       this.ctx = null;
     }
+  }
+
+  unlockAudio() {
+    this.init();
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume().then(() => {
+        if (this.bgmEnabled && !this.bgmTimer) {
+          this.startBgmLoop();
+        }
+      }).catch(() => {});
+    } else if (this.bgmEnabled && !this.bgmTimer) {
+      this.startBgmLoop();
+    }
+  }
+
+  setBgmTrack(trackName) {
+    if (!BGM_TRACKS[trackName]) return;
+    if (this.currentTrack !== trackName) {
+      this.currentTrack = trackName;
+      this.bgmStep = 0;
+      if (this.bgmEnabled && this.bgmTimer) {
+        this.stopBgmLoop();
+        this.startBgmLoop();
+      }
+    }
+  }
+
+  startBgmLoop() {
+    this.stopBgmLoop();
+    if (!this.bgmEnabled) return;
+
+    const track = BGM_TRACKS[this.currentTrack] || BGM_TRACKS.slime;
+    const interval = track.tempo || 260;
+
+    this.bgmTimer = setInterval(() => {
+      this.tickBgmStep();
+    }, interval);
+  }
+
+  stopBgmLoop() {
+    if (this.bgmTimer) {
+      clearInterval(this.bgmTimer);
+      this.bgmTimer = null;
+    }
+  }
+
+  toggleBgm() {
+    this.bgmEnabled = !this.bgmEnabled;
+    if (this.bgmEnabled) {
+      this.unlockAudio();
+      this.startBgmLoop();
+    } else {
+      this.stopBgmLoop();
+    }
+    return this.bgmEnabled;
+  }
+
+  tickBgmStep() {
+    if (!this.bgmEnabled || !this.ctx || this.ctx.state === 'suspended') return;
+
+    const track = BGM_TRACKS[this.currentTrack] || BGM_TRACKS.slime;
+    const step = this.bgmStep % track.melody.length;
+    const melNote = track.melody[step];
+    const bassNote = track.bass[step % track.bass.length];
+    const dur = (track.tempo / 1000) * 0.85;
+    const vol = track.volume || 0.022;
+
+    // メロディ発音
+    if (melNote && melNote !== 'REST' && BGM_NOTES[melNote]) {
+      this.playSynthNote(BGM_NOTES[melNote], track.melodyType || 'sine', dur, vol);
+    }
+    // ベース発音
+    if (bassNote && bassNote !== 'REST' && BGM_NOTES[bassNote]) {
+      this.playSynthNote(BGM_NOTES[bassNote], track.bassType || 'triangle', dur * 1.1, vol * 0.9);
+    }
+
+    this.bgmStep++;
+  }
+
+  playSynthNote(freq, type = 'sine', duration = 0.2, gainVal = 0.02) {
+    try {
+      if (!this.ctx || this.ctx.state !== 'running') return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+      gain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(gainVal, this.ctx.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch (e) {}
   }
 
   playTone(freq, type = 'sine', duration = 0.1, gainVal = 0.1, freqSlide = null) {
@@ -667,6 +862,7 @@ class Game {
       playTime: 0,
       lastSaved: Date.now(),
       soundEnabled: true,
+      bgmEnabled: true,
       buyMultiplier: 1,
       buildings: {},
       skills: {},
@@ -950,6 +1146,37 @@ class Game {
 
     this.updateSlimeAppearance();
     this.renderEnemyUI();
+    this.updateBgmTrack();
+  }
+
+  // --- ステージ・敵種族・ボス状態に応じたBGMトラック切り替え ---
+  updateBgmTrack() {
+    if (!this.enemy) return;
+    if (this.enemy.isBoss) {
+      this.sound.setBgmTrack('boss');
+      return;
+    }
+    const race = this.enemy.raceName || "";
+    const et = this.enemy.eyeType || "";
+    const name = this.enemy.name || "";
+
+    if (race.includes("スケルトン") || et === "skull" || name.includes("スケルトン") || name.includes("ボーン") || name.includes("ガイコツ")) {
+      this.sound.setBgmTrack('skeleton');
+    } else if (race.includes("ゴブリン") || race.includes("オーク") || race.includes("トロール") || et === "goblin" || name.includes("ゴブリン")) {
+      this.sound.setBgmTrack('goblin');
+    } else if (race.includes("ゴーレム") || race.includes("巨神") || et === "golem" || name.includes("ゴーレム")) {
+      this.sound.setBgmTrack('golem');
+    } else if (race.includes("デーモン") || race.includes("魔王") || et === "demon" || name.includes("デーモン") || name.includes("インプ")) {
+      this.sound.setBgmTrack('demon');
+    } else if (race.includes("ドラゴン") || race.includes("飛竜") || race.includes("竜") || et === "dragon" || name.includes("ドラゴン")) {
+      this.sound.setBgmTrack('dragon');
+    } else if (race.includes("宇宙") || race.includes("星辰") || race.includes("邪神") || race.includes("コズミック") || et === "cosmic" || name.includes("コズミック") || name.includes("アザトース")) {
+      this.sound.setBgmTrack('cosmic');
+    } else if (race.includes("超越") || race.includes("神") || name.includes("至高神") || name.includes("創世")) {
+      this.sound.setBgmTrack('god');
+    } else {
+      this.sound.setBgmTrack('slime');
+    }
   }
 
   // --- モンスターの外見・SVG動的描画（全端末・WebKit/Safari互換 100%確実描画 ＆ 50Lvごとの装備・衣装進化！） ---
@@ -2564,12 +2791,24 @@ class Game {
   }
 
   setupDOM() {
-    this.sound.enabled = this.state.soundEnabled;
+    this.sound.enabled = this.state.soundEnabled !== false;
+    this.sound.bgmEnabled = this.state.bgmEnabled !== false;
+
     const soundText = document.getElementById("sound-text");
     if (soundText) soundText.textContent = this.sound.enabled ? "ON" : "OFF";
+
+    const bgmText = document.getElementById("bgm-text");
+    if (bgmText) bgmText.textContent = this.sound.bgmEnabled ? "ON" : "OFF";
   }
 
   setupEventListeners() {
+    // 最初のユーザー操作でAudioContextをアンロックしてBGM再生を開始！
+    const unlockHandler = () => {
+      this.sound.unlockAudio();
+    };
+    document.addEventListener("click", unlockHandler, { once: true });
+    document.addEventListener("touchstart", unlockHandler, { once: true });
+
     // iPad / iOS Safari 連打時の画面拡大（ダブルタップズーム）を完全防止
     document.addEventListener("dblclick", (e) => {
       e.preventDefault();
@@ -2591,6 +2830,7 @@ class Game {
     // どのデバイス（PCマウス、iPad/iPhoneタッチ、Android）でも100%確実に反応するタップ処理
     let lastTapTimestamp = 0;
     const processUserTap = (e) => {
+      this.sound.unlockAudio();
       const now = Date.now();
       if (e.type === "click" && now - lastTapTimestamp < 350) {
         return; // touchstartで既に処理済みの場合は重複をスキップ
@@ -2636,13 +2876,26 @@ class Game {
       });
     }
 
+    // 効果音(SE)切り替え
     const btnSound = document.getElementById("btn-sound");
     if (btnSound) {
       btnSound.addEventListener("click", () => {
         this.sound.enabled = !this.sound.enabled;
         this.state.soundEnabled = this.sound.enabled;
         document.getElementById("sound-text").textContent = this.sound.enabled ? "ON" : "OFF";
-        this.showToast(`🔊 サウンド: ${this.sound.enabled ? 'ON' : 'OFF'}`);
+        this.showToast(`🔊 効果音(SE): ${this.sound.enabled ? 'ON' : 'OFF'}`);
+        this.saveGame();
+      });
+    }
+
+    // 音楽(BGM)切り替え
+    const btnBgm = document.getElementById("btn-bgm");
+    if (btnBgm) {
+      btnBgm.addEventListener("click", () => {
+        const isBgmOn = this.sound.toggleBgm();
+        this.state.bgmEnabled = isBgmOn;
+        document.getElementById("bgm-text").textContent = isBgmOn ? "ON" : "OFF";
+        this.showToast(`🎵 音楽(BGM): ${isBgmOn ? 'ON' : 'OFF'}`);
         this.saveGame();
       });
     }
