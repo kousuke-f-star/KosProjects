@@ -737,10 +737,10 @@ class Game {
     return level % 10 === 0;
   }
 
-  // 転生に必要な水晶数：1回目は1個、2回目は2個、3回目は3個...と1個ずつ増加！（水晶の導きで軽減）
+  // 転生に必要な水晶数：1回目1個、2回目1個、3回目2個、4回目2個、5回目3個、6回目3個...と2回ごとに1個増加！（水晶の導きで軽減）
   getRequiredCrystals() {
     const blessing = this.state.rebirthSkills["crystal_blessing"] || 0;
-    const baseReq = (this.state.rebirthCount || 0) + 1;
+    const baseReq = Math.floor((this.state.rebirthCount || 0) / 2) + 1;
     return Math.max(1, baseReq - blessing);
   }
 
