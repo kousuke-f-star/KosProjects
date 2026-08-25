@@ -1640,7 +1640,7 @@ class Game {
     const isMetal = !isBoss && Math.random() < 0.05;
 
     let baseHp = Math.floor(25 + (level - 1) * 22 + Math.pow(level, 1.55) * 8);
-    let baseGold = Math.max(3, Math.floor(4 + (level - 1) * 2.5 + Math.pow(level, 1.25) * 1.2));
+    let baseGold = Math.max(2, Math.floor(3 + (level - 1) * 1.8 + Math.pow(level, 1.15) * 0.9));
 
     if (isMetal) {
       this.enemy = {
@@ -1648,7 +1648,7 @@ class Game {
         level: level,
         hp: Math.max(15, Math.floor(baseHp * 0.35)),
         maxHp: Math.max(15, Math.floor(baseHp * 0.35)),
-        gold: baseGold * 12,
+        gold: baseGold * 8,
         isBoss: false,
         isMetal: true,
         raceName: category.raceName,
@@ -1659,7 +1659,7 @@ class Game {
       };
     } else if (isBoss) {
       const bossHp = Math.floor(baseHp * 3.8);
-      const bossGold = Math.floor(baseGold * 5.0);
+      const bossGold = Math.floor(baseGold * 3.5);
       this.state.bossTimer = this.getBossTimerDuration();
 
       this.enemy = {
@@ -2365,7 +2365,7 @@ class Game {
 
     this.createDamagePopup(Math.ceil(totalDmg), false, true, headX, headY);
 
-    let autoGold = Math.max(2, Math.floor(totalDmg * 0.8 + this.enemy.level * 1.2));
+    let autoGold = Math.max(1, Math.floor(1 + this.enemy.level * 0.35));
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
       autoGold = Math.floor(autoGold * (1 + merchantLvl * 0.10));
@@ -2468,7 +2468,7 @@ class Game {
     const isCombo = this.state.skills["click_combo"] && Math.random() < 0.25;
     if (isCombo) dmg *= 2;
 
-    let clickGold = Math.max(1, Math.floor(clickPower * 0.5 + (this.enemy.level * 0.3)));
+    let clickGold = Math.max(1, Math.floor(1 + this.enemy.level * 0.2));
     const merchantLvl = this.state.rebirthSkills["merchant_wit"] || 0;
     if (merchantLvl > 0) {
       clickGold = Math.floor(clickGold * (1 + merchantLvl * 0.10));
@@ -2530,7 +2530,7 @@ class Game {
     }
 
     if (this.state.skills["golden_touch"] && Math.random() < 0.1) {
-      const bonus = Math.max(1, Math.floor(this.enemy.maxHp * 0.2));
+      const bonus = Math.max(2, Math.floor(this.enemy.gold * 0.5));
       this.addGold(bonus);
       this.createDamagePopup(`✨ 大金 +${this.formatNumber(bonus)}`, true, false, headX + 25, headY - 30, true);
     }
