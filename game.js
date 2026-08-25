@@ -426,9 +426,9 @@ const BUILDINGS_MASTER = [
   { id: "archer", name: "弓兵の塔", icon: "🏹", attackIcon: "🏹", desc: "遠距離から矢を雨あられと射掛ける", baseCost: 1100, baseDPS: 25 },
   { id: "mage_tower", name: "魔導オートタワー", icon: "🔮", attackIcon: "🔮", desc: "古代魔術で自動迎撃する防衛塔", baseCost: 12000, baseDPS: 120 },
   { id: "ranch", name: "スライム自動牧場", icon: "🏡", attackIcon: "⚡", desc: "スライムを飼育して継続ゴールド化", baseCost: 130000, baseDPS: 900 },
-  { id: "cannon", name: "魔導カノン砲", icon: "💥", attackIcon: "💥", desc: "広範囲を吹き飛ばす重火器砲台", baseCost: 1400000, baseDPS: 2000 },
-  { id: "guild", name: "冒険者ギルド支部", icon: "🏰", attackIcon: "🛡️", desc: "大勢の熟練冒険者を雇い入れ総攻撃", baseCost: 20000000, baseDPS: 10000 },
-  { id: "dragon", name: "契約ドラゴン", icon: "🐉", attackIcon: "🔥", desc: "伝説の竜を召喚し圧倒的ブレスで殲滅する", baseCost: 330000000, baseDPS: 60000 }
+  { id: "cannon", name: "魔導カノン砲", icon: "💥", attackIcon: "💥", desc: "広範囲を吹き飛ばす重火器砲台", baseCost: 1400000, baseDPS: 4000 },
+  { id: "guild", name: "冒険者ギルド支部", icon: "🏰", attackIcon: "🛡️", desc: "大勢の熟練冒険者を雇い入れ総攻撃", baseCost: 20000000, baseDPS: 20000 },
+  { id: "dragon", name: "契約ドラゴン", icon: "🐉", attackIcon: "🔥", desc: "伝説の竜を召喚し圧倒的ブレスで殲滅する", baseCost: 330000000, baseDPS: 120000 }
 ];
 
 // --- 通常スキルマスター（ゴールドで購入・スッキリ厳選） ---
