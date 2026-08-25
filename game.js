@@ -1022,7 +1022,7 @@ class Game {
   handleClick(e = null) {
     if (this.isDefeating || this.enemy.hp <= 0) return;
 
-    this.state.totalClicks++;
+    this.state.totalClicks = (this.state.totalClicks || 0) + 1;
     
     const clickPower = this.getClickPower();
     const crit = this.getCritInfo();
@@ -1041,9 +1041,11 @@ class Game {
     this.addGold(clickGold);
 
     const slimeTarget = document.getElementById("slime-target");
-    slimeTarget.classList.remove("hit");
-    void slimeTarget.offsetWidth;
-    slimeTarget.classList.add("hit");
+    if (slimeTarget) {
+      slimeTarget.classList.remove("hit");
+      void slimeTarget.offsetWidth;
+      slimeTarget.classList.add("hit");
+    }
 
     if (isCrit) {
       this.sound.playCrit();
@@ -1051,9 +1053,13 @@ class Game {
       this.sound.playHit();
     }
 
-    const rect = slimeTarget.getBoundingClientRect();
-    const headX = rect.left + rect.width / 2;
-    const headY = rect.top + 15;
+    let headX = window.innerWidth / 2;
+    let headY = 250;
+    if (slimeTarget) {
+      const rect = slimeTarget.getBoundingClientRect();
+      headX = rect.left + rect.width / 2;
+      headY = rect.top + 15;
+    }
 
     this.createDamagePopup(dmg, isCrit, false, headX, headY);
     if (isCombo) {
@@ -1939,20 +1945,51 @@ class Game {
       e.preventDefault();
     });
 
+    // どのデバイス（PCマウス、iPad/iPhoneタッチ、Android）でも100%確実に反応するタップ処理
+    let lastTapTimestamp = 0;
+    const processUserTap = (e) => {
+      const now = Date.now();
+      if (e.type === "click" && now - lastTapTimestamp < 350) {
+        return; // touchstartで既に処理済みの場合は重複をスキップ
+      }
+      if (e.type === "touchstart") {
+        lastTapTimestamp = now;
+      }
+      const touch = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
+      this.handleClick(touch);
+    };
+
     const slimeTarget = document.getElementById("slime-target");
     if (slimeTarget) {
-      const handleSlimeTap = (e) => {
+      slimeTarget.addEventListener("touchstart", (e) => {
         if (e.cancelable) e.preventDefault();
         e.stopPropagation();
-        const touch = e.touches ? e.touches[0] : e;
-        this.handleClick(touch);
-      };
+        processUserTap(e);
+      }, { passive: false });
 
-      slimeTarget.addEventListener("touchstart", handleSlimeTap, { passive: false });
-      slimeTarget.addEventListener("mousedown", (e) => {
-        if (!('ontouchstart' in window)) {
-          handleSlimeTap(e);
+      slimeTarget.addEventListener("click", (e) => {
+        processUserTap(e);
+      });
+    }
+
+    // アリーナ全体の空きエリアをタップしても攻撃が当たる親切設計！
+    const arenaEl = document.getElementById("slime-arena");
+    if (arenaEl) {
+      arenaEl.addEventListener("touchstart", (e) => {
+        if (e.target.closest("button") || e.target.closest(".building-buy-btn") || e.target.closest(".skill-unlock-btn") || e.target.closest(".rebirth-skill-btn") || e.target.closest(".active-skill-btn")) {
+          return;
         }
+        if (e.target.closest("#slime-target")) return; // スライム本体で処理される
+        if (e.cancelable) e.preventDefault();
+        processUserTap(e);
+      }, { passive: false });
+
+      arenaEl.addEventListener("click", (e) => {
+        if (e.target.closest("button") || e.target.closest(".building-buy-btn") || e.target.closest(".skill-unlock-btn") || e.target.closest(".rebirth-skill-btn") || e.target.closest(".active-skill-btn")) {
+          return;
+        }
+        if (e.target.closest("#slime-target")) return;
+        processUserTap(e);
       });
     }
 
