@@ -2566,11 +2566,16 @@ class Game {
     this.state.totalKills++;
 
     const isBoss = this.enemy.isBoss;
+    let droppedCrystal = false;
     if (isBoss) {
       this.sound.playBossDefeat();
-      this.state.crystals += 1;
-      this.state.totalCrystals += 1;
-      this.renderCrystals();
+      // 💎 ボス討伐時、1/3 (約33.3%) の確率で「転生の水晶」がドロップ！
+      if (Math.random() < 1 / 3) {
+        droppedCrystal = true;
+        this.state.crystals += 1;
+        this.state.totalCrystals += 1;
+        this.renderCrystals();
+      }
     } else {
       this.sound.playDefeat();
     }
@@ -2599,8 +2604,13 @@ class Game {
     const rect = slimeTarget.getBoundingClientRect();
 
     if (isBoss) {
-      this.createDamagePopup(`👑 BOSS撃破！ 💎 転生の水晶 +1個！`, true, false, rect.left + rect.width / 2, rect.top + 10, false, false, false, true);
-      this.showToast(`👑 ステージボス撃破！ 「転生の水晶 💎 +1個」を獲得！`);
+      if (droppedCrystal) {
+        this.createDamagePopup(`👑 BOSS撃破！ 💎 水晶ドロップ！`, true, false, rect.left + rect.width / 2, rect.top + 10, false, false, false, true);
+        this.showToast(`👑 ステージボス撃破！ 「転生の水晶 💎 +1個」を獲得！`);
+      } else {
+        this.createDamagePopup(`👑 BOSS撃破！ 🪙 +${this.formatNumber(goldReward)} G`, true, false, rect.left + rect.width / 2, rect.top + 10, false, false, false, true);
+        this.showToast(`👑 ステージボス撃破！ 討伐ゴールドを獲得！`);
+      }
     } else if (this.enemy.isMetal) {
       this.createDamagePopup(`✨ METAL撃破！ 🪙 +${this.formatNumber(goldReward)} G`, true, false, rect.left + rect.width / 2, rect.top + 10, true, true);
       this.showToast(`✨ レアモンスター討伐！ 大量のゴールドを獲得！`);
@@ -3132,14 +3142,14 @@ class Game {
       if (openBossBtn) openBossBtn.style.display = "none";
       if (exitBossBtn) exitBossBtn.style.display = "inline-block";
       if (progressEl) {
-        progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚔️ ボス再戦モード中 (Lv.${this.state.currentLevel}) 💎水晶 & 🐾ペットドロップ！</span>`;
+        progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚔️ ボス再戦モード中 (Lv.${this.state.currentLevel}) 💎水晶(確率1/3) & 🐾ペットドロップ！</span>`;
       }
     } else {
       if (openBossBtn) openBossBtn.style.display = "inline-block";
       if (exitBossBtn) exitBossBtn.style.display = "none";
       if (progressEl) {
         if (this.enemy.isBoss) {
-          progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚠️ BOSS戦！ (Lv.${this.state.currentLevel}) 💎水晶ドロップ！</span>`;
+          progressEl.innerHTML = `<span style="color: #ef4444; font-weight: bold;">⚠️ BOSS戦！ (Lv.${this.state.currentLevel}) 💎水晶(確率1/3)ドロップ！</span>`;
         } else {
           progressEl.textContent = `種族: ${this.enemy.raceName} | 進行度: ${currentInStage} / 50 (Lv.${this.state.currentLevel})`;
         }
