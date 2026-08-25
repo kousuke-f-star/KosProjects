@@ -603,12 +603,73 @@ header {
   filter: drop-shadow(0 0 8px #d8b4fe);
 }
 
+/* ⚔️ プレイヤー斬撃・武器モーションエフェクト */
+.slash-effect {
+  position: absolute;
+  pointer-events: none;
+  z-index: 45;
+  width: 140px;
+  height: 140px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slash-arc {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border-right: 7px solid #ffffff;
+  border-top: 5px solid #38bdf8;
+  border-bottom: 2px solid transparent;
+  border-left: 2px solid transparent;
+  filter: drop-shadow(0 0 12px #38bdf8) drop-shadow(0 0 20px #ffffff);
+  animation: slash-arc-anim 0.22s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+.slash-arc.crit {
+  border-right: 9px solid #fff;
+  border-top: 7px solid #fbbf24;
+  border-bottom: 4px solid #ef4444;
+  filter: drop-shadow(0 0 16px #fbbf24) drop-shadow(0 0 25px #ea580c);
+  animation: slash-arc-crit 0.26s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+.slash-arc.cross {
+  transform: rotate(90deg);
+  border-right: 8px solid #fff;
+  border-top: 6px solid #a855f7;
+  filter: drop-shadow(0 0 15px #a855f7) drop-shadow(0 0 25px #fff);
+  animation: slash-arc-cross 0.26s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+}
+
+@keyframes slash-arc-anim {
+  0% { transform: rotate(-80deg) scale(0.4); opacity: 1; }
+  60% { transform: rotate(40deg) scale(1.3); opacity: 1; }
+  100% { transform: rotate(70deg) scale(1.4); opacity: 0; }
+}
+
+@keyframes slash-arc-crit {
+  0% { transform: rotate(-90deg) scale(0.4); opacity: 1; }
+  60% { transform: rotate(50deg) scale(1.5); opacity: 1; }
+  100% { transform: rotate(90deg) scale(1.6); opacity: 0; }
+}
+
+@keyframes slash-arc-cross {
+  0% { transform: rotate(90deg) scale(0.4); opacity: 1; }
+  60% { transform: rotate(-30deg) scale(1.5); opacity: 1; }
+  100% { transform: rotate(-70deg) scale(1.6); opacity: 0; }
+}
+
 .attack-projectile {
   position: absolute;
   pointer-events: none;
-  z-index: 15;
-  font-size: 1.4rem;
-  transition: all 0.25s linear;
+  z-index: 30;
+  font-size: 1.6rem;
+  transition: all 0.28s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
 }
 
 /* 敵情報 */
@@ -1464,41 +1525,56 @@ header {
   100% { transform: translateY(-80px) rotate(360deg); opacity: 0; }
 }
 
+/* 🗡️ 新米冒険者：構えから一気に振り下ろす袈裟斬り */
 @keyframes sword-slash {
-  0%, 100% { transform: rotate(0deg) translateY(0); }
-  30% { transform: rotate(-30deg) translateY(-6px); }
-  50% { transform: rotate(40deg) translateY(6px) scale(1.15); }
+  0%, 100% { transform: rotate(0deg) translate(0, 0); }
+  25% { transform: rotate(-35deg) translate(-4px, -8px); } /* 溜め */
+  45% { transform: rotate(50deg) translate(10px, 6px) scale(1.25); filter: drop-shadow(0 0 10px #38bdf8); } /* 一閃！ */
+  60% { transform: rotate(20deg) translate(4px, 2px); }
 }
 
+/* 🏹 熟練エルフ弓兵：引き絞りから力強い射出 */
 @keyframes bow-aim {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px) scale(1.08); }
+  0%, 100% { transform: scale(1) translate(0, 0); }
+  35% { transform: scale(0.92, 1.1) translate(-6px, -2px) rotate(-12deg); } /* グッと引き絞る */
+  45% { transform: scale(1.22, 0.92) translate(5px, 0) rotate(6deg); filter: drop-shadow(0 0 12px #86efac); } /* 射出！ */
+  70% { transform: scale(1) translate(0, 0); }
 }
 
+/* 🔮 魔導タワー：魔力収束から光球解放 */
 @keyframes magic-float {
-  0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 6px #a855f7); }
-  50% { transform: translateY(-10px) scale(1.1); filter: drop-shadow(0 0 18px #c084fc); }
+  0%, 100% { transform: translateY(0) scale(1); filter: drop-shadow(0 0 8px #a855f7); }
+  40% { transform: translateY(-8px) scale(0.9); filter: drop-shadow(0 0 25px #d8b4fe); }
+  55% { transform: translateY(-2px) scale(1.25); filter: drop-shadow(0 0 35px #ffffff); } /* 発射！ */
 }
 
+/* 罠：バネ仕掛けでガブッと挟み込む */
 @keyframes trap-snap {
   0%, 80%, 100% { transform: scale(1); }
-  85% { transform: scale(1.25, 0.65); }
-  90% { transform: scale(0.9, 1.15); }
+  85% { transform: scale(1.35, 0.55); filter: brightness(1.3); }
+  90% { transform: scale(0.85, 1.25); }
 }
 
+/* 💥 魔導キャノン：激しい反動とド迫力の発射炎 */
 @keyframes cannon-recoil {
-  0%, 85%, 100% { transform: translateX(0) scale(1); }
-  90% { transform: translateX(-8px) scale(1.15, 0.85); }
+  0%, 80%, 100% { transform: translateX(0) scale(1); }
+  84% { transform: translateX(3px) scale(0.95, 1.05); } /* 予兆 */
+  88% { transform: translateX(-16px) scale(1.35, 0.8) rotate(-6deg); filter: drop-shadow(0 0 25px #f97316); } /* ドカン！ */
+  94% { transform: translateX(-4px) scale(0.98, 1.02); }
 }
 
+/* 🏴‍☠️ ギルド旗：風になびく */
 @keyframes banner-wave {
   0%, 100% { transform: rotate(0deg); }
-  50% { transform: rotate(4deg); }
+  50% { transform: rotate(6deg) scale(1.03); }
 }
 
+/* 🐉 召喚古代ドラゴン：首を持ち上げて火炎ブレス噴射 */
 @keyframes dragon-fly {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-14px) rotate(5deg) scale(1.06); }
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  30% { transform: translateY(-14px) rotate(-10deg) scale(0.95); } /* 溜め */
+  50% { transform: translateY(8px) rotate(14deg) scale(1.3); filter: drop-shadow(0 0 35px #ef4444); } /* ブレス放射！ */
+  75% { transform: translateY(-4px) rotate(4deg) scale(1.05); }
 }
 
 @keyframes bounce-small {

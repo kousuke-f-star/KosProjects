@@ -2252,17 +2252,56 @@ class Game {
     proj.textContent = icon;
 
     const arenaRect = arena.getBoundingClientRect();
-    proj.style.left = `${startX - arenaRect.left}px`;
-    proj.style.top = `${startY - arenaRect.top}px`;
+    const relStartX = startX - arenaRect.left;
+    const relStartY = startY - arenaRect.top;
+    const relEndX = endX - arenaRect.left;
+    const relEndY = endY - arenaRect.top;
+
+    proj.style.left = `${relStartX}px`;
+    proj.style.top = `${relStartY}px`;
+
+    // 進行方向への傾き角度を計算
+    const angleRad = Math.atan2(relEndY - relStartY, relEndX - relStartX);
+    const angleDeg = angleRad * (180 / Math.PI);
+    proj.style.transform = `rotate(${angleDeg}deg) scale(0.8)`;
 
     arena.appendChild(proj);
 
     requestAnimationFrame(() => {
-      proj.style.transform = `translate(${endX - startX}px, ${endY - startY}px) scale(1.3)`;
+      proj.style.transform = `translate(${relEndX - relStartX}px, ${relEndY - relStartY}px) rotate(${angleDeg}deg) scale(1.4)`;
       proj.style.opacity = "0.2";
     });
 
-    setTimeout(() => proj.remove(), 280);
+    setTimeout(() => {
+      proj.remove();
+      // 着弾ミニ衝撃波
+      this.createSlashEffect(endX, endY, false, false);
+    }, 280);
+  }
+
+  createSlashEffect(x, y, isCrit = false, isCombo = false) {
+    const arena = document.getElementById("slime-arena");
+    if (!arena) return;
+
+    const effect = document.createElement("div");
+    effect.className = "slash-effect";
+
+    const arenaRect = arena.getBoundingClientRect();
+    effect.style.left = `${x - arenaRect.left}px`;
+    effect.style.top = `${y - arenaRect.top}px`;
+
+    const arc = document.createElement("div");
+    arc.className = `slash-arc ${isCrit ? 'crit' : ''}`;
+    effect.appendChild(arc);
+
+    if (isCrit || isCombo) {
+      const cross = document.createElement("div");
+      cross.className = `slash-arc cross ${isCrit ? 'crit' : ''}`;
+      effect.appendChild(cross);
+    }
+
+    arena.appendChild(effect);
+    setTimeout(() => effect.remove(), 260);
   }
 
   // --- クリック攻撃 ---
@@ -2307,6 +2346,15 @@ class Game {
       headX = rect.left + rect.width / 2;
       headY = rect.top + 15;
     }
+
+    // ⚔️ 斬撃エフェクトの発生（タップ位置またはモンスター中心）
+    let slashX = headX;
+    let slashY = headY + 50;
+    if (e && e.clientX !== undefined && e.clientY !== undefined) {
+      slashX = e.clientX;
+      slashY = e.clientY;
+    }
+    this.createSlashEffect(slashX, slashY, isCrit, isCombo);
 
     this.createDamagePopup(dmg, isCrit, false, headX, headY);
     if (isCombo) {
