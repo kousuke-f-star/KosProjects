@@ -126,12 +126,12 @@ const SLIME_TYPES = [
 const BUILDINGS_MASTER = [
   { id: "trap", name: "スライム捕獲罠", icon: "🪤", attackIcon: "🪤", desc: "自動でスライムを捕獲して少しずつコインを稼ぐ", baseCost: 15, baseDPS: 1 },
   { id: "novice", name: "見習い剣士", icon: "🗡️", attackIcon: "⚔️", desc: "駆け出しの冒険者が定期的にスライムを斬りつける", baseCost: 100, baseDPS: 8 },
-  { id: "archer", name: "弓兵の物見櫓", icon: "🏹", attackIcon: "🏹", desc: "遠距離から矢を雨のように降らせて討伐支援", baseCost: 1100, baseDPS: 50 },
-  { id: "mage_tower", name: "魔導オートタワー", icon: "🔮", attackIcon: "🔮", desc: "魔力で自動追尾の魔法弾を連射する古代兵器", baseCost: 12000, baseDPS: 300 },
-  { id: "ranch", name: "スライム自動牧場", icon: "🏡", attackIcon: "🍖", desc: "スライムを繁殖・出荷して大量の素材と富を得る", baseCost: 130000, baseDPS: 2000 },
-  { id: "cannon", name: "錬金術カノン砲", icon: "💥", attackIcon: "💥", desc: "超高圧の錬金エネルギー弾でまとめて粉砕する", baseCost: 1400000, baseDPS: 15000 },
-  { id: "guild", name: "冒険者ギルド本部", icon: "🏰", attackIcon: "🛡️", desc: "精鋭の冒険者部隊を一斉派遣して掃討作戦を展開", baseCost: 20000000, baseDPS: 120000 },
-  { id: "dragon", name: "契約ドラゴン", icon: "🐉", attackIcon: "🔥", desc: "伝説の竜を召喚し圧倒的ブレスで殲滅する", baseCost: 330000000, baseDPS: 1000000 }
+  { id: "archer", name: "弓兵の物見櫓", icon: "🏹", attackIcon: "🏹", desc: "遠距離から矢を雨のように降らせて討伐支援", baseCost: 1100, baseDPS: 45 },
+  { id: "mage_tower", name: "魔導オートタワー", icon: "🔮", attackIcon: "🔮", desc: "魔力で自動追尾の魔法弾を連射する古代兵器", baseCost: 12000, baseDPS: 220 },
+  { id: "ranch", name: "スライム自動牧場", icon: "🏡", attackIcon: "🍖", desc: "スライムを繁殖・出荷して大量の素材と富を得る", baseCost: 130000, baseDPS: 1000 },
+  { id: "cannon", name: "錬金術カノン砲", icon: "💥", attackIcon: "💥", desc: "超高圧の錬金エネルギー弾でまとめて粉砕する", baseCost: 1400000, baseDPS: 6000 },
+  { id: "guild", name: "冒険者ギルド本部", icon: "🏰", attackIcon: "🛡️", desc: "精鋭の冒険者部隊を一斉派遣して掃討作戦を展開", baseCost: 20000000, baseDPS: 40000 },
+  { id: "dragon", name: "契約ドラゴン", icon: "🐉", attackIcon: "🔥", desc: "伝説の竜を召喚し圧倒的ブレスで殲滅する", baseCost: 330000000, baseDPS: 300000 }
 ];
 
 const SKILLS_MASTER = [
