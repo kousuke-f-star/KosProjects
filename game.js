@@ -567,7 +567,7 @@ const BGM_TRACKS = {
     tempo: 220,
     melodyType: 'sawtooth',
     bassType: 'triangle',
-    volume: 0.022,
+    volume: 0.065,
     melody: ['Eb4', 'D4', 'REST', 'C4', 'B3', 'REST', 'C4', 'Db4', 'Eb4', 'REST', 'D4', 'Db4', 'C4', 'REST', 'B3', 'REST'],
     bass:   ['C2', 'C2', 'REST', 'C2', 'Eb2', 'REST', 'D2', 'Db2', 'C2', 'C2', 'REST', 'C2', 'Fs2', 'REST', 'F2', 'E2']
   },
@@ -576,7 +576,7 @@ const BGM_TRACKS = {
     tempo: 280,
     melodyType: 'sine',
     bassType: 'triangle',
-    volume: 0.024,
+    volume: 0.075,
     melody: ['C4', 'E4', 'G4', 'C5', 'B4', 'G4', 'A4', 'G4', 'E4', 'F4', 'G4', 'E4', 'D4', 'E4', 'C4', 'REST'],
     bass:   ['C3', 'REST', 'G2', 'REST', 'A2', 'REST', 'E2', 'REST', 'F2', 'REST', 'C3', 'REST', 'G2', 'REST', 'C3', 'REST']
   },
@@ -585,7 +585,7 @@ const BGM_TRACKS = {
     tempo: 250,
     melodyType: 'triangle',
     bassType: 'sine',
-    volume: 0.022,
+    volume: 0.070,
     melody: ['D4', 'F4', 'A4', 'D5', 'Db5', 'A4', 'Bb4', 'A4', 'F4', 'G4', 'Ab4', 'F4', 'E4', 'F4', 'D4', 'REST'],
     bass:   ['D2', 'REST', 'A2', 'REST', 'D2', 'F2', 'G2', 'A2', 'Bb2', 'REST', 'F2', 'REST', 'A2', 'REST', 'D2', 'REST']
   },
@@ -594,7 +594,7 @@ const BGM_TRACKS = {
     tempo: 230,
     melodyType: 'triangle',
     bassType: 'triangle',
-    volume: 0.023,
+    volume: 0.072,
     melody: ['E4', 'G4', 'E4', 'B4', 'A4', 'G4', 'E4', 'REST', 'G4', 'A4', 'B4', 'G4', 'E4', 'D4', 'E4', 'REST'],
     bass:   ['E2', 'E2', 'B2', 'E2', 'A2', 'REST', 'E2', 'B2', 'E2', 'E2', 'B2', 'E2', 'D2', 'REST', 'E2', 'REST']
   },
@@ -603,7 +603,7 @@ const BGM_TRACKS = {
     tempo: 320,
     melodyType: 'sine',
     bassType: 'sine',
-    volume: 0.024,
+    volume: 0.075,
     melody: ['A3', 'E4', 'A4', 'C5', 'B4', 'E4', 'G4', 'REST', 'F4', 'C4', 'E4', 'B3', 'D4', 'A3', 'C4', 'B3'],
     bass:   ['A2', 'REST', 'A2', 'REST', 'E2', 'REST', 'E2', 'REST', 'F2', 'REST', 'C2', 'REST', 'D2', 'REST', 'E2', 'REST']
   },
@@ -612,7 +612,7 @@ const BGM_TRACKS = {
     tempo: 240,
     melodyType: 'sawtooth',
     bassType: 'triangle',
-    volume: 0.020,
+    volume: 0.065,
     melody: ['Fs4', 'A4', 'C5', 'Fs5', 'F5', 'C5', 'D5', 'C5', 'A4', 'B4', 'C5', 'A4', 'G4', 'A4', 'Fs4', 'REST'],
     bass:   ['Fs2', 'Fs2', 'C3', 'Fs2', 'D3', 'REST', 'C3', 'B2', 'Fs2', 'Fs2', 'C3', 'Fs2', 'G2', 'REST', 'Fs2', 'REST']
   },
@@ -621,7 +621,7 @@ const BGM_TRACKS = {
     tempo: 250,
     melodyType: 'triangle',
     bassType: 'sawtooth',
-    volume: 0.022,
+    volume: 0.070,
     melody: ['G4', 'B4', 'D5', 'G5', 'Fs5', 'D5', 'E5', 'D5', 'B4', 'C5', 'D5', 'B4', 'A4', 'B4', 'G4', 'REST'],
     bass:   ['G2', 'G2', 'D3', 'G2', 'C3', 'REST', 'G2', 'D3', 'G2', 'G2', 'D3', 'G2', 'F2', 'REST', 'G2', 'REST']
   },
@@ -630,7 +630,7 @@ const BGM_TRACKS = {
     tempo: 360,
     melodyType: 'sine',
     bassType: 'sine',
-    volume: 0.024,
+    volume: 0.075,
     melody: ['C4', 'E4', 'Ab4', 'C5', 'E5', 'Ab4', 'E4', 'REST', 'Db4', 'F4', 'A4', 'Db5', 'F5', 'A4', 'F4', 'REST'],
     bass:   ['C2', 'REST', 'REST', 'REST', 'Ab2', 'REST', 'REST', 'REST', 'Db2', 'REST', 'REST', 'REST', 'A2', 'REST', 'REST', 'REST']
   },
@@ -639,7 +639,7 @@ const BGM_TRACKS = {
     tempo: 290,
     melodyType: 'sine',
     bassType: 'triangle',
-    volume: 0.023,
+    volume: 0.072,
     melody: ['E4', 'G4', 'B4', 'E5', 'D5', 'B4', 'C5', 'B4', 'G4', 'A4', 'B4', 'G4', 'Fs4', 'G4', 'E4', 'REST'],
     bass:   ['E2', 'REST', 'B2', 'REST', 'C3', 'REST', 'G2', 'REST', 'A2', 'REST', 'E2', 'REST', 'B2', 'REST', 'E2', 'REST']
   }
@@ -650,9 +650,19 @@ class SoundController {
     this.ctx = null;
     this.enabled = true;      // SE(効果音)の有効/無効
     this.bgmEnabled = true;   // BGM(音楽)の有効/無効
+    this.bgmVolume = 0.75;    // BGM音量スライダー (0.0〜1.0)
+    this.seVolume = 0.80;     // SE音量スライダー (0.0〜1.0)
     this.currentTrack = 'slime';
     this.bgmStep = 0;
     this.bgmTimer = null;
+  }
+
+  setBgmVolume(val) {
+    this.bgmVolume = Math.max(0, Math.min(1, val));
+  }
+
+  setSeVolume(val) {
+    this.seVolume = Math.max(0, Math.min(1, val));
   }
 
   init() {
@@ -729,7 +739,15 @@ class SoundController {
     const melNote = track.melody[step];
     const bassNote = track.bass[step % track.bass.length];
     const dur = (track.tempo / 1000) * 0.85;
-    const vol = track.volume || 0.022;
+    
+    // スライダー音量を乗算して反映
+    const baseVol = track.volume || 0.075;
+    const vol = baseVol * this.bgmVolume;
+
+    if (vol <= 0.0001) {
+      this.bgmStep++;
+      return;
+    }
 
     // メロディ発音
     if (melNote && melNote !== 'REST' && BGM_NOTES[melNote]) {
@@ -737,13 +755,13 @@ class SoundController {
     }
     // ベース発音
     if (bassNote && bassNote !== 'REST' && BGM_NOTES[bassNote]) {
-      this.playSynthNote(BGM_NOTES[bassNote], track.bassType || 'triangle', dur * 1.1, vol * 0.9);
+      this.playSynthNote(BGM_NOTES[bassNote], track.bassType || 'triangle', dur * 1.1, vol * 0.85);
     }
 
     this.bgmStep++;
   }
 
-  playSynthNote(freq, type = 'sine', duration = 0.2, gainVal = 0.02) {
+  playSynthNote(freq, type = 'sine', duration = 0.2, gainVal = 0.05) {
     try {
       if (!this.ctx || this.ctx.state !== 'running') return;
       const osc = this.ctx.createOscillator();
@@ -773,6 +791,9 @@ class SoundController {
         this.ctx.resume().catch(() => {});
       }
 
+      const actualGain = gainVal * this.seVolume;
+      if (actualGain <= 0.0001) return;
+
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
@@ -782,7 +803,7 @@ class SoundController {
         osc.frequency.exponentialRampToValueAtTime(freqSlide, this.ctx.currentTime + duration);
       }
 
-      gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+      gain.gain.setValueAtTime(actualGain, this.ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
 
       osc.connect(gain);
@@ -863,6 +884,8 @@ class Game {
       lastSaved: Date.now(),
       soundEnabled: true,
       bgmEnabled: true,
+      bgmVolume: 0.75,
+      seVolume: 0.80,
       buyMultiplier: 1,
       buildings: {},
       skills: {},
@@ -2793,12 +2816,43 @@ class Game {
   setupDOM() {
     this.sound.enabled = this.state.soundEnabled !== false;
     this.sound.bgmEnabled = this.state.bgmEnabled !== false;
+    this.sound.bgmVolume = (this.state.bgmVolume !== undefined) ? this.state.bgmVolume : 0.75;
+    this.sound.seVolume = (this.state.seVolume !== undefined) ? this.state.seVolume : 0.80;
 
     const soundText = document.getElementById("sound-text");
     if (soundText) soundText.textContent = this.sound.enabled ? "ON" : "OFF";
 
     const bgmText = document.getElementById("bgm-text");
     if (bgmText) bgmText.textContent = this.sound.bgmEnabled ? "ON" : "OFF";
+
+    this.updateVolumeUI();
+  }
+
+  updateVolumeUI() {
+    const bgmPercent = Math.round(this.sound.bgmVolume * 100);
+    const sePercent = Math.round(this.sound.seVolume * 100);
+
+    // モーダル内のスライダー
+    const sliderBgmModal = document.getElementById("slider-bgm-volume-modal");
+    const valBgmModal = document.getElementById("val-bgm-volume-modal");
+    if (sliderBgmModal) sliderBgmModal.value = bgmPercent;
+    if (valBgmModal) valBgmModal.textContent = `${bgmPercent}%`;
+
+    const sliderSeModal = document.getElementById("slider-se-volume-modal");
+    const valSeModal = document.getElementById("val-se-volume-modal");
+    if (sliderSeModal) sliderSeModal.value = sePercent;
+    if (valSeModal) valSeModal.textContent = `${sePercent}%`;
+
+    // 設定タブ内のスライダー
+    const sliderBgmTab = document.getElementById("slider-bgm-volume-tab");
+    const valBgmTab = document.getElementById("val-bgm-volume-tab");
+    if (sliderBgmTab) sliderBgmTab.value = bgmPercent;
+    if (valBgmTab) valBgmTab.textContent = `${bgmPercent}%`;
+
+    const sliderSeTab = document.getElementById("slider-se-volume-tab");
+    const valSeTab = document.getElementById("val-se-volume-tab");
+    if (sliderSeTab) sliderSeTab.value = sePercent;
+    if (valSeTab) valSeTab.textContent = `${sePercent}%`;
   }
 
   setupEventListeners() {
@@ -2808,6 +2862,39 @@ class Game {
     };
     document.addEventListener("click", unlockHandler, { once: true });
     document.addEventListener("touchstart", unlockHandler, { once: true });
+
+    // 音量スライダーイベント（BGM）
+    const handleBgmSlider = (e) => {
+      const val = parseInt(e.target.value, 10) / 100;
+      this.sound.setBgmVolume(val);
+      this.state.bgmVolume = val;
+      this.sound.unlockAudio();
+      this.updateVolumeUI();
+      this.saveGame();
+    };
+    document.getElementById("slider-bgm-volume-modal")?.addEventListener("input", handleBgmSlider);
+    document.getElementById("slider-bgm-volume-tab")?.addEventListener("input", handleBgmSlider);
+
+    // 音量スライダーイベント（SE効果音）
+    const handleSeSlider = (e) => {
+      const val = parseInt(e.target.value, 10) / 100;
+      this.sound.setSeVolume(val);
+      this.state.seVolume = val;
+      this.sound.playTone(600, 'triangle', 0.08, 0.15); // テスト発音
+      this.updateVolumeUI();
+      this.saveGame();
+    };
+    document.getElementById("slider-se-volume-modal")?.addEventListener("input", handleSeSlider);
+    document.getElementById("slider-se-volume-tab")?.addEventListener("input", handleSeSlider);
+
+    // 音量設定モーダル開閉
+    document.getElementById("btn-volume-settings")?.addEventListener("click", () => {
+      this.updateVolumeUI();
+      document.getElementById("volume-modal")?.classList.add("show");
+    });
+    document.getElementById("btn-close-volume-modal")?.addEventListener("click", () => {
+      document.getElementById("volume-modal")?.classList.remove("show");
+    });
 
     // iPad / iOS Safari 連打時の画面拡大（ダブルタップズーム）を完全防止
     document.addEventListener("dblclick", (e) => {
@@ -2859,7 +2946,7 @@ class Game {
     const arenaEl = document.getElementById("slime-arena");
     if (arenaEl) {
       arenaEl.addEventListener("touchstart", (e) => {
-        if (e.target.closest("button") || e.target.closest(".building-buy-btn") || e.target.closest(".skill-unlock-btn") || e.target.closest(".rebirth-skill-btn") || e.target.closest(".active-skill-btn")) {
+        if (e.target.closest("button") || e.target.closest(".building-buy-btn") || e.target.closest(".skill-unlock-btn") || e.target.closest(".rebirth-skill-btn") || e.target.closest(".active-skill-btn") || e.target.closest(".volume-slider")) {
           return;
         }
         if (e.target.closest("#slime-target")) return; // スライム本体で処理される
@@ -2868,7 +2955,7 @@ class Game {
       }, { passive: false });
 
       arenaEl.addEventListener("click", (e) => {
-        if (e.target.closest("button") || e.target.closest(".building-buy-btn") || e.target.closest(".skill-unlock-btn") || e.target.closest(".rebirth-skill-btn") || e.target.closest(".active-skill-btn")) {
+        if (e.target.closest("button") || e.target.closest(".building-buy-btn") || e.target.closest(".skill-unlock-btn") || e.target.closest(".rebirth-skill-btn") || e.target.closest(".active-skill-btn") || e.target.closest(".volume-slider")) {
           return;
         }
         if (e.target.closest("#slime-target")) return;

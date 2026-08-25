@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=3.2.0">
+  <link rel="stylesheet" href="style.css?v=3.3.0">
 </head>
 <body>
 
@@ -16,7 +16,7 @@
     <div class="logo-area">
       <div class="logo-icon">⚔️</div>
       <h1>スライム放置クエスト</h1>
-      <span class="version-badge" id="app-version">v3.2.0</span>
+      <span class="version-badge" id="app-version">v3.3.0</span>
     </div>
 
     <div class="header-stats">
@@ -44,6 +44,7 @@
     <div class="header-controls">
       <button class="icon-btn" id="btn-sound" title="効果音(SE)切替">🔊 <span id="sound-text">ON</span></button>
       <button class="icon-btn" id="btn-bgm" title="音楽(BGM)切替">🎵 <span id="bgm-text">ON</span></button>
+      <button class="icon-btn" id="btn-volume-settings" title="音量調節">🎛️ 音量</button>
       <button class="icon-btn" id="btn-save" title="手動セーブ">💾 保存</button>
       <button class="icon-btn" id="btn-header-reset" style="border-color: rgba(239,68,68,0.5); color: #fca5a5;" title="データを完全初期化">🔄 リセット</button>
     </div>
@@ -269,6 +270,29 @@
             </div>
           </div>
 
+          <!-- 音量調節セクション -->
+          <h3 style="font-size: 1rem; margin: 16px 0 10px 0; color: #38bdf8; font-weight: 800;">🎛️ サウンド・音量調節</h3>
+          <div class="volume-control-card">
+            <div class="volume-row">
+              <div class="volume-label-group">
+                <span>🎵 音楽 (BGM) 音量</span>
+                <span class="volume-val-badge" id="val-bgm-volume-tab">75%</span>
+              </div>
+              <div class="volume-slider-container">
+                <input type="range" min="0" max="100" value="75" class="volume-slider" id="slider-bgm-volume-tab">
+              </div>
+            </div>
+            <div class="volume-row">
+              <div class="volume-label-group">
+                <span>🔊 効果音 (SE) 音量</span>
+                <span class="volume-val-badge" id="val-se-volume-tab">80%</span>
+              </div>
+              <div class="volume-slider-container">
+                <input type="range" min="0" max="100" value="80" class="volume-slider" id="slider-se-volume-tab">
+              </div>
+            </div>
+          </div>
+
           <div class="setting-buttons-group">
             <button class="icon-btn" id="btn-manual-save" style="justify-content: center;">💾 進行状況を手動セーブ</button>
             <button class="danger-btn" id="btn-reset-data">⚠️ データをリセットして最初から</button>
@@ -318,10 +342,44 @@
     </div>
   </div>
 
+  <!-- 音量設定モーダル -->
+  <div class="modal-backdrop" id="volume-modal">
+    <div class="modal-box">
+      <div class="modal-icon">🎛️</div>
+      <h3 class="modal-title" style="color: #38bdf8;">サウンド・音量設定</h3>
+      <p class="modal-desc" style="margin-bottom: 16px;">
+        BGM（音楽）と効果音（SE）の音量を好みの大きさにスライダーで自由に調節できます。
+      </p>
+
+      <div class="volume-control-card" style="text-align: left; background: rgba(15, 23, 42, 0.6);">
+        <div class="volume-row">
+          <div class="volume-label-group">
+            <span>🎵 音楽 (BGM) 音量</span>
+            <span class="volume-val-badge" id="val-bgm-volume-modal">75%</span>
+          </div>
+          <div class="volume-slider-container">
+            <input type="range" min="0" max="100" value="75" class="volume-slider" id="slider-bgm-volume-modal">
+          </div>
+        </div>
+        <div class="volume-row" style="margin-top: 10px;">
+          <div class="volume-label-group">
+            <span>🔊 効果音 (SE) 音量</span>
+            <span class="volume-val-badge" id="val-se-volume-modal">80%</span>
+          </div>
+          <div class="volume-slider-container">
+            <input type="range" min="0" max="100" value="80" class="volume-slider" id="slider-se-volume-modal">
+          </div>
+        </div>
+      </div>
+
+      <button class="modal-close-btn" id="btn-close-volume-modal">設定を閉じる</button>
+    </div>
+  </div>
+
   <!-- トースト通知コンテナ -->
   <div class="toast-container" id="toast-container"></div>
 
   <!-- ゲームスクリプト -->
-  <script src="game.js?v=3.2.0"></script>
+  <script src="game.js?v=3.3.0"></script>
 </body>
 </html>
