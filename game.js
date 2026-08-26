@@ -421,7 +421,7 @@ const MONSTER_CATEGORIES = [
 ];
 
 const BUILDINGS_MASTER = [
-  { id: "trap", name: "スライム捕獲罠", icon: "🪤", attackIcon: "🪤", desc: "自動でスライムを捕獲する罠を仕掛ける", baseCost: 15, baseDPS: 0.8 },
+  { id: "trap", name: "スライム捕獲罠", icon: "🪤", attackIcon: "🪤", desc: "自動でスライムを捕獲する罠を仕掛ける", baseCost: 15, baseDPS: 1 },
   { id: "novice", name: "見習い冒険者", icon: "🗡️", attackIcon: "⚔️", desc: "剣を振るって加勢してくれる仲間", baseCost: 100, baseDPS: 4 },
   { id: "archer", name: "弓兵の塔", icon: "🏹", attackIcon: "🏹", desc: "遠距離から矢を雨あられと射掛ける", baseCost: 1100, baseDPS: 25 },
   { id: "mage_tower", name: "魔導オートタワー", icon: "🔮", attackIcon: "🔮", desc: "古代魔術で自動迎撃する防衛塔", baseCost: 12000, baseDPS: 120 },
@@ -3742,7 +3742,10 @@ class Game {
   }
 
   formatNumber(num) {
-    if (num === null || num === undefined) return "0";
+    if (num === null || num === undefined || isNaN(num)) return "0";
+    if (num < 10 && num > 0 && num % 1 !== 0) {
+      return num.toFixed(1).replace(/\.0$/, '');
+    }
     if (num < 10000) return Math.floor(num).toLocaleString();
 
     const units = [
