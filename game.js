@@ -1341,6 +1341,7 @@ class Game {
       totalKills: 0,
       currentLevel: 1,
       highestLevel: 1,       // 現在の周回で到達した最高レベル
+      normalLevel: 1,        // 通常冒険で現在進行中のステージレベル（到達地点）
       savedNormalLevel: 1,   // ボス再戦突入前の通常冒険レベル（復帰用）
       isBossReplay: false,   // ボス再戦モード中フラグ
       replayBossLevel: 0,    // 再戦中のボスレベル
@@ -2637,6 +2638,8 @@ class Game {
       } else {
         // 通常冒険モード：レベル進行
         this.state.currentLevel++;
+        this.state.normalLevel = this.state.currentLevel;
+        this.state.savedNormalLevel = this.state.currentLevel;
         this.state.highestLevel = Math.max(this.state.highestLevel || 1, this.state.currentLevel);
 
         const newStageIndex = this.getStageIndex();
@@ -2798,6 +2801,7 @@ class Game {
 
     // 進行リセット（現在の周回の最高到達レベルもLv.1から新たにスタート）
     this.state.currentLevel = 1;
+    this.state.normalLevel = 1;
     this.state.highestLevel = 1;
     this.state.savedNormalLevel = 1;
     this.state.isBossReplay = false;
@@ -3556,9 +3560,10 @@ class Game {
   startBossReplay(bossLevel) {
     document.getElementById("boss-modal")?.classList.remove("show");
 
-    // ボス再戦に入る前の元の通常冒険レベルを確実に保存
+    // ボス再戦に入る前の通常冒険レベルを確実に同期・保存
     if (!this.state.isBossReplay) {
-      this.state.savedNormalLevel = this.state.currentLevel;
+      this.state.normalLevel = Math.max(1, this.state.currentLevel, this.state.normalLevel || 1);
+      this.state.savedNormalLevel = this.state.normalLevel;
     }
 
     this.state.isBossReplay = true;
@@ -3574,8 +3579,13 @@ class Game {
 
   exitBossReplay() {
     this.state.isBossReplay = false;
-    // ボス再戦に入る前の元の通常冒険レベルに正確に復帰
-    this.state.currentLevel = this.state.savedNormalLevel || 1;
+    this.state.replayBossLevel = 0;
+
+    // 通常冒険レベル（normalLevel）に100%確実に復帰！
+    const targetLvl = Math.max(1, this.state.normalLevel || this.state.savedNormalLevel || this.state.highestLevel || 1);
+    this.state.currentLevel = targetLvl;
+    this.state.normalLevel = targetLvl;
+    this.state.savedNormalLevel = targetLvl;
 
     this.sound.playBuy();
     this.spawnEnemy();
@@ -4119,7 +4129,8 @@ class Game {
     this.state.rebirthCount = Number(this.state.rebirthCount) || 0;
     this.state.currentLevel = Math.max(1, Number(this.state.currentLevel) || 1);
     this.state.highestLevel = Math.max(1, Number(this.state.highestLevel) || Number(this.state.currentLevel) || 1);
-    this.state.savedNormalLevel = Math.max(1, Number(this.state.savedNormalLevel) || Number(this.state.currentLevel) || 1);
+    this.state.normalLevel = Math.max(1, Number(this.state.normalLevel) || Number(this.state.highestLevel) || Number(this.state.currentLevel) || 1);
+    this.state.savedNormalLevel = this.state.normalLevel;
     this.state.isBossReplay = Boolean(this.state.isBossReplay);
     this.state.replayBossLevel = Number(this.state.replayBossLevel) || 0;
     this.state.buyMultiplier = Number(this.state.buyMultiplier) || 1;
