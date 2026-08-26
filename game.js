@@ -439,12 +439,12 @@ const SKILLS_MASTER = [
   { id: "click_combo", name: "連撃の心得", icon: "⚡", desc: "クリック時、25%の確率で2回連続ダメージを与える", cost: 1500, type: "passive" },
   { id: "skill_berserk", name: "スキル: バーサーク", icon: "🔥", desc: "【アクティブ】15秒間、クリック攻撃力とDPSが3倍になる (CD: 60秒)", cost: 2000, type: "active", cd: 60, duration: 15 },
   { id: "meteor_resonance", name: "流星の共鳴", icon: "💫", desc: "隕石ラッシュの持続時間が +6秒(計26秒) 延長され、攻撃倍率が 2.5倍 になる", cost: 5000, type: "passive" },
-  { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の 3% がクリック攻撃力に加算される", cost: 8000, type: "passive" },
+  { id: "click_power_2", name: "剣技の心得", icon: "⚔️", desc: "DPS（秒間自動攻撃力）の 1% がクリック攻撃力に加算される", cost: 8000, type: "passive" },
   { id: "guardian_aegis", name: "守護者の加護", icon: "🛡️", desc: "ボス戦の制限時間が 40秒 ➔ 55秒 に延長される", cost: 15000, type: "passive" },
   { id: "bounty_hunter", name: "賞金首ハンター", icon: "💎", desc: "スライム討伐時の獲得ゴールドが +50% 増加する", cost: 40000, type: "passive" },
   { id: "skill_goldrush", name: "スキル: ゴールドラッシュ", icon: "💰", desc: "【アクティブ】即座に秒間DPSの30秒分のゴールドを獲得する (CD: 90秒)", cost: 60000, type: "active", cd: 90 },
-  { id: "thunder_strike", name: "雷光の閃き", icon: "⚡", desc: "クリティカル時、追加でDPS 3秒分の電撃ダメージを与える", cost: 80000, type: "passive" },
-  { id: "building_synergy", name: "連携の極意", icon: "🤝", desc: "すべての建物の攻撃力・生産力が 2倍 になる", cost: 150000, type: "passive" },
+  { id: "thunder_strike", name: "雷光の閃き", icon: "⚡", desc: "クリティカル時、追加でDPS 0.3秒分の電撃ダメージを与える", cost: 80000, type: "passive" },
+  { id: "building_synergy", name: "連携の極意", icon: "🤝", desc: "すべての建物の攻撃力・生産力が +20% 増加する", cost: 150000, type: "passive" },
   { id: "skill_cyclone", name: "スキル: サイクロン", icon: "🌪️", desc: "【アクティブ】10秒間、仲間たちの自動攻撃スピードが3倍になり超連打する (CD: 75秒)", cost: 200000, type: "active", cd: 75, duration: 10 },
   { id: "skill_meteor", name: "スキル: メテオ落とし", icon: "☄️", desc: "【アクティブ】巨大な隕石を落とし、スライムに現在DPSの50倍ダメージを一撃で与える (CD: 120秒)", cost: 500000, type: "active", cd: 120 },
   { id: "golden_touch", name: "ミダスタッチ", icon: "✨", desc: "クリック時、10%の確率でスライムの最大HP20%相当のボーナスゴールドを獲得", cost: 2000000, type: "passive" }
@@ -1538,7 +1538,7 @@ class Game {
     // DPS連動ボーナス
     const dps = this.getDPS(false);
     let dpsBonusRatio = 0;
-    if (this.state.skills["click_power_2"]) dpsBonusRatio += 0.03;
+    if (this.state.skills["click_power_2"]) dpsBonusRatio += 0.01;
 
     if (dpsBonusRatio > 0) {
       base += Math.floor(dps * dpsBonusRatio);
@@ -1589,7 +1589,7 @@ class Game {
       if (count > 0) {
         let bDPS = b.baseDPS * count;
         if (b.id === "trap" && this.state.skills["trap_mastery"]) bDPS *= 3;
-        if (this.state.skills["building_synergy"]) bDPS *= 2;
+        if (this.state.skills["building_synergy"]) bDPS *= 1.20;
         totalDPS += bDPS;
       }
     });
@@ -2518,11 +2518,11 @@ class Game {
     }
     this.createDamagePopup(`🪙 +${this.formatNumber(clickGold)}`, false, false, headX + 18, headY - 12, true);
 
-    // 雷光の閃き (クリティカル時、追加でDPS 3秒分の電撃ダメージ)
+    // 雷光の閃き (クリティカル時、追加でDPS 0.3秒分の電撃ダメージ)
     if (isCrit && this.state.skills["thunder_strike"]) {
       const dps = this.getDPS(false);
       if (dps > 0) {
-        const shockDmg = Math.max(1, Math.floor(dps * 3));
+        const shockDmg = Math.max(1, Math.floor(dps * 0.3));
         dmg += shockDmg;
         this.createDamagePopup(`⚡雷光 +${this.formatNumber(shockDmg)}`, true, false, headX - 30, headY - 35);
       }
@@ -3224,7 +3224,7 @@ class Game {
 
       let bDPS = b.baseDPS;
       if (b.id === "trap" && this.state.skills["trap_mastery"]) bDPS *= 3;
-      if (this.state.skills["building_synergy"]) bDPS *= 2;
+      if (this.state.skills["building_synergy"]) bDPS = Math.floor(bDPS * 1.20);
       const currentTotalDPS = bDPS * count;
 
       return `
