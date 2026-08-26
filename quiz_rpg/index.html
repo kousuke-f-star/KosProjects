@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>クイズ勇者の運命と知恵の迷宮 〜 Branches of Fate 〜</title>
+  <!-- Google Fonts: Noto Sans JP -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Starfield Canvas -->
+  <canvas id="ambient-canvas"></canvas>
+
+  <div class="app-container">
+
+    <!-- Top Header Navigation -->
+    <header>
+      <div class="header-logo">
+        <span class="icon">🔮</span>
+        <span>クイズRPG</span>
+      </div>
+
+      <!-- Player Fast Stats in Header -->
+      <div class="header-player-stats" id="header-player-stats" style="display: none;">
+        <span class="stat-badge job" id="status-job-name">Lv.1 勇者</span>
+        <span class="stat-badge gold" id="status-gold">🪙 <span id="status-gold-val">50</span> G</span>
+      </div>
+
+      <div class="header-nav-btns">
+        <a href="../index.html" class="icon-btn" style="text-decoration:none;" title="スライム放置クエストへ戻る">🏠 <span style="font-size:0.75rem">スライムRPG</span></a>
+        <button class="icon-btn" id="btn-open-tree" title="冒険の分岐ツリーを確認">🗺️ <span style="font-size:0.75rem">マップ</span></button>
+        <button class="icon-btn" id="btn-open-dict" title="図鑑・エンディング記録">📖 <span style="font-size:0.75rem">図鑑</span></button>
+        <button class="icon-btn" id="btn-toggle-sound" title="音量のON/OFF">🔊 <span style="font-size:0.75rem">音ON</span></button>
+      </div>
+    </header>
+
+    <!-- Main Screens Container -->
+    <main style="flex:1; display:flex; flex-direction:column;">
+
+      <!-- 1. Title Screen -->
+      <section class="screen active" id="title-screen">
+        <div class="title-hero">
+          <div class="title-logo-banner">⚔️📖✨</div>
+          <h1 class="game-main-title">知恵と選択の迷宮</h1>
+          <p class="game-sub-title">Quiz Chronicles: Branches of Fate</p>
+          <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px;">
+            あなたの知恵（4択クイズ）と選択が運命の道を拓く！<br>
+            知恵の書を取り戻し、多彩なエンディングを目指せ！
+          </p>
+        </div>
+
+        <div class="title-menu-box">
+          <button class="btn-primary" id="btn-new-game">
+            <span>✨ 冒険をはじめから</span>
+          </button>
+          <button class="btn-secondary" id="btn-continue">
+            <span>💾 つづきから</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Persistent Player Status Bar (Visible in Game) -->
+      <div class="player-status-card" id="persistent-player-bars" style="display: none;">
+        <div class="bars-container">
+          <!-- HP Bar -->
+          <div class="bar-wrapper" id="status-hp">
+            <div class="bar-label">
+              <span style="color:#f87171;">❤️ HP</span>
+              <span id="status-hp-text">100 / 100</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill hp" id="bar-hp-fill"></div>
+            </div>
+          </div>
+          <!-- MP Bar -->
+          <div class="bar-wrapper" id="status-mp">
+            <div class="bar-label">
+              <span style="color:#60a5fa;">🔷 MP</span>
+              <span id="status-mp-text">30 / 30</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill mp" id="bar-mp-fill"></div>
+            </div>
+          </div>
+          <!-- EXP Bar -->
+          <div class="bar-wrapper" id="status-level">
+            <div class="bar-label">
+              <span style="color:#34d399;">⭐ EXP</span>
+              <span id="status-exp-text">0 / 50</span>
+            </div>
+            <div class="progress-track">
+              <div class="progress-fill exp" id="bar-exp-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Story & Branching Choice Screen -->
+      <section class="screen" id="story-screen">
+        <div class="story-box">
+          <div class="story-header">
+            <span class="story-chapter-tag" id="story-chapter-tag">プロローグ</span>
+            <h2 class="story-node-title" id="story-node-title">始まりの神殿</h2>
+          </div>
+
+          <div class="story-scene-banner env-temple" id="story-scene-banner">🏛️</div>
+
+          <p class="story-text" id="story-text">
+            物語のテキストがここに表示されます。
+          </p>
+
+          <h3 style="font-size:1rem; color:#fbbf24; margin-bottom:10px;">🚪 進む道を選択してください：</h3>
+          <div class="branch-choices-grid" id="branch-choices-grid">
+            <!-- Dynamically populated choices -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Battle Screen -->
+      <section class="screen" id="battle-screen">
+        <div class="battle-arena">
+          <!-- Enemy Zone -->
+          <div class="enemy-display-zone" id="enemy-display-zone">
+            <div class="enemy-info-bar">
+              <div class="enemy-name-row">
+                <span id="enemy-name" style="color:#f87171;">モンスター名</span>
+                <span id="enemy-hp-text" style="font-size:0.85rem; color:#cbd5e1;">100 / 100 HP</span>
+              </div>
+              <div class="progress-track" style="height: 12px;">
+                <div class="progress-fill hp" id="enemy-hp-fill" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div class="enemy-sprite" id="enemy-sprite">🪵</div>
+          </div>
+
+          <!-- Quiz Box -->
+          <div class="quiz-container">
+            <div class="quiz-header-badge">
+              <span class="quiz-genre-badge" id="quiz-genre-badge">ジャンル: 自然</span>
+              <span class="quiz-combo-badge" id="quiz-combo-badge"></span>
+            </div>
+
+            <!-- Timer Bar -->
+            <div class="quiz-timer-row">
+              <span style="font-size:0.8rem;">⏳</span>
+              <div class="quiz-timer-track">
+                <div class="quiz-timer-fill" id="quiz-timer-fill"></div>
+              </div>
+              <span class="quiz-timer-text" id="quiz-timer-text">18s</span>
+            </div>
+
+            <div class="quiz-question-box">
+              <p id="quiz-question-text">ここに問題文が表示されます。</p>
+            </div>
+
+            <!-- 4-Choice Option Buttons -->
+            <div class="quiz-options-grid" id="quiz-options-grid">
+              <!-- Dynamically populated options -->
+            </div>
+
+            <!-- Educational Explanation Box -->
+            <div class="quiz-explanation-box" id="quiz-explanation-box"></div>
+          </div>
+
+          <!-- Battle Action Skills / Items -->
+          <div class="battle-skills-bar" id="battle-skills-bar">
+            <!-- Dynamically populated skills & items -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Shop & Rest Screen -->
+      <section class="screen" id="shop-screen">
+        <div class="story-box">
+          <div class="story-header">
+            <span class="story-chapter-tag">休憩所・補給</span>
+            <h2 class="story-node-title" id="shop-title">妖精の泉</h2>
+          </div>
+          <p class="story-text" id="shop-story">泉の水で傷を癒やし、アイテムを補給しましょう。</p>
+
+          <h3 style="font-size:1rem; color:#60a5fa; margin-bottom:10px;">🎒 アイテム・装備ショップ：</h3>
+          <div class="shop-grid" id="shop-items-grid">
+            <!-- Dynamically populated items -->
+          </div>
+
+          <div style="margin-top:20px; text-align:right;">
+            <button class="btn-primary" id="btn-shop-depart" style="margin-left:auto;">
+              <span>旅を再開する ➔</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Ending Screen -->
+      <section class="screen" id="ending-screen">
+        <div class="ending-card">
+          <div class="ending-icon" id="ending-icon">🏆</div>
+          <h2 class="ending-title" id="ending-title">エンディングタイトル</h2>
+          <p class="ending-story" id="ending-story">エンディングの物語</p>
+
+          <div class="ending-stats-summary" id="ending-stats-summary">
+            <!-- Final player stats -->
+          </div>
+
+          <button class="btn-primary" id="btn-ending-title" style="margin:0 auto;">
+            <span>🏰 タイトルへ戻る</span>
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Modals -->
+
+  <!-- 1. Job Selection Modal -->
+  <div class="modal-overlay" id="modal-job-select">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title">⚔️ 職業（ジョブ）を選択</div>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.9rem; color:#cbd5e1; margin-bottom:10px;">
+          職業によってステータス、クイズの解答時間、強力なスキルが異なります。
+        </p>
+        <div class="job-selector-grid" id="job-list-container">
+          <!-- Dynamically populated jobs -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Tree Map Modal -->
+  <div class="modal-overlay" id="modal-tree-map">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title">🗺️ 冒険の分岐マップツリー</div>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.85rem; color:#94a3b8; margin-bottom:14px;">
+          あなたが選んだルートと現在地、未踏のエリアを確認できます。
+        </p>
+        <div class="tree-node-wrapper" id="tree-map-content">
+          <!-- Dynamically populated node items -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Dictionary & Collection Modal -->
+  <div class="modal-overlay" id="modal-dictionary">
+    <div class="modal-window">
+      <div class="modal-header">
+        <div class="modal-title">📖 大百科・エンディング図鑑</div>
+        <button class="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="dict-content">
+        <!-- Dynamically populated dictionary -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="sound.js"></script>
+  <script src="questions.js"></script>
+  <script src="story_tree.js"></script>
+  <script src="game.js"></script>
+
+</body>
+</html>
