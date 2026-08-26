@@ -1340,7 +1340,8 @@ class Game {
       totalClicks: 0,
       totalKills: 0,
       currentLevel: 1,
-      highestLevel: 1,       // これまで到達した最高レベル
+      highestLevel: 1,       // 現在の周回で到達した最高レベル
+      savedNormalLevel: 1,   // ボス再戦突入前の通常冒険レベル（復帰用）
       isBossReplay: false,   // ボス再戦モード中フラグ
       replayBossLevel: 0,    // 再戦中のボスレベル
       bossTimer: 40,
@@ -2795,9 +2796,12 @@ class Game {
     this.state.totalSkillPoints += gainedSP;
     this.state.rebirthCount += 1;
 
-    // 進行リセット
+    // 進行リセット（現在の周回の最高到達レベルもLv.1から新たにスタート）
     this.state.currentLevel = 1;
+    this.state.highestLevel = 1;
+    this.state.savedNormalLevel = 1;
     this.state.isBossReplay = false;
+    this.state.replayBossLevel = 0;
     this.state.gold = 0;
     this.state.clickLevel = 0; // クリック強化もLv.1から強くてニューゲーム
 
@@ -3552,6 +3556,11 @@ class Game {
   startBossReplay(bossLevel) {
     document.getElementById("boss-modal")?.classList.remove("show");
 
+    // ボス再戦に入る前の元の通常冒険レベルを確実に保存
+    if (!this.state.isBossReplay) {
+      this.state.savedNormalLevel = this.state.currentLevel;
+    }
+
     this.state.isBossReplay = true;
     this.state.replayBossLevel = bossLevel;
     this.state.currentLevel = bossLevel;
@@ -3565,13 +3574,14 @@ class Game {
 
   exitBossReplay() {
     this.state.isBossReplay = false;
-    this.state.currentLevel = this.state.highestLevel || 1;
+    // ボス再戦に入る前の元の通常冒険レベルに正確に復帰
+    this.state.currentLevel = this.state.savedNormalLevel || 1;
 
     this.sound.playBuy();
     this.spawnEnemy();
     this.renderStageInfo();
     this.updateArenaEnvironment();
-    this.showToast(`⏩ 通常冒険（最高到達ステージ Lv.${this.state.currentLevel}）に戻りました！`);
+    this.showToast(`⏩ 通常冒険（Lv.${this.state.currentLevel}）に戻りました！`);
   }
 
   renderActiveSkillBar() {
@@ -4106,6 +4116,7 @@ class Game {
     this.state.rebirthCount = Number(this.state.rebirthCount) || 0;
     this.state.currentLevel = Math.max(1, Number(this.state.currentLevel) || 1);
     this.state.highestLevel = Math.max(1, Number(this.state.highestLevel) || Number(this.state.currentLevel) || 1);
+    this.state.savedNormalLevel = Math.max(1, Number(this.state.savedNormalLevel) || Number(this.state.currentLevel) || 1);
     this.state.isBossReplay = Boolean(this.state.isBossReplay);
     this.state.replayBossLevel = Number(this.state.replayBossLevel) || 0;
     this.state.buyMultiplier = Number(this.state.buyMultiplier) || 1;
